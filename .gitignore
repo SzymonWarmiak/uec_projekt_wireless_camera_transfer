@@ -1,0 +1,40 @@
+# =========================
+# Xilinx Vivado / FPGA
+# =========================
+*.jou
+*.log
+*.str
+*.pb
+*.wdb
+*.vdi
+*.vds
+.Xil/
+*/fpga/build/
+*/results/*.bit
+*/results/*.log
+
+# =========================
+# Symulacje
+# =========================
+xsim.dir/
+xrun.log
+xrun.history
+*.vcd
+
+# =========================
+# PlatformIO (ESP32)
+# =========================
+.pio/
+
+# =========================
+# Srodowiska i IDE (VS Code / DVT)
+# =========================
+.vscode/
+.dvt/*.auto.*
+dvt_build.log
+
+# =========================
+# Systemowe
+# =========================
+.DS_Store
+Thumbs.db
