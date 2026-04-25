@@ -1,0 +1,21 @@
+[33m9f9f71d[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m feat: switch video stream to full QVGA 320x240 resolution with downsampling
+[33mca7d950[m feat: implement continuous UDP streaming for stable video transfer
+[33m5fe5d77[m feat: integrate OV7670 camera streaming at 256x256 resolution
+[33m1164707[m transfer wifi staly 0.35 mbs okolo, transfer spi stale 0.6mbs
+[33m9c604d1[m optymalizacja predkosci, lagow brak
+[33m19f6b75[m dziala symulacja kamery
+[33ma361aa1[m wow 1.2MB na sekunde po spi
+[33m931e531[m spi dziala, esp skrpyt dziala
+[33m586a44d[m blank_project
+[33mf1811fe[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m lab2 done
+[33m362ba19[m Dodane inicjaly GT i male poprawki w vga_timing
+[33mcfab035[m done clear end
+[33m3046df5[m done CLEAR :)
+[33m03c1e88[m dziala symulacja do wyswietlania inicalow w results
+[33m1917b3d[m symulacja dziala
+[33me9f4c12[m vga_timming vga_pkg done
+[33m7a633e1[m vga_timing done
+[33m82a1945[m add deadline
+[33ma3ebd76[m Setting up GitHub Classroom Feedback
+[33meffec0d[m[33m ([m[1;31morigin/feedback[m[33m)[m GitHub Classroom Feedback
+[33m927f358[m Initial commit
