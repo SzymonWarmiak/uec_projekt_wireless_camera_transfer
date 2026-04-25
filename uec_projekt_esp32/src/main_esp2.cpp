@@ -3,10 +3,10 @@
 #include <WiFiUdp.h>
 #include "driver/spi_slave.h"
 
-#define LED_PIN 8 // Pin wbudowanej diody LED
+#define LED_PIN 8
 
-const char* ssid = "ESP_VIDEO_TX";     // Sieć nadawana przez ESP1
-const char* password = "video_stream"; // Hasło do sieci ESP1
+const char* ssid = "ESP_VIDEO_TX";
+const char* password = "video_stream";
 const int udp_port = 1234;
 
 WiFiUDP udp; 
@@ -18,14 +18,13 @@ WiFiUDP udp;
 #define SPI_BUFFER_SIZE 76802
 
 WORD_ALIGNED_ATTR uint8_t frame_buf[SPI_BUFFER_SIZE];
+WORD_ALIGNED_ATTR uint8_t assemble_buf[SPI_BUFFER_SIZE];
 static spi_slave_transaction_t esp2_spi_t;
 
 void spi_tx_task(void *pvParameters) {
     while(1) {
         spi_slave_transaction_t* ret_t;
-        // Czekamy az Basys2 wygeneruje zegar i odbierze cala ramke po SPI z ESP2
         if (spi_slave_get_trans_result(SPI2_HOST, &ret_t, portMAX_DELAY) == ESP_OK) {
-            // Ramka zostala wyslana, od razu ladujemy bufor z powrotem do kolejki DMA
             spi_slave_queue_trans(SPI2_HOST, &esp2_spi_t, portMAX_DELAY); 
         }
     }
@@ -38,9 +37,8 @@ void setup() {
     WiFi.setSleep(WIFI_PS_NONE);
     
     pinMode(LED_PIN, OUTPUT);
-    digitalWrite(LED_PIN, HIGH); // Świeci ciągle podczas oczekiwania
+    digitalWrite(LED_PIN, HIGH);
     
-    // --- KONFIGURACJA SPI SLAVE ---
     spi_bus_config_t buscfg;
     memset(&buscfg, 0, sizeof(buscfg));
     buscfg.mosi_io_num = GPIO_MOSI;
@@ -65,15 +63,15 @@ void setup() {
 
     memset(&esp2_spi_t, 0, sizeof(esp2_spi_t));
     esp2_spi_t.length = SPI_BUFFER_SIZE * 8;
-    esp2_spi_t.tx_buffer = frame_buf; // ESP2 wypycha na druty ten bufor 
-    esp2_spi_t.rx_buffer = NULL;      // Nic nie odbieramy od Basys2
+    esp2_spi_t.tx_buffer = frame_buf;
+    esp2_spi_t.rx_buffer = NULL;
     spi_slave_queue_trans(SPI2_HOST, &esp2_spi_t, portMAX_DELAY);
     
     xTaskCreate(spi_tx_task, "spi_tx_task", 4096, NULL, 24, NULL);
 
-    WiFi.mode(WIFI_STA); // Wymuszenie trybu stacji (Client)
+    WiFi.mode(WIFI_STA);
     WiFi.begin(ssid, password);
-    WiFi.setTxPower(WIFI_POWER_8_5dBm); // Obniżenie mocy sygnału zapobiega problemom na płytkach prototypowych
+    WiFi.setTxPower(WIFI_POWER_8_5dBm);
     Serial.print("Laczenie z Wi-Fi");
     while (WiFi.status() != WL_CONNECTED) {
         delay(500);
@@ -91,11 +89,8 @@ void loop() {
     static unsigned long last_led_toggle = 0;
     static unsigned long last_broadcast = 0;
 
-    // Keep-Alive: Jesli przez 500ms nie dostalismy nic, prosimy o rozpoczecie strumieniowania
     if (current_time - last_req > 500) {
-        // Wysyłamy pakiet uderzeniowy tylko co 500 ms, a nie w każdym obrocie pętli
         if (current_time - last_broadcast > 500) {
-            // Obliczenie adresu broadcast dla lokalnej podsieci (omija blokady routera)
             IPAddress myIP = WiFi.localIP();
             IPAddress subnet = WiFi.subnetMask();
             IPAddress bcastIP(myIP[0] | ~subnet[0], myIP[1] | ~subnet[1], myIP[2] | ~subnet[2], myIP[3] | ~subnet[3]);
@@ -117,12 +112,14 @@ void loop() {
         if (packetSize == 1025) {
             uint8_t chunk_id = udp.read();
             if (chunk_id < 75) {
-                udp.read(frame_buf + chunk_id * 1024, 1024);
+                udp.read(assemble_buf + chunk_id * 1024, 1024);
             }
         } else if (packetSize == 3) {
             uint8_t chunk_id = udp.read();
             if (chunk_id == 75) {
-                udp.read(frame_buf + 76800, 2);
+                udp.read(assemble_buf + 76800, 2);
+                
+                memcpy(frame_buf, assemble_buf, SPI_BUFFER_SIZE);
             }
         } else {
             udp.flush();
@@ -130,10 +127,9 @@ void loop() {
     }
 
     if (data_received) {
-        last_req = current_time; // Zapisujemy fakt, ze zyje i dziala!
+        last_req = current_time;
     }
 
-    // Sygnalizacja LED - szybkie miganie gdy odbierane są dane (ok 10 Hz)
     static bool led_state = false;
     bool is_communicating = (current_time - last_req < 500);
     if (is_communicating) {
@@ -143,6 +139,6 @@ void loop() {
             last_led_toggle = current_time;
         }
     } else {
-        digitalWrite(LED_PIN, HIGH); // Świeci ciągle, gdy brak komunikacji
+        digitalWrite(LED_PIN, HIGH);
     }
 }
