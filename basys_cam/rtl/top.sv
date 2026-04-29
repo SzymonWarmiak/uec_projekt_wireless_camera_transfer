@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 
-module top (
+module top_basys_cam (
     input  logic clk,
     input  logic rst,
     output logic [15:0] led,

@@ -19,13 +19,13 @@ WiFiUDP udp;
 
 WORD_ALIGNED_ATTR uint8_t frame_buf[SPI_BUFFER_SIZE];
 WORD_ALIGNED_ATTR uint8_t assemble_buf[SPI_BUFFER_SIZE];
-static spi_slave_transaction_t esp2_spi_t;
+static spi_slave_transaction_t esp_station_spi_t;
 
 void spi_tx_task(void *pvParameters) {
     while(1) {
         spi_slave_transaction_t* ret_t;
         if (spi_slave_get_trans_result(SPI2_HOST, &ret_t, portMAX_DELAY) == ESP_OK) {
-            spi_slave_queue_trans(SPI2_HOST, &esp2_spi_t, portMAX_DELAY); 
+            spi_slave_queue_trans(SPI2_HOST, &esp_station_spi_t, portMAX_DELAY); 
         }
     }
 }
@@ -33,7 +33,7 @@ void spi_tx_task(void *pvParameters) {
 void setup() {
     Serial.begin(115200);
     delay(2000);
-    Serial.println("\n--- START ESP32 NR 2 (Station) ---");
+    Serial.println("\n--- START ESP_STATION ---");
     WiFi.setSleep(WIFI_PS_NONE);
     
     pinMode(LED_PIN, OUTPUT);
@@ -61,11 +61,11 @@ void setup() {
 
     spi_slave_initialize(SPI2_HOST, &buscfg, &slvcfg, SPI_DMA_CH_AUTO);
 
-    memset(&esp2_spi_t, 0, sizeof(esp2_spi_t));
-    esp2_spi_t.length = SPI_BUFFER_SIZE * 8;
-    esp2_spi_t.tx_buffer = frame_buf;
-    esp2_spi_t.rx_buffer = NULL;
-    spi_slave_queue_trans(SPI2_HOST, &esp2_spi_t, portMAX_DELAY);
+    memset(&esp_station_spi_t, 0, sizeof(esp_station_spi_t));
+    esp_station_spi_t.length = SPI_BUFFER_SIZE * 8;
+    esp_station_spi_t.tx_buffer = frame_buf;
+    esp_station_spi_t.rx_buffer = NULL;
+    spi_slave_queue_trans(SPI2_HOST, &esp_station_spi_t, portMAX_DELAY);
     
     xTaskCreate(spi_tx_task, "spi_tx_task", 4096, NULL, 24, NULL);
 
@@ -77,7 +77,7 @@ void setup() {
         delay(500);
         Serial.print(".");
     }
-    Serial.print("\nPolaczono z Twoja siecia! IP ESP2: ");
+    Serial.print("\nPolaczono z Twoja siecia! IP ESP_STATION: ");
     Serial.println(WiFi.localIP());
 
     udp.begin(udp_port);
@@ -99,7 +99,7 @@ void loop() {
             udp.write((const uint8_t*)"start", 5);
             udp.endPacket();
             last_broadcast = current_time;
-            Serial.printf("Szukam ESP1 w sieci... (Wysylam Broadcast na: %s)\n", bcastIP.toString().c_str());
+            Serial.printf("Szukam ESP_CAM w sieci... (Wysylam Broadcast na: %s)\n", bcastIP.toString().c_str());
         }
     }
 

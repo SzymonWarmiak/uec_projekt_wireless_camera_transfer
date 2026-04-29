@@ -1,1 +1,4 @@
-{}
+{
+    "C_Cpp.default.configurationProvider": "platformio.platformio-ide",
+    "C_Cpp.default.compileCommands": "${workspaceFolder}/uec_projekt_esp32/compile_commands.json"
+}

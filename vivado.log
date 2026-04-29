@@ -1,27 +1,27 @@
 #-----------------------------------------------------------
-# Vivado v2024.2 (64-bit)
-# SW Build 5239630 on Fri Nov 08 22:35:27 MST 2024
-# IP Build 5239520 on Sun Nov 10 16:12:51 MST 2024
-# SharedData Build 5239561 on Fri Nov 08 14:39:27 MST 2024
-# Start of session at: Sat Apr 25 14:54:59 2026
-# Process ID         : 4324
-# Current directory  : C:/Users/szymo/Desktop/AGH/SEMESTR_4/UEC2/Projekt/projekt_cyfrowka_sw_gt
-# Command line       : vivado.exe -mode batch -source C:/Users/szymo/Desktop/AGH/SEMESTR_4/UEC2/Projekt/projekt_cyfrowka_sw_gt/tools/program_fpga.tcl -tclargs C:/Users/szymo/Desktop/AGH/SEMESTR_4/UEC2/Projekt/projekt_cyfrowka_sw_gt/basys_2/results/top_basys3.bit 210183795558A -notrace
-# Log file           : C:/Users/szymo/Desktop/AGH/SEMESTR_4/UEC2/Projekt/projekt_cyfrowka_sw_gt/vivado.log
-# Journal file       : C:/Users/szymo/Desktop/AGH/SEMESTR_4/UEC2/Projekt/projekt_cyfrowka_sw_gt\vivado.jou
-# Running On         : pcszymek
+# Vivado v2025.1 (64-bit)
+# SW Build 6140274 on Thu May 22 00:12:29 MDT 2025
+# IP Build 6138677 on Thu May 22 03:10:11 MDT 2025
+# SharedData Build 6139179 on Tue May 20 17:58:58 MDT 2025
+# Start of session at: Wed Apr 29 22:40:01 2026
+# Process ID         : 12560
+# Current directory  : C:/Users/Vmagic/Desktop/Jezdzik/uec_projekt_wireless_camera_transfer
+# Command line       : vivado.exe -mode batch -source C:/Users/Vmagic/Desktop/Jezdzik/uec_projekt_wireless_camera_transfer/tools/program_fpga.tcl -tclargs C:/Users/Vmagic/Desktop/Jezdzik/uec_projekt_wireless_camera_transfer/basys_station/results/top_basys3.bit 210183795558A -notrace
+# Log file           : C:/Users/Vmagic/Desktop/Jezdzik/uec_projekt_wireless_camera_transfer/vivado.log
+# Journal file       : C:/Users/Vmagic/Desktop/Jezdzik/uec_projekt_wireless_camera_transfer\vivado.jou
+# Running On         : Vmagic
 # Platform           : Windows Server 2016 or Windows 10
 # Operating System   : 26200
-# Processor Detail   : 13th Gen Intel(R) Core(TM) i7-13650HX
-# CPU Frequency      : 2803 MHz
-# CPU Physical cores : 14
-# CPU Logical cores  : 20
-# Host memory        : 34049 MB
-# Swap memory        : 2147 MB
-# Total Virtual      : 36196 MB
-# Available Virtual  : 16945 MB
+# Processor Detail   : Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+# CPU Frequency      : 1992 MHz
+# CPU Physical cores : 4
+# CPU Logical cores  : 8
+# Host memory        : 21279 MB
+# Swap memory        : 1342 MB
+# Total Virtual      : 22621 MB
+# Available Virtual  : 5867 MB
 #-----------------------------------------------------------
-source C:/Users/szymo/Desktop/AGH/SEMESTR_4/UEC2/Projekt/projekt_cyfrowka_sw_gt/tools/program_fpga.tcl
+source C:/Users/Vmagic/Desktop/Jezdzik/uec_projekt_wireless_camera_transfer/tools/program_fpga.tcl
 # if { $argc < 1 } {
 #     puts "Blad: Brak sciezki do pliku bitstream!"
 #     exit 1
@@ -29,21 +29,31 @@ source C:/Users/szymo/Desktop/AGH/SEMESTR_4/UEC2/Projekt/projekt_cyfrowka_sw_gt/
 # set bitstream_file [lindex $argv 0]
 # set target_id [lindex $argv 1]
 # open_hw_manager
+open_hw_manager: Time (s): cpu = 00:00:08 ; elapsed = 00:00:05 . Memory (MB): peak = 495.133 ; gain = 214.742
 # connect_hw_server -allow_non_jtag
 INFO: [Labtools 27-2285] Connecting to hw_server url TCP:localhost:3121
+INFO: [Labtools 27-2222] Launching hw_server...
+INFO: [Labtools 27-2221] Launch Output:
+
+****** Xilinx hw_server v2025.1
+  **** Build date : May  6 2025 at 09:15:36
+    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+
+
 INFO: [Labtools 27-3415] Connecting to cs_server url TCP:localhost:0
 INFO: [Labtools 27-3417] Launching cs_server...
 INFO: [Labtools 27-2221] Launch Output:
 
 
-******** Xilinx cs_server v2024.2.0
-  ****** Build date   : Oct 30 2024-19:19:07
-    **** Build number : 2024.2.1730312347
+******** Xilinx cs_server v2025.1.0
+  ****** Build date   : May 13 2025-21:15:27
+    **** Build number : 2025.1.1747163727
       ** Copyright 2017-2022 Xilinx, Inc. All Rights Reserved.
       ** Copyright 2022-2026 Advanced Micro Devices, Inc. All Rights Reserved.
 
 
 
+connect_hw_server: Time (s): cpu = 00:00:00 ; elapsed = 00:00:08 . Memory (MB): peak = 499.055 ; gain = 3.922
 # set targets [get_hw_targets]
 # set selected_target ""
 # if { $target_id != "" } {
@@ -71,7 +81,7 @@ INFO: [Labtoolstcl 44-466] Opening hw_target localhost:3121/xilinx_tcf/Digilent/
 # current_hw_device $device
 # set_property PROGRAM.FILE $bitstream_file $device
 # puts "Wgrywanie pliku: $bitstream_file..."
-Wgrywanie pliku: C:/Users/szymo/Desktop/AGH/SEMESTR_4/UEC2/Projekt/projekt_cyfrowka_sw_gt/basys_2/results/top_basys3.bit...
+Wgrywanie pliku: C:/Users/Vmagic/Desktop/Jezdzik/uec_projekt_wireless_camera_transfer/basys_station/results/top_basys3.bit...
 # program_hw_devices $device
 INFO: [Labtools 27-3164] End of startup status: HIGH
 # puts "Operacja zakonczona sukcesem!"
@@ -79,4 +89,4 @@ Operacja zakonczona sukcesem!
 # close_hw_target
 INFO: [Labtoolstcl 44-464] Closing hw_target localhost:3121/xilinx_tcf/Digilent/210183795558A
 # close_hw_manager
-INFO: [Common 17-206] Exiting Vivado at Sat Apr 25 14:55:09 2026...
+INFO: [Common 17-206] Exiting Vivado at Wed Apr 29 22:40:18 2026...

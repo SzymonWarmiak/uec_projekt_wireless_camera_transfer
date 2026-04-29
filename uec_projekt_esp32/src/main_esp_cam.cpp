@@ -24,13 +24,13 @@ void setup() {
     pinMode(LED_PIN, OUTPUT);
     digitalWrite(LED_PIN, HIGH);
 
-    Serial.println("\n--- ESP1: Nadajnik Wideo (Tylko SPI -> UDP) ---");
+    Serial.println("\n--- ESP_CAM: Nadajnik Wideo (Tylko SPI -> UDP) ---");
     WiFi.setSleep(WIFI_PS_NONE);
     WiFi.mode(WIFI_AP);
     WiFi.setTxPower(WIFI_POWER_8_5dBm);
     WiFi.softAP(ssid, pass);
     
-    Serial.print("\nAccess Point uruchomiony! IP ESP1 (Nadajnika): ");
+    Serial.print("\nAccess Point uruchomiony! IP ESP_CAM (Nadajnika): ");
     Serial.println(WiFi.softAPIP());
 
     udp.begin(udp_port);

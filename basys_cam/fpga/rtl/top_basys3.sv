@@ -108,7 +108,7 @@ module top_basys3 (
      *  Project functional top module
      */
 
-    top u_top (
+    top_basys_cam u_top (
         .clk(pclk),
         .rst(btnC),
         .led(led),

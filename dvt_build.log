@@ -1,368 +1,338 @@
 *** Start analyzing build configuration ***
-INFO: Auto-config - Scanning: C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt
-INFO: Auto-config - VLOG: C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt
+INFO: Auto-config - Scanning: C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer
+INFO: Auto-config - VLOG: C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer
 INFO: Auto-config - Wrote:
     .dvt\default.build.auto.1
 *** List of included argument files ***
-    Build configuration file:  C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\.dvt\default.build
-    -f c:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\.dvt\default.build.auto.1
+    Build configuration file:  C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\.dvt\default.build
+    -f c:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\.dvt\default.build.auto.1
 *** List of invocations ***
-Invocation #1 +dvt_init+dvt in c:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\.dvt\default.build.auto.1 at line 9
-*** Done analyzing build configuration [533 ms] ***
+Invocation #1 +dvt_init+dvt in c:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\.dvt\default.build.auto.1 at line 9
+*** Done analyzing build configuration [862 ms] ***
 
 *** Start SystemVerilog build ***
 *** Invocation #1***
-Loading (1) C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\fpga\rtl\top_basys3.sv ...
-Done C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\fpga\rtl\top_basys3.sv [58 ms, 135 lines, SystemVerilog_2012] ...
-Loading (2) C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\rtl\ov7670_capture.sv ...
-Done C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\rtl\ov7670_capture.sv [14 ms, 79 lines, SystemVerilog_2012] ...
-Loading (3) C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\rtl\ov7670_configurator.sv ...
-Done C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\rtl\ov7670_configurator.sv [25 ms, 143 lines, SystemVerilog_2012] ...
-Loading (4) C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\rtl\pwm_generator.sv ...
-Done C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\rtl\pwm_generator.sv [3 ms, 27 lines, SystemVerilog_2012] ...
-Loading (5) C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\rtl\spi_master.sv ...
-Done C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\rtl\spi_master.sv [18 ms, 92 lines, SystemVerilog_2012] ...
-Loading (6) C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\rtl\spi_stream_master.sv ...
-Done C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\rtl\spi_stream_master.sv [8 ms, 99 lines, SystemVerilog_2012] ...
-Loading (7) C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\rtl\test_pattern_generator.sv ...
-Done C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\rtl\test_pattern_generator.sv [4 ms, 65 lines, SystemVerilog_2012] ...
-Loading (8) C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\rtl\top.sv ...
-Done C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\rtl\top.sv [17 ms, 278 lines, SystemVerilog_2012] ...
-Loading (9) C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\rtl\top_vga.sv ...
-Done C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\rtl\top_vga.sv [4 ms, 113 lines, SystemVerilog_2012] ...
-Loading (10) C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\rtl\video_framebuffer.sv ...
-Done C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\rtl\video_framebuffer.sv [2 ms, 33 lines, SystemVerilog_2012] ...
-Loading (11) C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\sim\common\tiff_writer.sv ...
-Done C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\sim\common\tiff_writer.sv [33 ms, 405 lines, SystemVerilog_2012] ...
-Loading (12) C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_2\fpga\rtl\top_basys3.sv ...
-Done C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_2\fpga\rtl\top_basys3.sv [4 ms, 135 lines, SystemVerilog_2012] ...
-Loading (13) C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_2\rtl\ov7670_capture.sv ...
-Done C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_2\rtl\ov7670_capture.sv [4 ms, 79 lines, SystemVerilog_2012] ...
-Loading (14) C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_2\rtl\ov7670_configurator.sv ...
-Done C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_2\rtl\ov7670_configurator.sv [10 ms, 143 lines, SystemVerilog_2012] ...
-Loading (15) C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_2\rtl\pwm_generator.sv ...
-Done C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_2\rtl\pwm_generator.sv [1 ms, 27 lines, SystemVerilog_2012] ...
-Loading (16) C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_2\rtl\spi_master.sv ...
-Done C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_2\rtl\spi_master.sv [3 ms, 92 lines, SystemVerilog_2012] ...
-Loading (17) C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_2\rtl\spi_stream_master.sv ...
-Done C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_2\rtl\spi_stream_master.sv [5 ms, 99 lines, SystemVerilog_2012] ...
-Loading (18) C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_2\rtl\test_pattern_generator.sv ...
-Done C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_2\rtl\test_pattern_generator.sv [2 ms, 65 lines, SystemVerilog_2012] ...
-Loading (19) C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_2\rtl\top.sv ...
-Done C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_2\rtl\top.sv [11 ms, 278 lines, SystemVerilog_2012] ...
-Loading (20) C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_2\rtl\top_vga.sv ...
-Done C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_2\rtl\top_vga.sv [4 ms, 113 lines, SystemVerilog_2012] ...
-Loading (21) C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_2\rtl\video_framebuffer.sv ...
-Done C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_2\rtl\video_framebuffer.sv [2 ms, 33 lines, SystemVerilog_2012] ...
-Loading (22) C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_2\sim\common\tiff_writer.sv ...
-Done C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_2\sim\common\tiff_writer.sv [17 ms, 405 lines, SystemVerilog_2012] ...
-Loading (23) C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\rtl\vga_pkg.sv ...
-Done C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\rtl\vga_pkg.sv [2 ms, 29 lines, SystemVerilog_2012] ...
-Loading (24) C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_2\rtl\vga_pkg.sv ...
-Done C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_2\rtl\vga_pkg.sv [1 ms, 29 lines, SystemVerilog_2012] ...
-Loading (25) C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_2\rtl\vga_timing.sv ...
-Done C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_2\rtl\vga_timing.sv [2 ms, 81 lines, SystemVerilog_2012] ...
-Loading (26) C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_2\rtl\vga_frame_renderer.sv ...
-Done C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_2\rtl\vga_frame_renderer.sv [24 ms, 301 lines, SystemVerilog_2012] ...
-Loading (27) C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\rtl\vga_timing.sv ...
-Done C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\rtl\vga_timing.sv [3 ms, 81 lines, SystemVerilog_2012] ...
-Loading (28) C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\rtl\vga_frame_renderer.sv ...
-Done C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\rtl\vga_frame_renderer.sv [16 ms, 301 lines, SystemVerilog_2012] ...
-Loading (29) C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\sim\common\glbl.v ...
-Done C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\sim\common\glbl.v [2 ms, 85 lines, Verilog_2001] ...
-Loading (30) C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_2\sim\common\glbl.v ...
-Done C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_2\sim\common\glbl.v [0 ms, 85 lines, Verilog_2001] ...
-*** Done invocation #1 [307 ms] ***
-*** Done parsing [LT 158 ms, PT 307 ms] ***
-*** Total number of lines [3 930] ***
+Loading (1) C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\fpga\rtl\top_basys3.sv ...
+Done C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\fpga\rtl\top_basys3.sv [149 ms, 135 lines, SystemVerilog_2012] ...
+Loading (2) C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\rtl\ov7670_capture.sv ...
+Done C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\rtl\ov7670_capture.sv [32 ms, 79 lines, SystemVerilog_2012] ...
+Loading (3) C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\rtl\ov7670_configurator.sv ...
+Done C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\rtl\ov7670_configurator.sv [122 ms, 143 lines, SystemVerilog_2012] ...
+Loading (4) C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\rtl\pwm_generator.sv ...
+Done C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\rtl\pwm_generator.sv [5 ms, 27 lines, SystemVerilog_2012] ...
+Loading (5) C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\rtl\spi_master.sv ...
+Done C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\rtl\spi_master.sv [21 ms, 92 lines, SystemVerilog_2012] ...
+Loading (6) C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\rtl\spi_stream_master.sv ...
+Done C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\rtl\spi_stream_master.sv [10 ms, 99 lines, SystemVerilog_2012] ...
+Loading (7) C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\rtl\test_pattern_generator.sv ...
+Done C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\rtl\test_pattern_generator.sv [9 ms, 65 lines, SystemVerilog_2012] ...
+Loading (8) C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\rtl\top.sv ...
+Done C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\rtl\top.sv [52 ms, 278 lines, SystemVerilog_2012] ...
+Loading (9) C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\rtl\top_vga.sv ...
+Done C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\rtl\top_vga.sv [53 ms, 113 lines, SystemVerilog_2012] ...
+Loading (10) C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\rtl\video_framebuffer.sv ...
+Done C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\rtl\video_framebuffer.sv [5 ms, 33 lines, SystemVerilog_2012] ...
+Loading (11) C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\sim\common\tiff_writer.sv ...
+Done C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\sim\common\tiff_writer.sv [107 ms, 405 lines, SystemVerilog_2012] ...
+Loading (12) C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_station\fpga\rtl\top_basys3.sv ...
+Done C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_station\fpga\rtl\top_basys3.sv [14 ms, 121 lines, SystemVerilog_2012] ...
+Loading (13) C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_station\rtl\spi_master.sv ...
+Done C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_station\rtl\spi_master.sv [8 ms, 92 lines, SystemVerilog_2012] ...
+Loading (14) C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_station\rtl\spi_stream_master.sv ...
+Done C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_station\rtl\spi_stream_master.sv [10 ms, 99 lines, SystemVerilog_2012] ...
+Loading (15) C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_station\rtl\spi_stream_rx.sv ...
+Done C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_station\rtl\spi_stream_rx.sv [6 ms, 99 lines, SystemVerilog_2012] ...
+Loading (16) C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_station\rtl\test_pattern_generator.sv ...
+Done C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_station\rtl\test_pattern_generator.sv [9 ms, 65 lines, SystemVerilog_2012] ...
+Loading (17) C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_station\rtl\top.sv ...
+Done C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_station\rtl\top.sv [12 ms, 98 lines, SystemVerilog_2012] ...
+Loading (18) C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_station\rtl\top_vga.sv ...
+Done C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_station\rtl\top_vga.sv [5 ms, 113 lines, SystemVerilog_2012] ...
+Loading (19) C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_station\rtl\video_framebuffer.sv ...
+Done C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_station\rtl\video_framebuffer.sv [3 ms, 33 lines, SystemVerilog_2012] ...
+Loading (20) C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_station\sim\common\tiff_writer.sv ...
+Done C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_station\sim\common\tiff_writer.sv [37 ms, 405 lines, SystemVerilog_2012] ...
+Loading (21) C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\rtl\vga_pkg.sv ...
+Done C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\rtl\vga_pkg.sv [4 ms, 29 lines, SystemVerilog_2012] ...
+Loading (22) C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_station\rtl\vga_pkg.sv ...
+Done C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_station\rtl\vga_pkg.sv [2 ms, 29 lines, SystemVerilog_2012] ...
+Loading (23) C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_station\rtl\vga_timing.sv ...
+Done C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_station\rtl\vga_timing.sv [4 ms, 81 lines, SystemVerilog_2012] ...
+Loading (24) C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_station\rtl\vga_frame_renderer.sv ...
+Done C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_station\rtl\vga_frame_renderer.sv [62 ms, 301 lines, SystemVerilog_2012] ...
+Loading (25) C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\rtl\vga_timing.sv ...
+Done C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\rtl\vga_timing.sv [5 ms, 81 lines, SystemVerilog_2012] ...
+Loading (26) C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\rtl\vga_frame_renderer.sv ...
+Done C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\rtl\vga_frame_renderer.sv [46 ms, 301 lines, SystemVerilog_2012] ...
+Loading (27) C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\sim\common\glbl.v ...
+Done C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\sim\common\glbl.v [4 ms, 85 lines, Verilog_2001] ...
+Loading (28) C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_station\sim\common\glbl.v ...
+Done C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_station\sim\common\glbl.v [0 ms, 85 lines, Verilog_2001] ...
+Loading (29) C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\sim\common\glbl.v ...
+Done C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\sim\common\glbl.v [0 ms, 85 lines, Verilog_2001] ...
+*** Done invocation #1 [810 ms] ***
+*** Done parsing [LT 258 ms, PT 810 ms] ***
+*** Total number of lines [3 671] ***
 Performing post full build actions ...
-Performing post full build step 1 (SRI) [2 ms] ...
-Performing post full build step 2 (RI) [11 ms] ...
-Performing post full build step 3 (RCP) [9 ms] ...
-*** Files summary [30 total, 30 unique, 0 optimized] ***
-*** Done SystemVerilog build [645 ms] ***
+Performing post full build step 1 (SRI) [4 ms] ...
+Performing post full build step 2 (RI) [13 ms] ...
+Performing post full build step 3 (RCP) [7 ms] ...
+*** Files summary [29 total, 29 unique, 0 optimized] ***
+*** Done SystemVerilog build [1s.572ms] ***
 
 *** Start mixed mode extension build ***
-Performing mixed post full build step (VLOG - RI) [2 ms] ...
+Performing mixed post full build step (VLOG - RI) [5 ms] ...
 *** Warning: UNSPECIFIED_TOP: Please specify a -top module/entity/configuration in the project build file
-*** Top design candidates: work.top_basys3
-Performing mixed post full build step (MIXED - ELAB) [484 ms] ...
-Performing mixed post full build step (MIXED - UNEL) [209 ms] ...
+*** Top design candidates: work.top_basys3, work.top_basys_station
+Performing mixed post full build step (MIXED - ELAB) [637 ms] ...
+Performing mixed post full build step (MIXED - UNEL) [460 ms] ...
 *** Warning: UNDECLARED_MODULE: Module 'IBUF' is not declared
-    at line 61 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\fpga\rtl\top_basys3.sv:61 [compile index 1]
+    at line 61 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\fpga\rtl\top_basys3.sv:61 [compile index 1]
 *** Warning: UNDECLARED_MODULE: Module 'MMCME2_BASE' is not declared
-    at line 66 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\fpga\rtl\top_basys3.sv:66 [compile index 1]
+    at line 66 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\fpga\rtl\top_basys3.sv:66 [compile index 1]
 *** Warning: UNDECLARED_MODULE: Module 'BUFH' is not declared
-    at line 91 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\fpga\rtl\top_basys3.sv:91 [compile index 1]
+    at line 91 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\fpga\rtl\top_basys3.sv:91 [compile index 1]
 *** Warning: UNDECLARED_MODULE: Module 'BUFGCE' is not declared
-    at line 99 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\fpga\rtl\top_basys3.sv:99 [compile index 1]
+    at line 99 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\fpga\rtl\top_basys3.sv:99 [compile index 1]
 *** Warning: UNDECLARED_MODULE: Module 'xpm_fifo_axis' is not declared
-    at line 71 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_2\rtl\top.sv:71 [compile index 19]
+    at line 71 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\rtl\top.sv:71 [compile index 8]
 *** Warning: STATIC_INITIALIZATION: Explicit 'static' or 'automatic' is required when implicit static variable is initialized
-    at line 94 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_2\rtl\ov7670_configurator.sv:94 [compile index 14]
+    at line 94 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\rtl\ov7670_configurator.sv:94 [compile index 3]
 *** Warning: WIDTH_MISMATCH_PADDING: Assignment to 'pixel_x' of '32-bit' type from 'hcount_in' of '11-bit' type
-    at line 179 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\rtl\vga_frame_renderer.sv:179 [compile index 28]
+    at line 179 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\rtl\vga_frame_renderer.sv:179 [compile index 26]
 *** Warning: WIDTH_MISMATCH_PADDING: Assignment to 'pixel_y' of '32-bit' type from 'vcount_in' of '11-bit' type
-    at line 179 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\rtl\vga_frame_renderer.sv:179 [compile index 28]
+    at line 179 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\rtl\vga_frame_renderer.sv:179 [compile index 26]
 *** Warning: WIDTH_MISMATCH_PADDING: Assignment to 'pixel_x' of '32-bit' type from 'hcount_in' of '11-bit' type
-    at line 180 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\rtl\vga_frame_renderer.sv:180 [compile index 28]
+    at line 180 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\rtl\vga_frame_renderer.sv:180 [compile index 26]
 *** Warning: WIDTH_MISMATCH_PADDING: Assignment to 'pixel_y' of '32-bit' type from 'vcount_in' of '11-bit' type
-    at line 180 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\rtl\vga_frame_renderer.sv:180 [compile index 28]
+    at line 180 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\rtl\vga_frame_renderer.sv:180 [compile index 26]
 *** Warning: WIDTH_MISMATCH_PADDING: Assignment to 'pixel_x' of '32-bit' type from 'hcount_in' of '11-bit' type
-    at line 181 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\rtl\vga_frame_renderer.sv:181 [compile index 28]
+    at line 181 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\rtl\vga_frame_renderer.sv:181 [compile index 26]
 *** Warning: WIDTH_MISMATCH_PADDING: Assignment to 'pixel_y' of '32-bit' type from 'vcount_in' of '11-bit' type
-    at line 181 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\rtl\vga_frame_renderer.sv:181 [compile index 28]
+    at line 181 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\rtl\vga_frame_renderer.sv:181 [compile index 26]
 *** Warning: WIDTH_MISMATCH_PADDING: Assignment to 'pixel_x' of '32-bit' type from 'hcount_in' of '11-bit' type
-    at line 184 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\rtl\vga_frame_renderer.sv:184 [compile index 28]
+    at line 184 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\rtl\vga_frame_renderer.sv:184 [compile index 26]
 *** Warning: WIDTH_MISMATCH_PADDING: Assignment to 'pixel_y' of '32-bit' type from 'vcount_in' of '11-bit' type
-    at line 184 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\rtl\vga_frame_renderer.sv:184 [compile index 28]
+    at line 184 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\rtl\vga_frame_renderer.sv:184 [compile index 26]
 *** Warning: WIDTH_MISMATCH_PADDING: Assignment to 'pixel_x' of '32-bit' type from 'hcount_in' of '11-bit' type
-    at line 185 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\rtl\vga_frame_renderer.sv:185 [compile index 28]
+    at line 185 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\rtl\vga_frame_renderer.sv:185 [compile index 26]
 *** Warning: WIDTH_MISMATCH_PADDING: Assignment to 'pixel_y' of '32-bit' type from 'vcount_in' of '11-bit' type
-    at line 185 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\rtl\vga_frame_renderer.sv:185 [compile index 28]
+    at line 185 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\rtl\vga_frame_renderer.sv:185 [compile index 26]
 *** Warning: WIDTH_MISMATCH_PADDING: Assignment to 'pixel_x' of '32-bit' type from 'hcount_in' of '11-bit' type
-    at line 186 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\rtl\vga_frame_renderer.sv:186 [compile index 28]
+    at line 186 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\rtl\vga_frame_renderer.sv:186 [compile index 26]
 *** Warning: WIDTH_MISMATCH_PADDING: Assignment to 'pixel_y' of '32-bit' type from 'vcount_in' of '11-bit' type
-    at line 186 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\rtl\vga_frame_renderer.sv:186 [compile index 28]
+    at line 186 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\rtl\vga_frame_renderer.sv:186 [compile index 26]
 *** Warning: UNELABORATED_MODULE: Module 'work.top_basys3' is not elaborated
-    at line 15 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_2\fpga\rtl\top_basys3.sv:15 [compile index 12]
-*** Warning: UNELABORATED_MODULE: Module 'work.ov7670_capture' is not elaborated
-    at line 3 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\rtl\ov7670_capture.sv:3 [compile index 2]
-*** Warning: UNELABORATED_MODULE: Module 'work.ov7670_configurator' is not elaborated
-    at line 3 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\rtl\ov7670_configurator.sv:3 [compile index 3]
-*** Warning: STATIC_INITIALIZATION: Explicit 'static' or 'automatic' is required when implicit static variable is initialized
-    at line 94 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\rtl\ov7670_configurator.sv:94 [compile index 3]
+    at line 15 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_station\fpga\rtl\top_basys3.sv:15 [compile index 12]
 *** Warning: UNELABORATED_MODULE: Module 'work.pwm_generator' is not elaborated
-    at line 3 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\rtl\pwm_generator.sv:3 [compile index 4]
-*** Warning: UNELABORATED_MODULE: Module 'work.pwm_generator' is not elaborated
-    at line 3 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_2\rtl\pwm_generator.sv:3 [compile index 15]
+    at line 3 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\rtl\pwm_generator.sv:3 [compile index 4]
 *** Warning: UNELABORATED_MODULE: Module 'work.spi_master' is not elaborated
-    at line 3 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\rtl\spi_master.sv:3 [compile index 5]
+    at line 3 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\rtl\spi_master.sv:3 [compile index 5]
 *** Warning: NON_STANDARD_PORT_DEFAULT_VALUE: Output port 'rx_data' cannot have a default value
-    at line 11 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\rtl\spi_master.sv:11 [compile index 5]
+    at line 11 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\rtl\spi_master.sv:11 [compile index 5]
 *** Warning: NON_STANDARD_PORT_DEFAULT_VALUE: Output port 'busy' cannot have a default value
-    at line 12 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\rtl\spi_master.sv:12 [compile index 5]
+    at line 12 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\rtl\spi_master.sv:12 [compile index 5]
 *** Warning: NON_STANDARD_PORT_DEFAULT_VALUE: Output port 'sck' cannot have a default value
-    at line 14 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\rtl\spi_master.sv:14 [compile index 5]
+    at line 14 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\rtl\spi_master.sv:14 [compile index 5]
 *** Warning: NON_STANDARD_PORT_DEFAULT_VALUE: Output port 'mosi' cannot have a default value
-    at line 15 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\rtl\spi_master.sv:15 [compile index 5]
+    at line 15 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\rtl\spi_master.sv:15 [compile index 5]
 *** Warning: NON_STANDARD_PORT_DEFAULT_VALUE: Output port 'cs_n' cannot have a default value
-    at line 17 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\rtl\spi_master.sv:17 [compile index 5]
+    at line 17 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\rtl\spi_master.sv:17 [compile index 5]
 *** Warning: UNELABORATED_MODULE: Module 'work.spi_master' is not elaborated
-    at line 3 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_2\rtl\spi_master.sv:3 [compile index 16]
+    at line 3 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_station\rtl\spi_master.sv:3 [compile index 13]
 *** Warning: NON_STANDARD_PORT_DEFAULT_VALUE: Output port 'rx_data' cannot have a default value
-    at line 11 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_2\rtl\spi_master.sv:11 [compile index 16]
+    at line 11 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_station\rtl\spi_master.sv:11 [compile index 13]
 *** Warning: NON_STANDARD_PORT_DEFAULT_VALUE: Output port 'busy' cannot have a default value
-    at line 12 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_2\rtl\spi_master.sv:12 [compile index 16]
+    at line 12 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_station\rtl\spi_master.sv:12 [compile index 13]
 *** Warning: NON_STANDARD_PORT_DEFAULT_VALUE: Output port 'sck' cannot have a default value
-    at line 14 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_2\rtl\spi_master.sv:14 [compile index 16]
+    at line 14 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_station\rtl\spi_master.sv:14 [compile index 13]
 *** Warning: NON_STANDARD_PORT_DEFAULT_VALUE: Output port 'mosi' cannot have a default value
-    at line 15 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_2\rtl\spi_master.sv:15 [compile index 16]
+    at line 15 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_station\rtl\spi_master.sv:15 [compile index 13]
 *** Warning: NON_STANDARD_PORT_DEFAULT_VALUE: Output port 'cs_n' cannot have a default value
-    at line 17 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_2\rtl\spi_master.sv:17 [compile index 16]
+    at line 17 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_station\rtl\spi_master.sv:17 [compile index 13]
 *** Warning: UNELABORATED_MODULE: Module 'work.spi_stream_master' is not elaborated
-    at line 3 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\rtl\spi_stream_master.sv:3 [compile index 6]
+    at line 3 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\rtl\spi_stream_master.sv:3 [compile index 6]
 *** Warning: UNELABORATED_MODULE: Module 'work.test_pattern_generator' is not elaborated
-    at line 3 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\rtl\test_pattern_generator.sv:3 [compile index 7]
+    at line 3 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\rtl\test_pattern_generator.sv:3 [compile index 7]
 *** Warning: UNELABORATED_MODULE: Module 'work.test_pattern_generator' is not elaborated
-    at line 3 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_2\rtl\test_pattern_generator.sv:3 [compile index 18]
-*** Warning: UNELABORATED_MODULE: Module 'work.top' is not elaborated
-    at line 3 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\rtl\top.sv:3 [compile index 8]
+    at line 3 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_station\rtl\test_pattern_generator.sv:3 [compile index 16]
 *** Warning: UNELABORATED_MODULE: Module 'work.top_vga' is not elaborated
-    at line 5 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\rtl\top_vga.sv:5 [compile index 9]
+    at line 5 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\rtl\top_vga.sv:5 [compile index 9]
 *** Warning: UNELABORATED_MODULE: Module 'work.video_framebuffer' is not elaborated
-    at line 3 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\rtl\video_framebuffer.sv:3 [compile index 10]
+    at line 3 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\rtl\video_framebuffer.sv:3 [compile index 10]
 *** Warning: UNELABORATED_MODULE: Module 'work.tiff_writer' is not elaborated
-    at line 17 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\sim\common\tiff_writer.sv:17 [compile index 11]
+    at line 17 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\sim\common\tiff_writer.sv:17 [compile index 11]
 *** Warning: ASSIGNMENT_BLOCKING: Blocking assignment of 'frame_number' in sequential logic (use non-blocking assignment)
-    at line 401 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\sim\common\tiff_writer.sv:401 [compile index 11]
+    at line 401 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\sim\common\tiff_writer.sv:401 [compile index 11]
 *** Warning: UNELABORATED_MODULE: Module 'work.tiff_writer' is not elaborated
-    at line 17 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_2\sim\common\tiff_writer.sv:17 [compile index 22]
+    at line 17 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_station\sim\common\tiff_writer.sv:17 [compile index 20]
 *** Warning: ASSIGNMENT_BLOCKING: Blocking assignment of 'frame_number' in sequential logic (use non-blocking assignment)
-    at line 401 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_2\sim\common\tiff_writer.sv:401 [compile index 22]
+    at line 401 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_station\sim\common\tiff_writer.sv:401 [compile index 20]
 *** Warning: UNELABORATED_MODULE: Module 'work.vga_timing' is not elaborated
-    at line 10 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_2\rtl\vga_timing.sv:10 [compile index 25]
+    at line 10 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_station\rtl\vga_timing.sv:10 [compile index 23]
 *** Warning: UNELABORATED_MODULE: Module 'work.vga_frame_renderer' is not elaborated
-    at line 7 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_2\rtl\vga_frame_renderer.sv:7 [compile index 26]
+    at line 7 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_station\rtl\vga_frame_renderer.sv:7 [compile index 24]
 *** Warning: UNELABORATED_MODULE: Module 'work.glbl' is not elaborated
-    at line 6 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\sim\common\glbl.v:6 [compile index 29]
+    at line 6 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\sim\common\glbl.v:6 [compile index 27]
 *** Warning: UNELABORATED_PACKAGE: Package 'work.vga_pkg' is not elaborated
-    at line 10 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\rtl\vga_pkg.sv:10 [compile index 23]
-Performing mixed post full build step (VLOG - RD) [15 ms] ...
-Performing mixed post full build step (VLOG - US) [102 ms] ...
+    at line 10 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\rtl\vga_pkg.sv:10 [compile index 21]
+Performing mixed post full build step (VLOG - RD) [14 ms] ...
+Performing mixed post full build step (VLOG - US) [234 ms] ...
 *** Warning: DUPLICATE_MODULE: Duplicate module 'top_basys3', already declared
-    at line 15 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\fpga\rtl\top_basys3.sv
-    at line 15 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_2\fpga\rtl\top_basys3.sv:15 [compile index 12]
-*** Warning: DUPLICATE_MODULE: Duplicate module 'ov7670_capture', already declared
-    at line 3 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\rtl\ov7670_capture.sv
-    at line 3 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_2\rtl\ov7670_capture.sv:3 [compile index 13]
-*** Warning: DUPLICATE_MODULE: Duplicate module 'ov7670_configurator', already declared
-    at line 3 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\rtl\ov7670_configurator.sv
-    at line 3 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_2\rtl\ov7670_configurator.sv:3 [compile index 14]
-*** Warning: DUPLICATE_MODULE: Duplicate module 'pwm_generator', already declared
-    at line 3 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\rtl\pwm_generator.sv
-    at line 3 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_2\rtl\pwm_generator.sv:3 [compile index 15]
+    at line 15 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\fpga\rtl\top_basys3.sv
+    at line 15 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_station\fpga\rtl\top_basys3.sv:15 [compile index 12]
 *** Warning: DUPLICATE_MODULE: Duplicate module 'spi_master', already declared
-    at line 3 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\rtl\spi_master.sv
-    at line 3 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_2\rtl\spi_master.sv:3 [compile index 16]
+    at line 3 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\rtl\spi_master.sv
+    at line 3 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_station\rtl\spi_master.sv:3 [compile index 13]
 *** Warning: DUPLICATE_MODULE: Duplicate module 'spi_stream_master', already declared
-    at line 3 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\rtl\spi_stream_master.sv
-    at line 3 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_2\rtl\spi_stream_master.sv:3 [compile index 17]
+    at line 3 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\rtl\spi_stream_master.sv
+    at line 3 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_station\rtl\spi_stream_master.sv:3 [compile index 14]
 *** Warning: DUPLICATE_MODULE: Duplicate module 'test_pattern_generator', already declared
-    at line 3 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\rtl\test_pattern_generator.sv
-    at line 3 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_2\rtl\test_pattern_generator.sv:3 [compile index 18]
-*** Warning: DUPLICATE_MODULE: Duplicate module 'top', already declared
-    at line 3 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\rtl\top.sv
-    at line 3 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_2\rtl\top.sv:3 [compile index 19]
+    at line 3 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\rtl\test_pattern_generator.sv
+    at line 3 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_station\rtl\test_pattern_generator.sv:3 [compile index 16]
 *** Warning: DUPLICATE_MODULE: Duplicate module 'top_vga', already declared
-    at line 5 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\rtl\top_vga.sv
-    at line 5 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_2\rtl\top_vga.sv:5 [compile index 20]
+    at line 5 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\rtl\top_vga.sv
+    at line 5 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_station\rtl\top_vga.sv:5 [compile index 18]
 *** Warning: DUPLICATE_MODULE: Duplicate module 'video_framebuffer', already declared
-    at line 3 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\rtl\video_framebuffer.sv
-    at line 3 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_2\rtl\video_framebuffer.sv:3 [compile index 21]
+    at line 3 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\rtl\video_framebuffer.sv
+    at line 3 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_station\rtl\video_framebuffer.sv:3 [compile index 19]
 *** Warning: DUPLICATE_MODULE: Duplicate module 'tiff_writer', already declared
-    at line 17 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\sim\common\tiff_writer.sv
-    at line 17 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_2\sim\common\tiff_writer.sv:17 [compile index 22]
+    at line 17 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\sim\common\tiff_writer.sv
+    at line 17 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_station\sim\common\tiff_writer.sv:17 [compile index 20]
 *** Warning: DUPLICATE_PACKAGE: Duplicate package 'vga_pkg', already declared
-    at line 10 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\rtl\vga_pkg.sv
-    at line 10 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_2\rtl\vga_pkg.sv:10 [compile index 24]
+    at line 10 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\rtl\vga_pkg.sv
+    at line 10 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_station\rtl\vga_pkg.sv:10 [compile index 22]
 *** Warning: DUPLICATE_MODULE: Duplicate module 'vga_timing', already declared
-    at line 10 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_2\rtl\vga_timing.sv
-    at line 10 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\rtl\vga_timing.sv:10 [compile index 27]
+    at line 10 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_station\rtl\vga_timing.sv
+    at line 10 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\rtl\vga_timing.sv:10 [compile index 25]
 *** Warning: DUPLICATE_MODULE: Duplicate module 'vga_frame_renderer', already declared
-    at line 7 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_2\rtl\vga_frame_renderer.sv
-    at line 7 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\rtl\vga_frame_renderer.sv:7 [compile index 28]
+    at line 7 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_station\rtl\vga_frame_renderer.sv
+    at line 7 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\rtl\vga_frame_renderer.sv:7 [compile index 26]
 *** Warning: SIGNAL_NEVER_USED: Signal 'pclk_mirror' is never used
-    at line 48 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\fpga\rtl\top_basys3.sv:48 [compile index 1]
+    at line 48 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\fpga\rtl\top_basys3.sv:48 [compile index 1]
 *** Warning: INTERNAL_GENERATED_CLOCK: Clock signal 'clk_ss' is not an input port
-    at line 96 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\fpga\rtl\top_basys3.sv:96 [compile index 1]
+    at line 96 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\fpga\rtl\top_basys3.sv:96 [compile index 1]
 *** Warning: SIGNAL_NEVER_USED: Signal 'pclk_mirror' is never used
-    at line 48 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_2\fpga\rtl\top_basys3.sv:48 [compile index 12]
+    at line 41 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_station\fpga\rtl\top_basys3.sv:41 [compile index 12]
 *** Warning: INTERNAL_GENERATED_CLOCK: Clock signal 'clk_ss' is not an input port
-    at line 96 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_2\fpga\rtl\top_basys3.sv:96 [compile index 12]
+    at line 89 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_station\fpga\rtl\top_basys3.sv:89 [compile index 12]
 *** Warning: SIGNAL_NEVER_READ: Signal 'prev_vsync' is never read
-    at line 31 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\rtl\ov7670_capture.sv:31 [compile index 2]
+    at line 31 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\rtl\ov7670_capture.sv:31 [compile index 2]
 *** Warning: SIGNAL_NOT_RESET: Signal 'latched_d' is not reset
-    at line 57 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\rtl\ov7670_capture.sv:57 [compile index 2]
+    at line 57 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\rtl\ov7670_capture.sv:57 [compile index 2]
 *** Warning: SIGNAL_NOT_RESET: Signal 'm_axis_tdata' is not reset
-    at line 65 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\rtl\ov7670_capture.sv:65 [compile index 2]
-*** Warning: SIGNAL_NEVER_READ: Signal 'prev_vsync' is never read
-    at line 31 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_2\rtl\ov7670_capture.sv:31 [compile index 13]
-*** Warning: SIGNAL_NOT_RESET: Signal 'latched_d' is not reset
-    at line 57 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_2\rtl\ov7670_capture.sv:57 [compile index 13]
-*** Warning: SIGNAL_NOT_RESET: Signal 'm_axis_tdata' is not reset
-    at line 65 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_2\rtl\ov7670_capture.sv:65 [compile index 13]
+    at line 65 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\rtl\ov7670_capture.sv:65 [compile index 2]
 *** Warning: SIGNAL_NEVER_READ: Signal 'siod' is never read
-    at line 7 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\rtl\ov7670_configurator.sv:7 [compile index 3]
-*** Warning: SIGNAL_NEVER_READ: Signal 'siod' is never read
-    at line 7 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_2\rtl\ov7670_configurator.sv:7 [compile index 14]
+    at line 7 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\rtl\ov7670_configurator.sv:7 [compile index 3]
 *** Warning: SIGNAL_NEVER_READ: Signal 'camera_config_done' is never read (connected to sub-instance output port)
-    at line 176 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\rtl\top.sv:176 [compile index 8]
+    at line 176 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\rtl\top.sv:176 [compile index 8]
 *** Warning: INTERNAL_GENERATED_CLOCK: Clock signal 'clk_40mhz' is not an input port
-    at line 247 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\rtl\top.sv:247 [compile index 8]
-*** Warning: SIGNAL_NEVER_READ: Signal 'camera_config_done' is never read (connected to sub-instance output port)
-    at line 176 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_2\rtl\top.sv:176 [compile index 19]
-*** Warning: INTERNAL_GENERATED_CLOCK: Clock signal 'clk_40mhz' is not an input port
-    at line 247 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_2\rtl\top.sv:247 [compile index 19]
+    at line 247 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\rtl\top.sv:247 [compile index 8]
 *** Warning: SIGNAL_NEVER_READ: Signal 'vcount_ren' is never read (connected to sub-instance output port)
-    at line 40 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\rtl\top_vga.sv:40 [compile index 9]
+    at line 40 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\rtl\top_vga.sv:40 [compile index 9]
 *** Warning: SIGNAL_NEVER_READ: Signal 'hcount_ren' is never read (connected to sub-instance output port)
-    at line 41 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\rtl\top_vga.sv:41 [compile index 9]
+    at line 41 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\rtl\top_vga.sv:41 [compile index 9]
 *** Warning: SIGNAL_NEVER_READ: Signal 'vblnk_ren' is never read (connected to sub-instance output port)
-    at line 43 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\rtl\top_vga.sv:43 [compile index 9]
+    at line 43 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\rtl\top_vga.sv:43 [compile index 9]
 *** Warning: SIGNAL_NEVER_READ: Signal 'hblnk_ren' is never read (connected to sub-instance output port)
-    at line 45 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\rtl\top_vga.sv:45 [compile index 9]
+    at line 45 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\rtl\top_vga.sv:45 [compile index 9]
 *** Warning: SIGNAL_NEVER_READ: Signal 'vcount_ren' is never read (connected to sub-instance output port)
-    at line 40 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_2\rtl\top_vga.sv:40 [compile index 20]
+    at line 40 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_station\rtl\top_vga.sv:40 [compile index 18]
 *** Warning: SIGNAL_NEVER_READ: Signal 'hcount_ren' is never read (connected to sub-instance output port)
-    at line 41 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_2\rtl\top_vga.sv:41 [compile index 20]
+    at line 41 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_station\rtl\top_vga.sv:41 [compile index 18]
 *** Warning: SIGNAL_NEVER_READ: Signal 'vblnk_ren' is never read (connected to sub-instance output port)
-    at line 43 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_2\rtl\top_vga.sv:43 [compile index 20]
+    at line 43 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_station\rtl\top_vga.sv:43 [compile index 18]
 *** Warning: SIGNAL_NEVER_READ: Signal 'hblnk_ren' is never read (connected to sub-instance output port)
-    at line 45 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_2\rtl\top_vga.sv:45 [compile index 20]
+    at line 45 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_station\rtl\top_vga.sv:45 [compile index 18]
 *** Warning: INTERNAL_GENERATED_RESET: Reset signal 'file_open' is not an input port
-    at line 388 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\sim\common\tiff_writer.sv:388 [compile index 11]
+    at line 388 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\sim\common\tiff_writer.sv:388 [compile index 11]
 *** Warning: MULTIPLE_CLOCKS_BLOCK: Procedural block driven by multiple clocks (go_delayed, go)
-    at line 395 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\sim\common\tiff_writer.sv:395 [compile index 11]
+    at line 395 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\sim\common\tiff_writer.sv:395 [compile index 11]
 *** Warning: INTERNAL_GENERATED_RESET: Reset signal 'file_open' is not an input port
-    at line 388 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_2\sim\common\tiff_writer.sv:388 [compile index 22]
+    at line 388 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_station\sim\common\tiff_writer.sv:388 [compile index 20]
 *** Warning: MULTIPLE_CLOCKS_BLOCK: Procedural block driven by multiple clocks (go_delayed, go)
-    at line 395 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_2\sim\common\tiff_writer.sv:395 [compile index 22]
+    at line 395 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_station\sim\common\tiff_writer.sv:395 [compile index 20]
+*** Warning: SIGNAL_NEVER_USED: Signal 'sw' is never used
+    at line 7 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_station\rtl\top.sv:7 [compile index 17]
+*** Warning: SIGNAL_NOT_RESET: Signal 'wr_addr_reg' is not reset
+    at line 63 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_station\rtl\top.sv:63 [compile index 17]
+*** Warning: SIGNAL_NOT_RESET: Signal 'rx_tdata_reg' is not reset
+    at line 64 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_station\rtl\top.sv:64 [compile index 17]
 *** Warning: PARAMETER_NEVER_USED: Parameter 'SCALE' is never used
-    at line 10 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_2\rtl\vga_frame_renderer.sv:10 [compile index 26]
+    at line 10 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_station\rtl\vga_frame_renderer.sv:10 [compile index 24]
 *** Warning: PARAMETER_NEVER_USED: Parameter 'X_OFFSET' is never used
-    at line 11 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_2\rtl\vga_frame_renderer.sv:11 [compile index 26]
+    at line 11 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_station\rtl\vga_frame_renderer.sv:11 [compile index 24]
 *** Warning: PARAMETER_NEVER_USED: Parameter 'Y_OFFSET' is never used
-    at line 12 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_2\rtl\vga_frame_renderer.sv:12 [compile index 26]
+    at line 12 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_station\rtl\vga_frame_renderer.sv:12 [compile index 24]
 *** Warning: SIGNAL_NEVER_USED: Signal 'status_word' is never used
-    at line 17 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_2\rtl\vga_frame_renderer.sv:17 [compile index 26]
+    at line 17 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_station\rtl\vga_frame_renderer.sv:17 [compile index 24]
 *** Warning: PARAMETER_NEVER_USED: Parameter 'SCALE' is never used
-    at line 10 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\rtl\vga_frame_renderer.sv:10 [compile index 28]
+    at line 10 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\rtl\vga_frame_renderer.sv:10 [compile index 26]
 *** Warning: PARAMETER_NEVER_USED: Parameter 'X_OFFSET' is never used
-    at line 11 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\rtl\vga_frame_renderer.sv:11 [compile index 28]
+    at line 11 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\rtl\vga_frame_renderer.sv:11 [compile index 26]
 *** Warning: PARAMETER_NEVER_USED: Parameter 'Y_OFFSET' is never used
-    at line 12 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\rtl\vga_frame_renderer.sv:12 [compile index 28]
+    at line 12 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\rtl\vga_frame_renderer.sv:12 [compile index 26]
 *** Warning: SIGNAL_NEVER_USED: Signal 'status_word' is never used
-    at line 17 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\rtl\vga_frame_renderer.sv:17 [compile index 28]
+    at line 17 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\rtl\vga_frame_renderer.sv:17 [compile index 26]
 *** Warning: SIGNAL_NEVER_READ: Signal 'GSR' is never read
-    at line 14 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\sim\common\glbl.v:14 [compile index 29]
+    at line 14 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\sim\common\glbl.v:14 [compile index 27]
 *** Warning: SIGNAL_NEVER_READ: Signal 'GTS' is never read
-    at line 15 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\sim\common\glbl.v:15 [compile index 29]
+    at line 15 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\sim\common\glbl.v:15 [compile index 27]
 *** Warning: SIGNAL_NEVER_USED: Signal 'GWE' is never used
-    at line 16 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\sim\common\glbl.v:16 [compile index 29]
+    at line 16 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\sim\common\glbl.v:16 [compile index 27]
 *** Warning: SIGNAL_NEVER_READ: Signal 'PRLD' is never read
-    at line 17 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\sim\common\glbl.v:17 [compile index 29]
+    at line 17 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\sim\common\glbl.v:17 [compile index 27]
 *** Warning: SIGNAL_NEVER_READ: Signal 'GRESTORE' is never read
-    at line 18 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\sim\common\glbl.v:18 [compile index 29]
+    at line 18 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\sim\common\glbl.v:18 [compile index 27]
 *** Warning: SIGNAL_NEVER_WRITTEN: Signal 'p_up_tmp' is never written
-    at line 19 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\sim\common\glbl.v:19 [compile index 29]
+    at line 19 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\sim\common\glbl.v:19 [compile index 27]
 *** Warning: SIGNAL_NEVER_READ: Signal 'PLL_LOCKG' is never read
-    at line 20 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\sim\common\glbl.v:20 [compile index 29]
+    at line 20 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\sim\common\glbl.v:20 [compile index 27]
 *** Warning: SIGNAL_NEVER_USED: Signal 'PROGB_GLBL' is never used
-    at line 22 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\sim\common\glbl.v:22 [compile index 29]
+    at line 22 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\sim\common\glbl.v:22 [compile index 27]
 *** Warning: SIGNAL_NEVER_USED: Signal 'CCLKO_GLBL' is never used
-    at line 23 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\sim\common\glbl.v:23 [compile index 29]
+    at line 23 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\sim\common\glbl.v:23 [compile index 27]
 *** Warning: SIGNAL_NEVER_USED: Signal 'FCSBO_GLBL' is never used
-    at line 24 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\sim\common\glbl.v:24 [compile index 29]
+    at line 24 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\sim\common\glbl.v:24 [compile index 27]
 *** Warning: SIGNAL_NEVER_USED: Signal 'DO_GLBL' is never used
-    at line 25 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\sim\common\glbl.v:25 [compile index 29]
+    at line 25 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\sim\common\glbl.v:25 [compile index 27]
 *** Warning: SIGNAL_NEVER_USED: Signal 'DI_GLBL' is never used
-    at line 26 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\sim\common\glbl.v:26 [compile index 29]
+    at line 26 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\sim\common\glbl.v:26 [compile index 27]
 *** Warning: SIGNAL_NEVER_USED: Signal 'JTAG_TDO_GLBL' is never used
-    at line 34 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\sim\common\glbl.v:34 [compile index 29]
+    at line 34 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\sim\common\glbl.v:34 [compile index 27]
 *** Warning: SIGNAL_NEVER_USED: Signal 'JTAG_TCK_GLBL' is never used
-    at line 35 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\sim\common\glbl.v:35 [compile index 29]
+    at line 35 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\sim\common\glbl.v:35 [compile index 27]
 *** Warning: SIGNAL_NEVER_USED: Signal 'JTAG_TDI_GLBL' is never used
-    at line 36 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\sim\common\glbl.v:36 [compile index 29]
+    at line 36 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\sim\common\glbl.v:36 [compile index 27]
 *** Warning: SIGNAL_NEVER_USED: Signal 'JTAG_TMS_GLBL' is never used
-    at line 37 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\sim\common\glbl.v:37 [compile index 29]
+    at line 37 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\sim\common\glbl.v:37 [compile index 27]
 *** Warning: SIGNAL_NEVER_USED: Signal 'JTAG_TRST_GLBL' is never used
-    at line 38 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\sim\common\glbl.v:38 [compile index 29]
+    at line 38 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\sim\common\glbl.v:38 [compile index 27]
 *** Warning: SIGNAL_NEVER_USED: Signal 'JTAG_CAPTURE_GLBL' is never used
-    at line 40 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\sim\common\glbl.v:40 [compile index 29]
+    at line 40 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\sim\common\glbl.v:40 [compile index 27]
 *** Warning: SIGNAL_NEVER_USED: Signal 'JTAG_RESET_GLBL' is never used
-    at line 41 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\sim\common\glbl.v:41 [compile index 29]
+    at line 41 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\sim\common\glbl.v:41 [compile index 27]
 *** Warning: SIGNAL_NEVER_USED: Signal 'JTAG_SHIFT_GLBL' is never used
-    at line 42 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\sim\common\glbl.v:42 [compile index 29]
+    at line 42 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\sim\common\glbl.v:42 [compile index 27]
 *** Warning: SIGNAL_NEVER_USED: Signal 'JTAG_UPDATE_GLBL' is never used
-    at line 43 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\sim\common\glbl.v:43 [compile index 29]
+    at line 43 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\sim\common\glbl.v:43 [compile index 27]
 *** Warning: SIGNAL_NEVER_USED: Signal 'JTAG_RUNTEST_GLBL' is never used
-    at line 44 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\sim\common\glbl.v:44 [compile index 29]
+    at line 44 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\sim\common\glbl.v:44 [compile index 27]
 *** Warning: SIGNAL_NEVER_READ: Signal 'JTAG_SEL1_GLBL' is never read
-    at line 46 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\sim\common\glbl.v:46 [compile index 29]
+    at line 46 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\sim\common\glbl.v:46 [compile index 27]
 *** Warning: SIGNAL_NEVER_READ: Signal 'JTAG_SEL2_GLBL' is never read
-    at line 47 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\sim\common\glbl.v:47 [compile index 29]
+    at line 47 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\sim\common\glbl.v:47 [compile index 27]
 *** Warning: SIGNAL_NEVER_READ: Signal 'JTAG_SEL3_GLBL' is never read
-    at line 48 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\sim\common\glbl.v:48 [compile index 29]
+    at line 48 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\sim\common\glbl.v:48 [compile index 27]
 *** Warning: SIGNAL_NEVER_READ: Signal 'JTAG_SEL4_GLBL' is never read
-    at line 49 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\sim\common\glbl.v:49 [compile index 29]
+    at line 49 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\sim\common\glbl.v:49 [compile index 27]
 *** Warning: SIGNAL_NEVER_READ: Signal 'JTAG_USER_TDO1_GLBL' is never read
-    at line 51 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\sim\common\glbl.v:51 [compile index 29]
+    at line 51 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\sim\common\glbl.v:51 [compile index 27]
 *** Warning: SIGNAL_NEVER_READ: Signal 'JTAG_USER_TDO2_GLBL' is never read
-    at line 52 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\sim\common\glbl.v:52 [compile index 29]
+    at line 52 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\sim\common\glbl.v:52 [compile index 27]
 *** Warning: SIGNAL_NEVER_READ: Signal 'JTAG_USER_TDO3_GLBL' is never read
-    at line 53 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\sim\common\glbl.v:53 [compile index 29]
+    at line 53 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\sim\common\glbl.v:53 [compile index 27]
 *** Warning: SIGNAL_NEVER_READ: Signal 'JTAG_USER_TDO4_GLBL' is never read
-    at line 54 in C:\Users\szymo\Desktop\AGH\SEMESTR_4\UEC2\Projekt\projekt_cyfrowka_sw_gt\basys_1\sim\common\glbl.v:54 [compile index 29]
-*** Done mixed mode extension build [854 ms] ***
-*** Total build time [2s.159ms] ***
+    at line 54 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\basys_cam\sim\common\glbl.v:54 [compile index 27]
+*** Done mixed mode extension build [1s.397ms] ***
+*** Total build time [4s.010ms] ***
