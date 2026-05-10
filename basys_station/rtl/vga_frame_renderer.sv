@@ -62,6 +62,10 @@ module vga_frame_renderer #(
     logic peer_indicator_now;
     logic spi_label_now;
     logic peer_label_now;
+    logic servo_left_box_now;
+    logic servo_right_box_now;
+    logic servo_bar_now;
+    logic servo_marker_now;
     logic crosshair_now;
     logic [$clog2(FRAME_WIDTH * FRAME_HEIGHT)-1:0] frame_rd_addr_nxt;
     logic [10:0] image_x;
@@ -78,6 +82,11 @@ module vga_frame_renderer #(
     logic [1:0] peer_indicator_pipe;
     logic [1:0] spi_label_pipe;
     logic [1:0] peer_label_pipe;
+    logic [1:0] servo_left_box_pipe;
+    logic [1:0] servo_right_box_pipe;
+    logic [1:0] servo_bar_pipe;
+    logic [1:0] servo_marker_pipe;
+    logic [15:0] status_word_pipe [0:1];
     logic [1:0] frame_valid_pipe;
     logic [1:0] spi_link_pipe;
     logic [1:0] peer_link_pipe;
@@ -152,6 +161,8 @@ module vga_frame_renderer #(
     logic [1:0] hblnk_pipe;
     
     int diff_x, diff_y;
+    int servo_marker_x;
+    int servo_pos_clamped;
 
     always_comb begin : address_comb
         visible_now = (!vblnk_in && !hblnk_in) &&
@@ -184,6 +195,21 @@ module vga_frame_renderer #(
         peer_label_now |= char_pixel(hcount_in, vcount_in, 264, 20, 4, "E");
         peer_label_now |= char_pixel(hcount_in, vcount_in, 288, 20, 4, "2");
         peer_label_now |= char_pixel(hcount_in, vcount_in, 312, 20, 4, "E");
+
+        servo_pos_clamped = (status_word[15:8] > 8'd67) ? 67 : status_word[15:8];
+        servo_marker_x = 220 + (servo_pos_clamped * 5);
+        servo_left_box_now = (!vblnk_in && !hblnk_in) &&
+            (hcount_in >= 120) && (hcount_in < 180) &&
+            (vcount_in >= 520) && (vcount_in < 570);
+        servo_right_box_now = (!vblnk_in && !hblnk_in) &&
+            (hcount_in >= 620) && (hcount_in < 680) &&
+            (vcount_in >= 520) && (vcount_in < 570);
+        servo_bar_now = (!vblnk_in && !hblnk_in) &&
+            (hcount_in >= 220) && (hcount_in < 555) &&
+            (vcount_in >= 540) && (vcount_in < 550);
+        servo_marker_now = (!vblnk_in && !hblnk_in) &&
+            (hcount_in >= servo_marker_x - 4) && (hcount_in <= servo_marker_x + 4) &&
+            (vcount_in >= 528) && (vcount_in < 562);
 
         if (visible_now) begin
             image_x = hcount_in - DISPLAY_X_OFFSET;
@@ -222,6 +248,12 @@ module vga_frame_renderer #(
             peer_indicator_pipe <= '0;
             spi_label_pipe <= '0;
             peer_label_pipe <= '0;
+            servo_left_box_pipe <= '0;
+            servo_right_box_pipe <= '0;
+            servo_bar_pipe <= '0;
+            servo_marker_pipe <= '0;
+            status_word_pipe[0] <= '0;
+            status_word_pipe[1] <= '0;
             frame_valid_pipe <= '0;
             spi_link_pipe <= '0;
             peer_link_pipe <= '0;
@@ -251,6 +283,12 @@ module vga_frame_renderer #(
             peer_indicator_pipe <= {peer_indicator_pipe[0], peer_indicator_now};
             spi_label_pipe <= {spi_label_pipe[0], spi_label_now};
             peer_label_pipe <= {peer_label_pipe[0], peer_label_now};
+            servo_left_box_pipe <= {servo_left_box_pipe[0], servo_left_box_now};
+            servo_right_box_pipe <= {servo_right_box_pipe[0], servo_right_box_now};
+            servo_bar_pipe <= {servo_bar_pipe[0], servo_bar_now};
+            servo_marker_pipe <= {servo_marker_pipe[0], servo_marker_now};
+            status_word_pipe[0] <= status_word;
+            status_word_pipe[1] <= status_word_pipe[0];
             frame_valid_pipe <= {frame_valid_pipe[0], frame_valid};
             spi_link_pipe <= {spi_link_pipe[0], spi_link};
             peer_link_pipe <= {peer_link_pipe[0], peer_link};
@@ -294,6 +332,19 @@ module vga_frame_renderer #(
 
             if (spi_label_pipe[1] || peer_label_pipe[1])
                 rgb_out <= 12'hf_f_f;
+
+            if (servo_bar_pipe[1])
+                rgb_out <= 12'h8_8_8;
+
+            if (servo_left_box_pipe[1])
+                rgb_out <= (status_word_pipe[1][1:0] == 2'd1) ? 12'hf_d_0 : 12'h3_3_3;
+
+            if (servo_right_box_pipe[1])
+                rgb_out <= (status_word_pipe[1][1:0] == 2'd2) ? 12'hf_d_0 : 12'h3_3_3;
+
+            if (servo_marker_pipe[1])
+                rgb_out <= 12'hf_0_f;
+
         end
     end
 

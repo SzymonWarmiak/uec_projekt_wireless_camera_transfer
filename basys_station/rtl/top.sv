@@ -5,6 +5,11 @@ module top_basys_station (
     input  logic rst,
     output logic [15:0] led,
     input  logic [15:0] sw,
+    input  logic btnl,
+    input  logic btnr,
+    input  logic servo_left_in,
+    input  logic servo_right_in,
+    input  logic servo_uart_rx,
     output logic spi_sck,
     output logic spi_mosi,
     input  logic spi_miso,
@@ -17,40 +22,106 @@ module top_basys_station (
     output logic [3:0] b
 );
 
-    // Basys 2 dziala wylacznie jako odbiornik SPI
-    assign spi_mosi = 1'b0; 
-
     logic [7:0] rx_tdata;
     logic       rx_tvalid;
     logic       rx_tuser;
+    logic [7:0] servo_cmd;
 
     spi_stream_rx #(
-        .CLK_DIV(4) // np. 40MHz / 4 = 10MHz dla SPI
+        .CLK_DIV(4) // 40 MHz / 4 = 10 MHz, jak w dzialajacym wzorze
     ) u_spi_rx (
         .clk(clk),
         .rst(rst),
         .m_axis_tdata(rx_tdata),
         .m_axis_tvalid(rx_tvalid),
         .m_axis_tuser(rx_tuser),
+        .s_axis_tdata(servo_cmd),
         .spi_sck(spi_sck),
+        .spi_mosi(spi_mosi),
         .spi_miso(spi_miso),
         .spi_cs_n(spi_cs_n)
     );
 
     logic [19:0] byte_index = '0;
     logic [15:0] remote_sw  = '0;
-
     logic [7:0]  rx_tdata_reg;
     logic [16:0] wr_addr_reg;
     logic        wr_en_reg;
+    localparam logic [7:0] SERVO_POS_MIN    = 8'd0;
+    localparam logic [7:0] SERVO_POS_CENTER = 8'd33;
+    localparam logic [7:0] SERVO_POS_MAX    = 8'd67;
+
+    logic [1:0]  servo_left_sync = '0;
+    logic [1:0]  servo_right_sync = '0;
+    logic [7:0]  servo_pos = SERVO_POS_CENTER;
+    logic [1:0]  servo_dir;
+    logic [19:0] servo_update_counter = '0;
+    logic [7:0]  uart_data;
+    logic        uart_valid;
+    logic        uart_wait_position = 1'b0;
+    logic        uart_wait_direction = 1'b0;
+    logic [7:0]  uart_position = SERVO_POS_CENTER;
+
+    assign servo_cmd = 8'h00;
+    assign servo_dir = servo_left_sync[1]  ? 2'd1 :
+                       servo_right_sync[1] ? 2'd2 :
+                                             2'd0;
+
+    uart_rx #(
+        .CLK_HZ(40_000_000),
+        .BAUD(115_200)
+    ) u_servo_uart_rx (
+        .clk(clk),
+        .rst(rst),
+        .rx(servo_uart_rx),
+        .data(uart_data),
+        .valid(uart_valid)
+    );
 
     always_ff @(posedge clk) begin
         if (rst) begin
             byte_index <= '0;
             remote_sw  <= '0;
             wr_en_reg  <= 1'b0;
+            servo_left_sync <= '0;
+            servo_right_sync <= '0;
+            servo_pos <= SERVO_POS_CENTER;
+            servo_update_counter <= '0;
+            uart_wait_position <= 1'b0;
+            uart_wait_direction <= 1'b0;
+            uart_position <= SERVO_POS_CENTER;
         end else begin
             wr_en_reg <= 1'b0;
+            servo_left_sync <= {servo_left_sync[0], servo_left_in};
+            servo_right_sync <= {servo_right_sync[0], servo_right_in};
+
+            if (uart_valid) begin
+                if (uart_wait_direction) begin
+                    uart_wait_direction <= 1'b0;
+                    servo_pos <= uart_position;
+                end else if (uart_wait_position) begin
+                    uart_wait_position <= 1'b0;
+                    uart_wait_direction <= 1'b1;
+                    if (uart_data > SERVO_POS_MAX) begin
+                        uart_position <= SERVO_POS_MAX;
+                    end else begin
+                        uart_position <= uart_data;
+                    end
+                end else if (uart_data == 8'ha5) begin
+                    uart_wait_position <= 1'b1;
+                end
+            end
+
+            if (servo_update_counter == 20'd799999) begin
+                servo_update_counter <= '0;
+                if ((servo_dir == 2'd1) && (servo_pos > SERVO_POS_MIN)) begin
+                    servo_pos <= servo_pos - 1'b1;
+                end else if ((servo_dir == 2'd2) && (servo_pos < SERVO_POS_MAX)) begin
+                    servo_pos <= servo_pos + 1'b1;
+                end
+            end else begin
+                servo_update_counter <= servo_update_counter + 1'b1;
+            end
 
             if (rx_tvalid) begin
                 if (rx_tuser) begin
@@ -82,7 +153,7 @@ module top_basys_station (
         .frame_wr_data(rx_tdata_reg),
         .frame_rd_bank(1'b0),
         .frame_valid(1'b1),
-        .status_word(remote_sw),
+        .status_word({servo_pos, 6'd0, servo_dir}),
         .spi_link(1'b1),
         .peer_link(1'b1),
         .target_x(9'd0), // Celownik wyzerowany, na Odbiorniku nie mamy kamery do liczenia ciemnych punktów

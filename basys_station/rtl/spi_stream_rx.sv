@@ -1,7 +1,7 @@
 `timescale 1ns / 1ps
 
 module spi_stream_rx #(
-    parameter int CLK_DIV = 4 // Dzielnik zegara, np. 40MHz/4 = 10MHz dla bezpiecznego SPI
+    parameter int CLK_DIV = 4 // Dzielnik zegara SPI; 40MHz/4 = 10MHz
 )(
     input  logic clk,
     input  logic rst,
@@ -9,13 +9,15 @@ module spi_stream_rx #(
     output logic [7:0] m_axis_tdata,
     output logic       m_axis_tvalid,
     output logic       m_axis_tuser,
+    input  logic [7:0] s_axis_tdata,
 
     output logic spi_sck,
+    output logic spi_mosi,
     input  logic spi_miso,
     output logic spi_cs_n
 );
 
-    localparam int FRAME_SIZE = 76802; // 2 bajty stanu switchy + 76800 bajtow ramki
+    localparam int FRAME_SIZE = 76803; // 2 status bytes + 76800 live pixels + 1 padding byte
 
     typedef enum logic [1:0] {IDLE, TRANSFER, WAIT_END} state_t;
     state_t state = IDLE;
@@ -25,6 +27,7 @@ module spi_stream_rx #(
     logic [7:0]  clk_cnt  = '0;
     logic        sck_int  = 1'b0;
     logic [7:0]  rx_shift = '0;
+    logic [7:0]  tx_shift = '0;
     logic [15:0] idle_cnt = '0;
 
     assign spi_sck = sck_int;
@@ -34,6 +37,7 @@ module spi_stream_rx #(
             state         <= IDLE;
             spi_cs_n      <= 1'b1;
             sck_int       <= 1'b0;
+            spi_mosi      <= 1'b0;
             m_axis_tvalid <= 1'b0;
             m_axis_tuser  <= 1'b0;
             idle_cnt      <= '0;
@@ -51,6 +55,8 @@ module spi_stream_rx #(
                         byte_cnt <= '0;
                         bit_cnt  <= 3'd7;
                         clk_cnt  <= '0;
+                        tx_shift <= s_axis_tdata;
+                        spi_mosi <= s_axis_tdata[7];
                         state    <= TRANSFER;
                     end else begin
                         idle_cnt <= idle_cnt + 1'b1;
@@ -78,9 +84,12 @@ module spi_stream_rx #(
                                 end else begin
                                     byte_cnt <= byte_cnt + 1'b1;
                                     bit_cnt  <= 3'd7;
+                                    tx_shift <= s_axis_tdata;
+                                    spi_mosi <= s_axis_tdata[7];
                                 end
                             end else begin
                                 bit_cnt <= bit_cnt - 1'b1;
+                                spi_mosi <= tx_shift[bit_cnt - 1'b1];
                             end
                         end
                     end else begin
@@ -90,6 +99,7 @@ module spi_stream_rx #(
 
                 WAIT_END: begin
                     spi_cs_n <= 1'b1;
+                    spi_mosi <= 1'b0;
                     state    <= IDLE;
                 end
             endcase

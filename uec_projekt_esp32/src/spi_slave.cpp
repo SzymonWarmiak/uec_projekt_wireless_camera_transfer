@@ -6,7 +6,7 @@
 #define GPIO_SCLK 4
 #define GPIO_CS   7
 
-#define SPI_BUFFER_SIZE 76802
+#define SPI_BUFFER_SIZE 76803
 
 WORD_ALIGNED_ATTR uint8_t recvbuf[SPI_BUFFER_SIZE];
 WORD_ALIGNED_ATTR uint8_t sendbuf[SPI_BUFFER_SIZE];
@@ -14,6 +14,7 @@ WORD_ALIGNED_ATTR uint8_t sendbuf[SPI_BUFFER_SIZE];
 spi_slave_transaction_t t;
 uint32_t spi_transactions = 0;
 uint32_t spi_bytes_received = 0;
+volatile uint8_t servo_command = 0;
 
 void spi_slave_task(void *pvParameters) {
     while(1) {
@@ -50,6 +51,7 @@ void init_spi_slave() {
     spi_slave_initialize(SPI2_HOST, &buscfg, &slvcfg, SPI_DMA_CH_AUTO);
     
     memset(&t, 0, sizeof(t));
+    memset(sendbuf, 0, sizeof(sendbuf));
     t.length = SPI_BUFFER_SIZE * 8;
     t.tx_buffer = sendbuf;
     t.rx_buffer = recvbuf;
@@ -64,6 +66,12 @@ uint32_t get_spi_transaction_count() {
 
 uint32_t get_spi_bytes_received() {
     return spi_bytes_received;
+}
+
+void set_servo_command(uint8_t command) {
+    servo_command = command;
+    sendbuf[0] = command;
+    sendbuf[1] = command;
 }
 
 const uint8_t* get_spi_buffer() {

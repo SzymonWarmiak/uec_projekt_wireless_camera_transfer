@@ -8,6 +8,10 @@
 const char* ssid = "ESP_VIDEO_TX";
 const char* pass = "video_stream";
 const int udp_port = 1234;
+static constexpr int kFrameBytes = 76803;
+static constexpr int kUdpChunkBytes = 1024;
+static constexpr int kFullChunks = kFrameBytes / kUdpChunkBytes;
+static constexpr int kLastChunkBytes = kFrameBytes - (kFullChunks * kUdpChunkBytes);
 
 WiFiUDP udp;
 
@@ -73,10 +77,10 @@ void loop() {
     if (streaming && (current_spi_count != last_spi_count)) {
         const uint8_t* buf = get_spi_buffer();
         
-        for (int i = 0; i < 75; i++) {
+        for (int i = 0; i < kFullChunks; i++) {
             udp.beginPacket(target_ip, target_port);
             udp.write((uint8_t)i);
-            udp.write(buf + i * 1024, 1024);
+            udp.write(buf + i * kUdpChunkBytes, kUdpChunkBytes);
             udp.endPacket();
             
             if ((i & 1) == 1) {
@@ -86,10 +90,12 @@ void loop() {
             }
         }
         
-        udp.beginPacket(target_ip, target_port);
-        udp.write((uint8_t)75);
-        udp.write(buf + 76800, 2);
-        udp.endPacket();
+        if (kLastChunkBytes > 0) {
+            udp.beginPacket(target_ip, target_port);
+            udp.write((uint8_t)kFullChunks);
+            udp.write(buf + kFullChunks * kUdpChunkBytes, kLastChunkBytes);
+            udp.endPacket();
+        }
         
         last_spi_count = current_spi_count;
     }

@@ -1,11 +1,11 @@
 ################################################################################
 #                    DO NOT MANUALLY EDIT THIS FILE!                           #
 ################################################################################
-# This file contains the automatically generated build configuration (2026/04/29 22:29:41)
-# requested at line 3 in C:\Users\Vmagic\Desktop\Jezdzik\uec_projekt_wireless_camera_transfer\.dvt\default.build
-
+# This file contains the generated build configuration mirrored from .dvt/default.build
 
 ################ Verilog Auto-config Directives ################
+# Compile only the active project sources. Avoid auto-scanning wzor/ copies,
+# because paths with non-ASCII names can be written back with broken encoding.
 +dvt_init
 
 basys_cam/fpga/rtl/top_basys3.sv
@@ -17,8 +17,13 @@ basys_cam/rtl/spi_stream_master.sv
 basys_cam/rtl/test_pattern_generator.sv
 basys_cam/rtl/top.sv
 basys_cam/rtl/top_vga.sv
+basys_cam/rtl/vga_pkg.sv
+basys_cam/rtl/vga_frame_renderer.sv
+basys_cam/rtl/vga_timing.sv
 basys_cam/rtl/video_framebuffer.sv
+basys_cam/sim/common/glbl.v
 basys_cam/sim/common/tiff_writer.sv
+
 basys_station/fpga/rtl/top_basys3.sv
 basys_station/rtl/spi_master.sv
 basys_station/rtl/spi_stream_master.sv
@@ -26,15 +31,11 @@ basys_station/rtl/spi_stream_rx.sv
 basys_station/rtl/test_pattern_generator.sv
 basys_station/rtl/top.sv
 basys_station/rtl/top_vga.sv
-basys_station/rtl/video_framebuffer.sv
-basys_station/sim/common/tiff_writer.sv
-basys_cam/rtl/vga_pkg.sv
-basys_station/rtl/vga_pkg.sv
-basys_station/rtl/vga_timing.sv
+basys_station/rtl/uart_rx.sv
 basys_station/rtl/vga_frame_renderer.sv
-basys_cam/rtl/vga_timing.sv
-basys_cam/rtl/vga_frame_renderer.sv
-basys_cam/sim/common/glbl.v
+basys_station/rtl/vga_timing.sv
+basys_station/rtl/video_framebuffer.sv
 basys_station/sim/common/glbl.v
-sim/common/glbl.v
+basys_station/sim/common/tiff_writer.sv
 
+sim/common/glbl.v

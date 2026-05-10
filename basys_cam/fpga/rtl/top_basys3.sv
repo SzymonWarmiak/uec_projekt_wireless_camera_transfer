@@ -32,7 +32,10 @@ module top_basys3 (
         output wire [3:0] vgaGreen,
         output wire [3:0] vgaBlue,
         output wire Hsync,
-        output wire Vsync
+        output wire Vsync,
+        input  wire servo_left_in,
+        input  wire servo_right_in,
+        output wire servo_pwm
     );
 
     timeunit 1ns;
@@ -128,7 +131,10 @@ module top_basys3 (
         .hs(Hsync),
         .r(vgaRed),
         .g(vgaGreen),
-        .b(vgaBlue)
+        .b(vgaBlue),
+        .servo_left_in(servo_left_in),
+        .servo_right_in(servo_right_in),
+        .servo_pwm(servo_pwm)
     );
 
 endmodule

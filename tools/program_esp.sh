@@ -10,9 +10,11 @@ UPLOAD_PORT=$2
 
 if [ -z "$TARGET_NAME" ]; then
     echo "Blad: Podaj cel ESP jako pierwszy argument!"
-    echo "Cele: esp_cam, esp_station"
+    echo "Cele: esp_cam, esp_station, esp_ps3, esp_cam_servo"
     echo "Przyklad kamera:  ./tools/program_esp.sh esp_cam COM12"
     echo "Przyklad stacja:  ./tools/program_esp.sh esp_station COM14"
+    echo "Przyklad pad PS3: ./tools/program_esp.sh esp_ps3 COM16"
+    echo "Przyklad serwo:   ./tools/program_esp.sh esp_cam_servo COM10"
     exit 1
 fi
 
@@ -25,13 +27,21 @@ case "$TARGET_NAME" in
         TARGET_ENV="esp_station"
         TARGET_FILE="main_esp_station.cpp"
         ;;
+    esp_ps3)
+        TARGET_ENV="esp_ps3"
+        TARGET_FILE="main_esp_ps3.cpp"
+        ;;
+    esp_cam_servo)
+        TARGET_ENV="esp_cam_servo"
+        TARGET_FILE="main_esp_cam_servo.cpp"
+        ;;
     *.cpp)
         TARGET_ENV=""
         TARGET_FILE="$TARGET_NAME"
         ;;
     *)
         echo "Blad: Nieznany cel ESP '$TARGET_NAME'."
-        echo "Uzyj: esp_cam albo esp_station."
+        echo "Uzyj: esp_cam, esp_station, esp_ps3 albo esp_cam_servo."
         exit 1
         ;;
 esac

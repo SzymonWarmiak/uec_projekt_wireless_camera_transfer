@@ -8,6 +8,10 @@
 const char* ssid = "ESP_VIDEO_TX";
 const char* password = "video_stream";
 const int udp_port = 1234;
+static constexpr int kFrameBytes = 76803;
+static constexpr int kUdpChunkBytes = 1024;
+static constexpr int kFullChunks = kFrameBytes / kUdpChunkBytes;
+static constexpr int kLastChunkBytes = kFrameBytes - (kFullChunks * kUdpChunkBytes);
 
 WiFiUDP udp; 
 
@@ -15,7 +19,7 @@ WiFiUDP udp;
 #define GPIO_MISO 5
 #define GPIO_SCLK 4
 #define GPIO_CS   7
-#define SPI_BUFFER_SIZE 76802
+#define SPI_BUFFER_SIZE 76803
 
 WORD_ALIGNED_ATTR uint8_t frame_buf[SPI_BUFFER_SIZE];
 WORD_ALIGNED_ATTR uint8_t assemble_buf[SPI_BUFFER_SIZE];
@@ -28,6 +32,16 @@ void spi_tx_task(void *pvParameters) {
             spi_slave_queue_trans(SPI2_HOST, &esp_station_spi_t, portMAX_DELAY); 
         }
     }
+}
+
+void send_control_broadcast(const uint8_t* data, size_t len) {
+    IPAddress myIP = WiFi.localIP();
+    IPAddress subnet = WiFi.subnetMask();
+    IPAddress bcastIP(myIP[0] | ~subnet[0], myIP[1] | ~subnet[1], myIP[2] | ~subnet[2], myIP[3] | ~subnet[3]);
+
+    udp.beginPacket(bcastIP, udp_port);
+    udp.write(data, len);
+    udp.endPacket();
 }
 
 void setup() {
@@ -62,6 +76,8 @@ void setup() {
     spi_slave_initialize(SPI2_HOST, &buscfg, &slvcfg, SPI_DMA_CH_AUTO);
 
     memset(&esp_station_spi_t, 0, sizeof(esp_station_spi_t));
+    memset(frame_buf, 0, sizeof(frame_buf));
+    memset(assemble_buf, 0, sizeof(assemble_buf));
     esp_station_spi_t.length = SPI_BUFFER_SIZE * 8;
     esp_station_spi_t.tx_buffer = frame_buf;
     esp_station_spi_t.rx_buffer = NULL;
@@ -88,38 +104,35 @@ void loop() {
     static unsigned long last_req = 0;
     static unsigned long last_led_toggle = 0;
     static unsigned long last_broadcast = 0;
+    static unsigned long last_status = 0;
+    static unsigned long last_data_received = 0;
 
     if (current_time - last_req > 500) {
         if (current_time - last_broadcast > 500) {
-            IPAddress myIP = WiFi.localIP();
-            IPAddress subnet = WiFi.subnetMask();
-            IPAddress bcastIP(myIP[0] | ~subnet[0], myIP[1] | ~subnet[1], myIP[2] | ~subnet[2], myIP[3] | ~subnet[3]);
-            
-            udp.beginPacket(bcastIP, udp_port);
-            udp.write((const uint8_t*)"start", 5);
-            udp.endPacket();
+            send_control_broadcast((const uint8_t*)"start", 5);
             last_broadcast = current_time;
-            Serial.printf("Szukam ESP_CAM w sieci... (Wysylam Broadcast na: %s)\n", bcastIP.toString().c_str());
         }
     }
 
     int packetSize;
     bool data_received = false;
-
     while ((packetSize = udp.parsePacket()) > 0) {
         data_received = true;
         
-        if (packetSize == 1025) {
+        if (packetSize == kUdpChunkBytes + 1) {
             uint8_t chunk_id = udp.read();
-            if (chunk_id < 75) {
-                udp.read(assemble_buf + chunk_id * 1024, 1024);
+            if (chunk_id < kFullChunks) {
+                const int chunk_offset = chunk_id * kUdpChunkBytes;
+                udp.read(assemble_buf + chunk_offset, kUdpChunkBytes);
+                memcpy(frame_buf + chunk_offset, assemble_buf + chunk_offset, kUdpChunkBytes);
             }
-        } else if (packetSize == 3) {
+        } else if (packetSize == kLastChunkBytes + 1) {
             uint8_t chunk_id = udp.read();
-            if (chunk_id == 75) {
-                udp.read(assemble_buf + 76800, 2);
-                
-                memcpy(frame_buf, assemble_buf, SPI_BUFFER_SIZE);
+            if (chunk_id == kFullChunks) {
+                udp.read(assemble_buf + kFullChunks * kUdpChunkBytes, kLastChunkBytes);
+                memcpy(frame_buf + kFullChunks * kUdpChunkBytes,
+                       assemble_buf + kFullChunks * kUdpChunkBytes,
+                       kLastChunkBytes);
             }
         } else {
             udp.flush();
@@ -128,6 +141,13 @@ void loop() {
 
     if (data_received) {
         last_req = current_time;
+        last_data_received = current_time;
+    }
+
+    if (current_time - last_status > 1000) {
+        last_status = current_time;
+        Serial.printf("Video status: last_udp_age_ms=%lu\n",
+                      last_data_received == 0 ? 0 : current_time - last_data_received);
     }
 
     static bool led_state = false;

@@ -205,15 +205,21 @@ set_property PACKAGE_PIN G2 [get_ports spi_sck]
 
 
 ##Pmod Header JXADC
+## Servo PWM signal on JXADC1 / XA1_P (photo label: JXAC1).
+## Connect only the servo signal wire here. Use JXADC GND for common ground.
 ##Sch name = XA1_P
-#set_property PACKAGE_PIN J3 [get_ports {JXADC[0]}]
-	#set_property IOSTANDARD LVCMOS33 [get_ports {JXADC[0]}]
+set_property PACKAGE_PIN J3 [get_ports servo_pwm]
+	set_property IOSTANDARD LVCMOS33 [get_ports servo_pwm]
+	set_property DRIVE 8 [get_ports servo_pwm]
+	set_property SLEW SLOW [get_ports servo_pwm]
 ##Sch name = XA2_P
-#set_property PACKAGE_PIN L3 [get_ports {JXADC[1]}]
-	#set_property IOSTANDARD LVCMOS33 [get_ports {JXADC[1]}]
+set_property PACKAGE_PIN L3 [get_ports servo_left_in]
+	set_property IOSTANDARD LVCMOS33 [get_ports servo_left_in]
+	set_property PULLDOWN true [get_ports servo_left_in]
 ##Sch name = XA3_P
-#set_property PACKAGE_PIN M2 [get_ports {JXADC[2]}]
-	#set_property IOSTANDARD LVCMOS33 [get_ports {JXADC[2]}]
+set_property PACKAGE_PIN M2 [get_ports servo_right_in]
+	set_property IOSTANDARD LVCMOS33 [get_ports servo_right_in]
+	set_property PULLDOWN true [get_ports servo_right_in]
 ##Sch name = XA4_P
 #set_property PACKAGE_PIN N2 [get_ports {JXADC[3]}]
 	#set_property IOSTANDARD LVCMOS33 [get_ports {JXADC[3]}]

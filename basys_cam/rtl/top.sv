@@ -22,13 +22,22 @@ module top_basys_cam (
     output logic hs,
     output logic [3:0] r,
     output logic [3:0] g,
-    output logic [3:0] b
+    output logic [3:0] b,
+    input  logic servo_left_in,
+    input  logic servo_right_in,
+    output logic servo_pwm
 );
 
     localparam int IMG_W = 320;
     localparam int IMG_H = 240;
 
-    typedef enum logic [1:0] {WAIT_FRAME, SEND_SW_H, SEND_SW_L, SEND_PIXELS} state_t;
+    typedef enum logic [2:0] {
+        WAIT_FRAME,
+        SEND_SW_H,
+        SEND_SW_L,
+        SEND_PIXELS,
+        SEND_PAD
+    } state_t;
     state_t state = WAIT_FRAME;
 
     logic [7:0] spi_tdata;
@@ -40,6 +49,19 @@ module top_basys_cam (
     logic rx_tvalid;
     logic [15:0] led_reg = '0;
     int rx_byte_cnt = 0;
+
+    localparam int SERVO_PERIOD_CYCLES = 800000; // 20 ms @ 40 MHz
+    localparam int SERVO_MIN_PULSE     = 20000;  // 0.5 ms @ 40 MHz
+    localparam int SERVO_CENTER_PULSE  = 60000;  // 1.5 ms @ 40 MHz
+    localparam int SERVO_MAX_PULSE     = 100000; // 2.5 ms @ 40 MHz
+    localparam int SERVO_STEP_CYCLES   = 1200;   // 30 us per PWM period
+
+    logic [19:0] servo_counter = '0;
+    logic [16:0] servo_pulse = SERVO_CENTER_PULSE;
+    logic [7:0]  spi_servo_cmd;
+    logic [7:0]  servo_cmd;
+    logic [1:0]  servo_left_sync = '0;
+    logic [1:0]  servo_right_sync = '0;
 
     logic [7:0] cap_tdata;
     logic       cap_tvalid;
@@ -108,6 +130,45 @@ module top_basys_cam (
     );
 
     assign led = led_reg;
+    assign spi_servo_cmd = led_reg[15:8];
+    assign servo_cmd = (servo_left_sync[1] && servo_right_sync[1]) ? 8'h03 :
+                       servo_left_sync[1]                         ? 8'h01 :
+                       servo_right_sync[1]                        ? 8'h02 :
+                                                                    spi_servo_cmd;
+
+    always_ff @(posedge clk) begin
+        if (rst) begin
+            servo_left_sync <= '0;
+            servo_right_sync <= '0;
+        end else begin
+            servo_left_sync <= {servo_left_sync[0], servo_left_in};
+            servo_right_sync <= {servo_right_sync[0], servo_right_in};
+        end
+    end
+
+    always_ff @(posedge clk) begin
+        if (rst) begin
+            servo_counter <= '0;
+            servo_pulse <= SERVO_CENTER_PULSE;
+            servo_pwm <= 1'b0;
+        end else begin
+            if (servo_counter == SERVO_PERIOD_CYCLES - 1) begin
+                servo_counter <= '0;
+
+                if (servo_cmd == 8'h03) begin
+                    servo_pulse <= SERVO_CENTER_PULSE;
+                end else if ((servo_cmd == 8'h01) && (servo_pulse > SERVO_MIN_PULSE + SERVO_STEP_CYCLES)) begin
+                    servo_pulse <= servo_pulse - SERVO_STEP_CYCLES;
+                end else if ((servo_cmd == 8'h02) && (servo_pulse < SERVO_MAX_PULSE - SERVO_STEP_CYCLES)) begin
+                    servo_pulse <= servo_pulse + SERVO_STEP_CYCLES;
+                end
+            end else begin
+                servo_counter <= servo_counter + 1'b1;
+            end
+
+            servo_pwm <= (servo_counter < servo_pulse);
+        end
+    end
 
     always_comb begin
         spi_tdata = 8'd0;
@@ -128,8 +189,12 @@ module top_basys_cam (
         end else if (state == SEND_PIXELS) begin
             spi_tdata = fifo_tdata;
             spi_tvalid = fifo_tvalid;
-            spi_tlast = fifo_tlast;
+            spi_tlast = 1'b0;
             fifo_tready = spi_tready;
+        end else if (state == SEND_PAD) begin
+            spi_tdata = 8'd0;
+            spi_tvalid = 1'b1;
+            spi_tlast = 1'b1;
         end
     end
 
@@ -149,7 +214,9 @@ module top_basys_cam (
 
             case (state)
                 WAIT_FRAME: begin
-                    if (fifo_tvalid && fifo_tuser) state <= SEND_SW_H;
+                    if (fifo_tvalid && fifo_tuser) begin
+                        state <= SEND_SW_H;
+                    end
                 end
                 SEND_SW_H: begin
                     if (spi_tvalid && spi_tready) state <= SEND_SW_L;
@@ -158,8 +225,16 @@ module top_basys_cam (
                     if (spi_tvalid && spi_tready) state <= SEND_PIXELS;
                 end
                 SEND_PIXELS: begin
-                    if (spi_tvalid && spi_tready && spi_tlast) state <= WAIT_FRAME;
+                    if (spi_tvalid && spi_tready) begin
+                        if (fifo_tlast) begin
+                            state <= SEND_PAD;
+                        end
+                    end
                 end
+                SEND_PAD: begin
+                    if (spi_tvalid && spi_tready) state <= WAIT_FRAME;
+                end
+                default: state <= WAIT_FRAME;
             endcase
         end
     end
