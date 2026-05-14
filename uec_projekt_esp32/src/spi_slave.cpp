@@ -6,7 +6,7 @@
 #define GPIO_SCLK 4
 #define GPIO_CS   7
 
-#define SPI_BUFFER_SIZE 76802
+#define SPI_BUFFER_SIZE 76800
 
 WORD_ALIGNED_ATTR uint8_t recvbuf[SPI_BUFFER_SIZE];
 WORD_ALIGNED_ATTR uint8_t sendbuf[SPI_BUFFER_SIZE];

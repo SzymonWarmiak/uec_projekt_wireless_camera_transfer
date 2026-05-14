@@ -28,7 +28,7 @@ module top (
     localparam int IMG_W = 320;
     localparam int IMG_H = 240;
 
-    typedef enum logic [1:0] {WAIT_FRAME, SEND_SW_H, SEND_SW_L, SEND_PIXELS} state_t;
+    typedef enum logic {WAIT_FRAME, SEND_PIXELS} state_t;
     state_t state = WAIT_FRAME;
 
     logic [7:0] spi_tdata;
@@ -117,14 +117,6 @@ module top (
 
         if (state == WAIT_FRAME) begin
             if (fifo_tvalid && !fifo_tuser) fifo_tready = 1'b1;
-        end else if (state == SEND_SW_H) begin
-            spi_tdata = sw[15:8];
-            spi_tvalid = 1'b1;
-            spi_tlast = 1'b0;
-        end else if (state == SEND_SW_L) begin
-            spi_tdata = sw[7:0];
-            spi_tvalid = 1'b1;
-            spi_tlast = 1'b0;
         end else if (state == SEND_PIXELS) begin
             spi_tdata = fifo_tdata;
             spi_tvalid = fifo_tvalid;
@@ -149,13 +141,7 @@ module top (
 
             case (state)
                 WAIT_FRAME: begin
-                    if (fifo_tvalid && fifo_tuser) state <= SEND_SW_H;
-                end
-                SEND_SW_H: begin
-                    if (spi_tvalid && spi_tready) state <= SEND_SW_L;
-                end
-                SEND_SW_L: begin
-                    if (spi_tvalid && spi_tready) state <= SEND_PIXELS;
+                    if (fifo_tvalid && fifo_tuser) state <= SEND_PIXELS;
                 end
                 SEND_PIXELS: begin
                     if (spi_tvalid && spi_tready && spi_tlast) state <= WAIT_FRAME;

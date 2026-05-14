@@ -86,11 +86,6 @@ void loop() {
             }
         }
         
-        udp.beginPacket(target_ip, target_port);
-        udp.write((uint8_t)75);
-        udp.write(buf + 76800, 2);
-        udp.endPacket();
-        
         last_spi_count = current_spi_count;
     }
     

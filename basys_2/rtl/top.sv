@@ -45,7 +45,6 @@ module top (
     );
 
     logic [19:0] byte_index = '0;
-    logic [15:0] remote_sw  = '0;
 
     logic [7:0]  rx_tdata_reg;
     logic [16:0] wr_addr_reg;
@@ -54,7 +53,6 @@ module top (
     always_ff @(posedge clk) begin
         if (rst) begin
             byte_index <= '0;
-            remote_sw  <= '0;
             wr_en_reg  <= 1'b0;
         end else begin
             wr_en_reg <= 1'b0;
@@ -62,12 +60,12 @@ module top (
             if (rx_tvalid) begin
                 if (rx_tuser) begin
                     byte_index <= 20'd1;
-                    remote_sw[15:8] <= rx_tdata; // Pierwszy bajt naglowka (switche H z Nadajnika)
+                    wr_addr_reg <= '0;
+                    rx_tdata_reg <= rx_tdata;
+                    wr_en_reg <= 1'b1;
                 end else begin
-                    if (byte_index == 20'd1) begin
-                        remote_sw[7:0] <= rx_tdata; // Drugi bajt naglowka (switche L z Nadajnika)
-                    end else if (byte_index >= 20'd2 && byte_index < 20'd76802) begin
-                        wr_addr_reg  <= byte_index - 20'd2; // Mapowanie na BRAM 0-76799
+                    if (byte_index < 20'd76800) begin
+                        wr_addr_reg  <= byte_index[16:0];
                         rx_tdata_reg <= rx_tdata;
                         wr_en_reg    <= 1'b1;
                     end
@@ -77,7 +75,7 @@ module top (
         end
     end
 
-    assign led = remote_sw; // Zapalamy fizyczne diody Basysa 2 na podstawie switchy z Basysa 1!
+    assign led = sw; // Swiecimy lokalnymi diodami na podstawie lokalnych przelacznikow
 
     top_vga u_top_vga (
         .clk(clk),
@@ -89,7 +87,7 @@ module top (
         .frame_wr_data(rx_tdata_reg),
         .frame_rd_bank(1'b0),
         .frame_valid(1'b1),
-        .status_word(remote_sw),
+        .status_word(sw),
         .spi_link(1'b1),
         .peer_link(1'b1),
         .target_x(9'd0), // Celownik wyzerowany, na Odbiorniku nie mamy kamery do liczenia ciemnych punktów

@@ -15,7 +15,7 @@ WiFiUDP udp;
 #define GPIO_MISO 5
 #define GPIO_SCLK 4
 #define GPIO_CS   7
-#define SPI_BUFFER_SIZE 76802
+#define SPI_BUFFER_SIZE 76800
 
 WORD_ALIGNED_ATTR uint8_t frame_buf[SPI_BUFFER_SIZE];
 WORD_ALIGNED_ATTR uint8_t assemble_buf[SPI_BUFFER_SIZE];
@@ -113,12 +113,9 @@ void loop() {
             uint8_t chunk_id = udp.read();
             if (chunk_id < 75) {
                 udp.read(assemble_buf + chunk_id * 1024, 1024);
-            }
-        } else if (packetSize == 3) {
-            uint8_t chunk_id = udp.read();
-            if (chunk_id == 75) {
-                udp.read(assemble_buf + 76800, 2);
-                memcpy(frame_buf, assemble_buf, SPI_BUFFER_SIZE);
+                if (chunk_id == 74) {
+                    memcpy(frame_buf, assemble_buf, SPI_BUFFER_SIZE);
+                }
             }
         } else {
             udp.flush();

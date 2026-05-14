@@ -17,7 +17,7 @@ module spi_stream_rx #(
     output logic spi_cs_n
 );
 
-    localparam int FRAME_SIZE = 76802; // 2 bajty stanu switchy + 76800 bajtow ramki
+    localparam int FRAME_SIZE = 76800; // Tylko 76800 bajtów obrazu
 
     typedef enum logic [1:0] {IDLE, TRANSFER, WAIT_END} state_t;
     state_t state = IDLE;
