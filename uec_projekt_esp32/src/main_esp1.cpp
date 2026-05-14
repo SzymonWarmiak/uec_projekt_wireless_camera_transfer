@@ -49,11 +49,11 @@ void loop() {
 
     int packetSize = udp.parsePacket();
     if (packetSize > 0) {
-        char req[16] = {0};
+        uint8_t req[16] = {0};
         udp.read(req, 15);
         udp.flush();
 
-        if (strncmp(req, "start", 5) == 0) {
+        if (strncmp((char*)req, "start", 5) == 0) {
             target_ip = udp.remoteIP();
             target_port = udp.remotePort();
             if (!streaming) {
@@ -61,7 +61,7 @@ void loop() {
             }
             streaming = true;
         }
-        else if (strncmp(req, "stop", 4) == 0) {
+        else if (strncmp((char*)req, "stop", 4) == 0) {
             streaming = false;
             Serial.println("Zatrzymano strumieniowanie.");
         }

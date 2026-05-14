@@ -118,7 +118,6 @@ void loop() {
             uint8_t chunk_id = udp.read();
             if (chunk_id == 75) {
                 udp.read(assemble_buf + 76800, 2);
-                
                 memcpy(frame_buf, assemble_buf, SPI_BUFFER_SIZE);
             }
         } else {

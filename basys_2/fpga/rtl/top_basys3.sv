@@ -15,6 +15,10 @@
 module top_basys3 (
         input  wire clk,
         input  wire btnC,
+        input  wire btnU,
+        input  wire btnL,
+        input  wire btnR,
+        input  wire btnD,
         output wire [15:0] led,
         input  wire [15:0] sw,
         output wire spi_sck,
@@ -103,7 +107,12 @@ module top_basys3 (
 
     top u_top (
         .clk(pclk),
-        .rst(btnC),
+        .rst(sw[15]), // Reset przeniesiony na przelacznik sw[15]
+        .btnC(btnC),
+        .btnU(btnU),
+        .btnL(btnL),
+        .btnR(btnR),
+        .btnD(btnD),
         .led(led),
         .sw(sw),
         .spi_sck(spi_sck),

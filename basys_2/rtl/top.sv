@@ -3,6 +3,11 @@
 module top (
     input  logic clk,
     input  logic rst,
+    input  logic btnC,
+    input  logic btnU,
+    input  logic btnL,
+    input  logic btnR,
+    input  logic btnD,
     output logic [15:0] led,
     input  logic [15:0] sw,
     output logic spi_sck,
@@ -17,22 +22,24 @@ module top (
     output logic [3:0] b
 );
 
-    // Basys 2 dziala wylacznie jako odbiornik SPI
-    assign spi_mosi = 1'b0; 
-
     logic [7:0] rx_tdata;
     logic       rx_tvalid;
     logic       rx_tuser;
+    
+    logic [15:0] tx_buttons;
+    assign tx_buttons = {11'd0, btnC, btnU, btnD, btnL, btnR};
 
     spi_stream_rx #(
         .CLK_DIV(4) // np. 40MHz / 4 = 10MHz dla SPI
     ) u_spi_rx (
         .clk(clk),
         .rst(rst),
+        .tx_data(tx_buttons),
         .m_axis_tdata(rx_tdata),
         .m_axis_tvalid(rx_tvalid),
         .m_axis_tuser(rx_tuser),
         .spi_sck(spi_sck),
+        .spi_mosi(spi_mosi),
         .spi_miso(spi_miso),
         .spi_cs_n(spi_cs_n)
     );

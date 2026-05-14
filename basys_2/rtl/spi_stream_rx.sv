@@ -6,11 +6,13 @@ module spi_stream_rx #(
     input  logic clk,
     input  logic rst,
 
+    input  logic [15:0] tx_data,
     output logic [7:0] m_axis_tdata,
     output logic       m_axis_tvalid,
     output logic       m_axis_tuser,
 
     output logic spi_sck,
+    output logic spi_mosi,
     input  logic spi_miso,
     output logic spi_cs_n
 );
@@ -25,9 +27,11 @@ module spi_stream_rx #(
     logic [7:0]  clk_cnt  = '0;
     logic        sck_int  = 1'b0;
     logic [7:0]  rx_shift = '0;
+    logic [15:0] tx_shift = '0;
     logic [15:0] idle_cnt = '0;
 
     assign spi_sck = sck_int;
+    assign spi_mosi = tx_shift[15];
 
     always_ff @(posedge clk) begin
         if (rst) begin
@@ -45,6 +49,7 @@ module spi_stream_rx #(
                 IDLE: begin
                     spi_cs_n <= 1'b1;
                     sck_int  <= 1'b0;
+                    tx_shift <= tx_data;
                     if (idle_cnt == 16'd1000) begin
                         idle_cnt <= '0;
                         spi_cs_n <= 1'b0;
@@ -68,6 +73,7 @@ module spi_stream_rx #(
                         end 
                         // Na zboczu opadajacym sprawdzamy czy mamy pelen bajt
                         else begin
+                            tx_shift <= {tx_shift[14:0], 1'b0}; // Przesuwanie rejestru nadawczego
                             if (bit_cnt == 0) begin
                                 m_axis_tdata  <= rx_shift;
                                 m_axis_tvalid <= 1'b1;
