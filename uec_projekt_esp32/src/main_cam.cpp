@@ -50,13 +50,16 @@ void loop() {
 
     int packetSize = udp.parsePacket();
     if (packetSize > 0) {
-        // Pakiet kontrolny: [0xC0][buttons_nibble] (buttons: bit0=U, bit1=D, bit2=L, bit3=R)
+        // Pakiet kontrolny: [0xC0][buttons_nibble] (bit0=U, bit1=R, bit2=D, bit3=L)
         if (packetSize == 2) {
             uint8_t hdr = udp.read();
             uint8_t buttons = udp.read();
             udp.flush();
             if (hdr == 0xC0) {
                 set_spi_reply_word((uint16_t)(buttons & 0x0F));
+                Serial.printf("[UDP RX CTRL] hdr=0x%02X nibble=0x%X\n", hdr, buttons & 0x0F);
+            } else {
+                Serial.printf("[UDP RX 2B BAD HDR] hdr=0x%02X data=0x%02X\n", hdr, buttons);
             }
         } else {
             uint8_t req[16] = {0};

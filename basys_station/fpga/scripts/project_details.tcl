@@ -31,13 +31,14 @@ set xdc_files {
 
 # Specify SystemVerilog design files location   -- EDIT
 set sv_files {
-    ../rtl/spi_stream_rx.sv
-    ../rtl/top.sv
     ../rtl/vga_pkg.sv
+    ../rtl/debounce.sv
+    ../rtl/spi_stream_rx.sv
     ../rtl/vga_timing.sv
+    ../rtl/video_framebuffer.sv
     ../rtl/vga_frame_renderer.sv
     ../rtl/top_vga.sv
-    ../rtl/video_framebuffer.sv
+    ../rtl/top.sv
     rtl/top_basys3.sv
 }
 

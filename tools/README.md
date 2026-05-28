@@ -71,9 +71,13 @@ Jeśli potrzebujesz sprawdzić sprzętowe numery JTAG aktualnie podłączonych u
 
 ## 6. Wgrywanie kodu na ESP32 (`program_esp.sh`)
 
-Skrypt pozwala wybrać który plik z `uec_projekt_esp32/src/main_*.cpp` ma być skompilowany i wgrany na podłączony mikrokontroler:
+Skrypt pozwala wybrać który plik z `uec_projekt_esp32/src/main_*.cpp` ma być skompilowany i wgrany na podłączony mikrokontroler.
+
+W obecnym setupie u nas:
+- **ESP cam** (po stronie kamery, AP) → `COM10`
+- **ESP station** (po stronie stacji, STA) → `COM12`
 
 ```bash
-./tools/program_esp.sh main_cam.cpp COM12
-./tools/program_esp.sh main_station.cpp COM14
+./tools/program_esp.sh main_cam.cpp COM10
+./tools/program_esp.sh main_station.cpp COM12
 ```

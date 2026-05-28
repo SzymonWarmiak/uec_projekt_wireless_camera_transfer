@@ -91,7 +91,7 @@ module ov7670_configurator (
         end else if (tick) begin
             case (state)
                 IDLE: begin
-                    logic [15:0] cmd = init_rom[reg_index];
+                    automatic logic [15:0] cmd = init_rom[reg_index];
                     if (cmd == 16'hFFFF) begin
                         state <= DONE_STATE;
                         done <= 1'b1;

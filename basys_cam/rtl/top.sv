@@ -107,7 +107,19 @@ module top (
         .spi_cs_n(spi_cs_n)
     );
 
-    // Docelowo pokazujemy tylko 4 bity sterowania (U/D/L/R) na LED0..LED3
+    // -------------------------------------------------------------------------
+    // Kanal zwrotny przyciskow ze stacji (placeholder pinow silnika).
+    // Sciezka: basys_station btn[U/R/D/L] -debounce-> spi_stream_rx (16-bit CTRL,
+    // MSB first) -> ESP_station SPI slave -> UDP [0xC0, nibble] -> ESP_cam ->
+    // sendbuf[0]=0x00 (MSB), sendbuf[1]=nibble (LSB) -> SPI MISO -> spi_stream_master
+    // -> led_reg[15:8]=0x00, led_reg[7:0]=nibble.
+    //
+    // Stale mapowanie nibble (led_reg[3:0]):
+    //   bit0 = btnU -> LED0 (LED1 na plytce)
+    //   bit1 = btnR -> LED1 (LED2 na plytce)
+    //   bit2 = btnD -> LED2 (LED3 na plytce)
+    //   bit3 = btnL -> LED3 (LED4 na plytce)
+    // -------------------------------------------------------------------------
     assign led = {12'd0, led_reg[3:0]};
 
     always_comb begin
@@ -170,90 +182,41 @@ module top (
     );
 
     // =========================================================
-    // --- OBSŁUGA WYŚWIETLACZA VGA (Bezpośrednio z kamery) ---
+    // --- OBSŁUGA WYŚWIETLACZA VGA (lokalny preview z kamery, debug) ---
     // =========================================================
-    
-    // 1. Sprzętowe generowanie zegara 40 MHz z systemowych 100 MHz (dla 800x600 @ 60Hz)
+
+    // Zegar 40 MHz dla VGA 800x600 @ 60Hz jest tworzony juz w fpga/rtl/top_basys3.sv
+    // przez MMCM, tutaj 'clk' to 40 MHz.
     logic clk_40mhz;
     assign clk_40mhz = clk;
 
-    // 2. Licznik adresów pikseli (zsynchronizowany z zegarem pclk kamery)
+    // Licznik adresow pikseli (zsynchronizowany z zegarem pclk kamery).
+    // cap_tuser to znacznik poczatku nowej klatki (piksel 0,0).
     logic [$clog2(IMG_W * IMG_H) - 1 : 0] cam_wr_addr = '0;
     always_ff @(posedge ov7670_pclk) begin
         if (cap_tvalid) begin
-            if (cap_tuser) cam_wr_addr <= '0; // cap_tuser to początek nowej klatki (X:0, Y:0)
-            else cam_wr_addr <= cam_wr_addr + 1;
+            if (cap_tuser) cam_wr_addr <= '0;
+            else           cam_wr_addr <= cam_wr_addr + 1;
         end
     end
 
-    // =========================================================
-    // --- SPRZĘTOWE WYZNACZANIE CELU (Najciemniejszy punkt) ---
-    // =========================================================
-    logic [8:0] cam_x = '0;
-    logic [7:0] cam_y = '0;
-    logic [7:0] min_val = 8'hFF;
-    logic [8:0] current_target_x = 160;
-    logic [7:0] current_target_y = 120;
-    logic [8:0] final_target_x = 160;
-    logic [7:0] final_target_y = 120;
-
-    always_ff @(posedge ov7670_pclk) begin
-        if (cap_tvalid) begin
-            if (cap_tuser) begin 
-                min_val <= cap_tdata;
-                current_target_x <= '0;
-                current_target_y <= '0;
-                final_target_x <= current_target_x; // Zapisz wynik przeanalizowanej klatki
-                final_target_y <= current_target_y;
-            end else begin
-                // Omijamy marginesy 10px, zeby zignorowac szum na brzegach matrycy kamery
-                if (cap_tdata < min_val && cam_x > 10 && cam_x < (IMG_W - 10) && cam_y > 10 && cam_y < (IMG_H - 10)) begin
-                    min_val <= cap_tdata;
-                    current_target_x <= cam_x;
-                    current_target_y <= cam_y;
-                end
-            end
-
-            if (cap_tuser) begin
-                cam_x <= 9'd1;
-                cam_y <= '0;
-            end else begin
-                if (cam_x == IMG_W - 1) begin
-                    cam_x <= '0;
-                    if (cam_y < IMG_H - 1) cam_y <= cam_y + 1;
-                end else begin
-                    cam_x <= cam_x + 1;
-                end
-            end
-        end
-    end
-
-    // Synchronizacja współrzędnych celu do domeny zegara VGA (40 MHz)
-    logic [8:0] target_x_sync1, target_x_sync2;
-    logic [7:0] target_y_sync1, target_y_sync2;
-    always_ff @(posedge clk_40mhz) begin
-        target_x_sync1 <= final_target_x;
-        target_x_sync2 <= target_x_sync1;
-        target_y_sync1 <= final_target_y;
-        target_y_sync2 <= target_y_sync1;
-    end
-
-    // 3. Główny moduł renderujący VGA z buforem ramki
+    // Glowny modul renderujacy VGA z buforem ramki. Celownik wylaczony -
+    // target_x/y wyzerowane (renderer i tak nie ma juz logiki crosshaira).
     top_vga u_top_vga (
-        .clk(clk_40mhz),               // Zegar odczytu dla monitora
+        .clk(clk_40mhz),
         .rst_n(~rst),
-        .frame_wr_clk(ov7670_pclk),    // Zegar zapisu z kamery
-        .frame_wr_en(cap_tvalid),      // Pisz do bufora tylko gdy kamera daje poprawne dane
+        .frame_wr_clk(ov7670_pclk),
+        .frame_wr_en(cap_tvalid),
         .frame_wr_bank(1'b0),
-        .frame_wr_addr(cam_wr_addr),   // Skalkulowany adres (0 do 76799)
-        .frame_wr_data(cap_tdata),     // Surowy piksel grayscale z kamery
+        .frame_wr_addr(cam_wr_addr),
+        .frame_wr_data(cap_tdata),
         .frame_rd_bank(1'b0),
-        .frame_valid(1'b1),            // Cały czas wyświetlaj
-        .status_word(sw),              // Do GUI na monitorze można przekazać stan Switchy
-        .spi_link(1'b1),               // Wymuś by diodka "SPI" na monitorze siweciła na niebiesko
+        .frame_valid(1'b1),
+        .status_word(sw),
+        .spi_link(1'b1),
         .peer_link(1'b0),
-        .target_x(target_x_sync2),     // Przekazanie X celownika
-        .target_y(target_y_sync2),     // Przekazanie Y celownika
+        .target_x(9'd0),
+        .target_y(8'd0),
         .vs(vs),
         .hs(hs),
         .r(r),

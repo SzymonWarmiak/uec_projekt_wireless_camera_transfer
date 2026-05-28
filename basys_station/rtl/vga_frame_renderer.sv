@@ -55,6 +55,10 @@ module vga_frame_renderer #(
     localparam int BORDER_X1 = DISPLAY_X_OFFSET + DISPLAY_WIDTH + 2;
     localparam int BORDER_Y1 = DISPLAY_Y_OFFSET + DISPLAY_HEIGHT + 2;
 
+    // Porty target_x / target_y zostaly w interfejsie modulu dla zgodnosci wstecznej
+    // (uzywaja go top_vga i wszystkie miejsca instancjonujace), ale logika crosshaira
+    // zostala wyciagnieta - na wejsciu spodziewamy sie zwykle 0 (patrz basys_cam/rtl/top.sv).
+
     logic visible_now;
     logic border_now;
     logic banner_now;
@@ -62,7 +66,6 @@ module vga_frame_renderer #(
     logic peer_indicator_now;
     logic spi_label_now;
     logic peer_label_now;
-    logic crosshair_now;
     logic [$clog2(FRAME_WIDTH * FRAME_HEIGHT)-1:0] frame_rd_addr_nxt;
     logic [10:0] image_x;
     logic [10:0] image_y;
@@ -81,7 +84,6 @@ module vga_frame_renderer #(
     logic [1:0] frame_valid_pipe;
     logic [1:0] spi_link_pipe;
     logic [1:0] peer_link_pipe;
-    logic [1:0] crosshair_pipe;
 
     function automatic logic [4:0] font_row(input logic [7:0] ch, input integer row);
         begin
@@ -150,8 +152,6 @@ module vga_frame_renderer #(
     logic [1:0] vblnk_pipe;
     logic [1:0] hsync_pipe;
     logic [1:0] hblnk_pipe;
-    
-    int diff_x, diff_y;
 
     always_comb begin : address_comb
         visible_now = (!vblnk_in && !hblnk_in) &&
@@ -193,13 +193,6 @@ module vga_frame_renderer #(
             src_x = rot_y;
             src_y = FRAME_HEIGHT - 1 - rot_x;
             frame_rd_addr_nxt = (src_y * FRAME_WIDTH) + src_x;
-            
-            diff_x = $signed({1'b0, src_x}) - $signed({3'b0, target_x});
-            diff_y = $signed({1'b0, src_y}) - $signed({4'b0, target_y});
-            crosshair_now = 1'b0;
-            if ((diff_y == 0) && (diff_x > -15) && (diff_x < 15)) crosshair_now = 1'b1;
-            if ((diff_x == 0) && (diff_y > -15) && (diff_y < 15)) crosshair_now = 1'b1;
-            if ((diff_x > -3) && (diff_x < 3) && (diff_y > -3) && (diff_y < 3)) crosshair_now = 1'b0; // Pusty srodek celownika
         end else begin
             image_x = '0;
             image_y = '0;
@@ -208,7 +201,6 @@ module vga_frame_renderer #(
             src_x = '0;
             src_y = '0;
             frame_rd_addr_nxt = '0;
-            crosshair_now = 1'b0;
         end
     end
 
@@ -225,7 +217,6 @@ module vga_frame_renderer #(
             frame_valid_pipe <= '0;
             spi_link_pipe <= '0;
             peer_link_pipe <= '0;
-            crosshair_pipe <= '0;
             vcount_pipe[0] <= '0;
             vcount_pipe[1] <= '0;
             hcount_pipe[0] <= '0;
@@ -254,7 +245,6 @@ module vga_frame_renderer #(
             frame_valid_pipe <= {frame_valid_pipe[0], frame_valid};
             spi_link_pipe <= {spi_link_pipe[0], spi_link};
             peer_link_pipe <= {peer_link_pipe[0], peer_link};
-            crosshair_pipe <= {crosshair_pipe[0], crosshair_now};
 
             vcount_pipe[0] <= vcount_in;
             vcount_pipe[1] <= vcount_pipe[0];
@@ -275,8 +265,7 @@ module vga_frame_renderer #(
             if (vblnk_pipe[1] || hblnk_pipe[1]) begin
                 rgb_out <= 12'h0_0_0;
             end else if (visible_pipe[1] && frame_valid_pipe[1]) begin
-            if (crosshair_pipe[1]) rgb_out <= 12'hf_0_0; // Czerwony kolor na pikselach celu
-            else rgb_out <= {frame_rd_data[7:4], frame_rd_data[7:4], frame_rd_data[7:4]};
+                rgb_out <= {frame_rd_data[7:4], frame_rd_data[7:4], frame_rd_data[7:4]};
             end else if (border_pipe[1]) begin
                 rgb_out <= frame_valid_pipe[1] ? 12'h0_d_7 : 12'hd_8_0;
             end else begin

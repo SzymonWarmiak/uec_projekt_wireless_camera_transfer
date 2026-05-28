@@ -25,11 +25,28 @@ module top (
     logic [7:0] rx_tdata;
     logic       rx_tvalid;
     logic       rx_tuser;
-    
+
+    // -------------------------------------------------------------------------
+    // Debounce 4 przyciskow kierunkowych (U/R/D/L). Pelnoetatowy filtr
+    // (debounce.sv, parametr N=19 -> ~13 ms przy 40 MHz) chroni przed
+    // wielokrotnym przelaczeniem stanu przy dotkniciu mechanicznego przycisku.
+    // btnC nie jest jeszcze uzywany - zostawiam zsynchronizowany "na zapas".
+    // -------------------------------------------------------------------------
+    logic btnU_d, btnD_d, btnL_d, btnR_d;
+    debounce #(.N(19)) u_db_btnU (.clk(clk), .rst(rst), .btn_in(btnU), .btn_out(btnU_d));
+    debounce #(.N(19)) u_db_btnD (.clk(clk), .rst(rst), .btn_in(btnD), .btn_out(btnD_d));
+    debounce #(.N(19)) u_db_btnL (.clk(clk), .rst(rst), .btn_in(btnL), .btn_out(btnL_d));
+    debounce #(.N(19)) u_db_btnR (.clk(clk), .rst(rst), .btn_in(btnR), .btn_out(btnR_d));
+
+    // Pakiet sterujacy 16-bit (na razie wysylamy 1 bajt LSB w spi_stream_rx,
+    // ale slowo trzymamy 16-bit dla zgodnosci z tx_data). Docelowe mapowanie
+    // bitow do LED-ow na basys_cam (LED1..LED4 = led[0..3]):
+    //   bit0 = btnU -> LED1
+    //   bit1 = btnR -> LED2
+    //   bit2 = btnD -> LED3
+    //   bit3 = btnL -> LED4
     logic [15:0] tx_buttons;
-    // Sterowanie 4-kierunkowe: LED0..LED3 po stronie nadajnika będą mapowane na te bity
-    // Bit0=btnU, Bit1=btnD, Bit2=btnL, Bit3=btnR
-    assign tx_buttons = {12'd0, btnR, btnL, btnD, btnU};
+    assign tx_buttons = {12'd0, btnL_d, btnD_d, btnR_d, btnU_d};
 
     spi_stream_rx #(
         .CLK_DIV(4) // np. 40MHz / 4 = 10MHz dla SPI
@@ -77,7 +94,14 @@ module top (
         end
     end
 
-    assign led = sw; // Swiecimy lokalnymi diodami na podstawie lokalnych przelacznikow
+    // -------------------------------------------------------------------------
+    // DEBUG: lokalna mirror-obserwacja zdebouncowanych przyciskow na LED0..LED3.
+    // Jesli tutaj LED-y nie reaguja, problem jest po stronie basys_station
+    // (reset, debounce, piny). Jesli reaguja a na basys_cam dalej nie -
+    // problem w sciezce SPI/ESP/UDP. Po debugu zastapic 'assign led = 16'd0;'.
+    // -------------------------------------------------------------------------
+    assign led[3:0]  = {btnL_d, btnD_d, btnR_d, btnU_d};
+    assign led[15:4] = 12'd0;
 
     top_vga u_top_vga (
         .clk(clk),
@@ -92,7 +116,7 @@ module top (
         .status_word(sw),
         .spi_link(1'b1),
         .peer_link(1'b1),
-        .target_x(9'd0), // Celownik wyzerowany, na Odbiorniku nie mamy kamery do liczenia ciemnych punktów
+        .target_x(9'd0), // Celownik wyciety - na odbiorniku nie ma kamery, port zachowany dla zgodnosci
         .target_y(8'd0),
         .vs(vs),
         .hs(hs),
