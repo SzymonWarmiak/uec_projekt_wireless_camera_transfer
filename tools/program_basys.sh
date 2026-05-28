@@ -7,7 +7,7 @@ CONFIG_FILE="$SCRIPT_DIR/board_config.sh"
 
 if [ -z "$1" ]; then
     echo "Uzycie: ./tools/program_basys.sh <folder_projektu> [NAZWA_LUB_ID_PLYTKI]"
-    echo "Przyklad: ./tools/program_basys.sh basys_1 basys15"
+    echo "Przyklad: ./tools/program_basys.sh basys_cam basys15"
     exit 1
 fi
 

@@ -1,0 +1,28 @@
+# Wymuszenie konwencji line endings niezaleznie od systemu klienta.
+# Domyslnie git decyduje automatycznie:
+* text=auto
+
+# Skrypty powloki i tcl musza miec LF - Git Bash i Vivado nie znosza CRLF.
+*.sh text eol=lf
+*.tcl text eol=lf
+
+# Pliki RTL i konfiguracja FPGA - zostawiamy LF, niektore narzedzia
+# (np. xrun, hal_mtm) maja klopot z CRLF w pre-procesorze.
+*.sv  text eol=lf
+*.v   text eol=lf
+*.vhd text eol=lf
+*.xdc text eol=lf
+
+# Code C/C++ ESP32 - LF (PlatformIO i toolchain ESP-IDF preferuja LF).
+*.c   text eol=lf
+*.cpp text eol=lf
+*.h   text eol=lf
+*.hpp text eol=lf
+
+# Pliki Markdown / .ini / .json zostawiamy autodetekcji (text=auto wyzej).
+
+# Pliki binarne - zadnej konwersji.
+*.bit binary
+*.mcs binary
+*.prm binary
+*.pdf binary

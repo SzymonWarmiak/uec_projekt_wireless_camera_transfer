@@ -10,7 +10,7 @@ UPLOAD_PORT=$2
 
 if [ -z "$TARGET_FILE" ]; then
     echo "Blad: Podaj plik z kodem jako pierwszy argument!"
-    echo "Przyklad: ./tools/program_esp.sh main_esp1.cpp COM12"
+    echo "Przyklad: ./tools/program_esp.sh main_cam.cpp COM12"
     exit 1
 fi
 
