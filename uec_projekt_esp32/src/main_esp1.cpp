@@ -16,6 +16,7 @@ uint16_t target_port = 0;
 bool streaming = false;
 unsigned long last_frame_time = 0;
 unsigned long last_led_toggle = 0;
+static uint16_t frame_seq = 0;
 
 void setup() {
     Serial.begin(115200);
@@ -49,21 +50,31 @@ void loop() {
 
     int packetSize = udp.parsePacket();
     if (packetSize > 0) {
-        uint8_t req[16] = {0};
-        udp.read(req, 15);
-        udp.flush();
-
-        if (strncmp((char*)req, "start", 5) == 0) {
-            target_ip = udp.remoteIP();
-            target_port = udp.remotePort();
-            if (!streaming) {
-                Serial.printf("Rozpoczęto strumieniowanie obrazu do: %s:%d\n", target_ip.toString().c_str(), target_port);
+        // Pakiet kontrolny: [0xC0][buttons_nibble] (buttons: bit0=U, bit1=D, bit2=L, bit3=R)
+        if (packetSize == 2) {
+            uint8_t hdr = udp.read();
+            uint8_t buttons = udp.read();
+            udp.flush();
+            if (hdr == 0xC0) {
+                set_spi_reply_word((uint16_t)(buttons & 0x0F));
             }
-            streaming = true;
-        }
-        else if (strncmp((char*)req, "stop", 4) == 0) {
-            streaming = false;
-            Serial.println("Zatrzymano strumieniowanie.");
+        } else {
+            uint8_t req[16] = {0};
+            udp.read(req, 15);
+            udp.flush();
+
+            if (strncmp((char*)req, "start", 5) == 0) {
+                target_ip = udp.remoteIP();
+                target_port = udp.remotePort();
+                if (!streaming) {
+                    Serial.printf("Rozpoczęto strumieniowanie obrazu do: %s:%d\n", target_ip.toString().c_str(), target_port);
+                }
+                streaming = true;
+            }
+            else if (strncmp((char*)req, "stop", 4) == 0) {
+                streaming = false;
+                Serial.println("Zatrzymano strumieniowanie.");
+            }
         }
     }
 
@@ -72,9 +83,13 @@ void loop() {
 
     if (streaming && (current_spi_count != last_spi_count)) {
         const uint8_t* buf = get_spi_buffer();
+        frame_seq++;
         
         for (int i = 0; i < 75; i++) {
             udp.beginPacket(target_ip, target_port);
+            // UDP header: [frame_seq_lo][frame_seq_hi][chunk_id]
+            udp.write((uint8_t)(frame_seq & 0xFF));
+            udp.write((uint8_t)((frame_seq >> 8) & 0xFF));
             udp.write((uint8_t)i);
             udp.write(buf + i * 1024, 1024);
             udp.endPacket();

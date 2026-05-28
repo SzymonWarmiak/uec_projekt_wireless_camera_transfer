@@ -69,3 +69,10 @@ uint32_t get_spi_bytes_received() {
 const uint8_t* get_spi_buffer() {
     return recvbuf;
 }
+
+void set_spi_reply_word(uint16_t word) {
+    // Basys1 odczytuje 2 pierwsze bajty podczas transakcji SPI (rx_byte_cnt 0..1)
+    // Wysyłamy MSB najpierw, żeby pasowało do istniejącego mapowania w basys_1/rtl/top.sv.
+    sendbuf[0] = (uint8_t)((word >> 8) & 0xFF);
+    sendbuf[1] = (uint8_t)(word & 0xFF);
+}

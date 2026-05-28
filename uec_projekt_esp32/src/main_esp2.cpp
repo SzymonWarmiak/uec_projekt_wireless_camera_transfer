@@ -19,13 +19,49 @@ WiFiUDP udp;
 
 WORD_ALIGNED_ATTR uint8_t frame_buf[SPI_BUFFER_SIZE];
 WORD_ALIGNED_ATTR uint8_t assemble_buf[SPI_BUFFER_SIZE];
-static spi_slave_transaction_t esp2_spi_t;
+WORD_ALIGNED_ATTR uint8_t spi_rx_hdr[2];
+static spi_slave_transaction_t esp2_ctrl_t;
+static spi_slave_transaction_t esp2_frame_t;
+
+static uint16_t current_seq = 0;
+static bool chunk_received[75] = {false};
+
+static volatile uint8_t pending_buttons = 0;
+static volatile bool pending_buttons_valid = false;
+
+static inline void reset_chunk_state(uint16_t new_seq) {
+    current_seq = new_seq;
+    for (int i = 0; i < 75; i++) chunk_received[i] = false;
+}
+
+static inline bool all_chunks_received() {
+    for (int i = 0; i < 75; i++) {
+        if (!chunk_received[i]) return false;
+    }
+    return true;
+}
 
 void spi_tx_task(void *pvParameters) {
     while(1) {
         spi_slave_transaction_t* ret_t;
         if (spi_slave_get_trans_result(SPI2_HOST, &ret_t, portMAX_DELAY) == ESP_OK) {
-            spi_slave_queue_trans(SPI2_HOST, &esp2_spi_t, portMAX_DELAY); 
+            if (ret_t == &esp2_ctrl_t) {
+                // Basys2 wysyła stan przycisków w transakcji kontrolnej (2 bajty MOSI)
+                // Format słowa (MSB first): [15:4]=0, [3]=btnR, [2]=btnL, [1]=btnD, [0]=btnU
+                uint16_t buttons_word = ((uint16_t)spi_rx_hdr[0] << 8) | (uint16_t)spi_rx_hdr[1];
+                uint8_t buttons_nibble = (uint8_t)(buttons_word & 0x0F);
+                static uint8_t last_buttons = 0xFF;
+
+                if (buttons_nibble != last_buttons) {
+                    pending_buttons = buttons_nibble;
+                    pending_buttons_valid = true;
+                    last_buttons = buttons_nibble;
+                }
+            } else if (ret_t == &esp2_frame_t) {
+                // Po zakończeniu transferu ramki, kolejkowanie następnego cyklu: CTRL -> FRAME
+                spi_slave_queue_trans(SPI2_HOST, &esp2_ctrl_t, portMAX_DELAY);
+                spi_slave_queue_trans(SPI2_HOST, &esp2_frame_t, portMAX_DELAY);
+            }
         }
     }
 }
@@ -52,7 +88,7 @@ void setup() {
     memset(&slvcfg, 0, sizeof(slvcfg));
     slvcfg.spics_io_num = GPIO_CS;
     slvcfg.flags = 0;
-    slvcfg.queue_size = 1;
+    slvcfg.queue_size = 2;
     slvcfg.mode = 0;
 
     #ifndef SPI_DMA_CH_AUTO
@@ -61,11 +97,21 @@ void setup() {
 
     spi_slave_initialize(SPI2_HOST, &buscfg, &slvcfg, SPI_DMA_CH_AUTO);
 
-    memset(&esp2_spi_t, 0, sizeof(esp2_spi_t));
-    esp2_spi_t.length = SPI_BUFFER_SIZE * 8;
-    esp2_spi_t.tx_buffer = frame_buf;
-    esp2_spi_t.rx_buffer = NULL;
-    spi_slave_queue_trans(SPI2_HOST, &esp2_spi_t, portMAX_DELAY);
+    // Transakcja kontrolna: 2 bajty (tylko RX MOSI)
+    memset(&esp2_ctrl_t, 0, sizeof(esp2_ctrl_t));
+    esp2_ctrl_t.length = 16;
+    esp2_ctrl_t.tx_buffer = NULL;
+    esp2_ctrl_t.rx_buffer = spi_rx_hdr;
+
+    // Transakcja ramki: 76800 bajtów (TX wideo, RX niepotrzebny)
+    memset(&esp2_frame_t, 0, sizeof(esp2_frame_t));
+    esp2_frame_t.length = SPI_BUFFER_SIZE * 8;
+    esp2_frame_t.tx_buffer = frame_buf;
+    esp2_frame_t.rx_buffer = NULL;
+
+    // Kolejkujemy startowy cykl: CTRL -> FRAME
+    spi_slave_queue_trans(SPI2_HOST, &esp2_ctrl_t, portMAX_DELAY);
+    spi_slave_queue_trans(SPI2_HOST, &esp2_frame_t, portMAX_DELAY);
     
     xTaskCreate(spi_tx_task, "spi_tx_task", 4096, NULL, 24, NULL);
 
@@ -88,6 +134,9 @@ void loop() {
     static unsigned long last_req = 0;
     static unsigned long last_led_toggle = 0;
     static unsigned long last_broadcast = 0;
+    static bool seq_initialized = false;
+    static IPAddress esp1_ip;
+    static uint16_t esp1_port = udp_port;
 
     if (current_time - last_req > 500) {
         if (current_time - last_broadcast > 500) {
@@ -108,18 +157,42 @@ void loop() {
 
     while ((packetSize = udp.parsePacket()) > 0) {
         data_received = true;
+        esp1_ip = udp.remoteIP();
+        esp1_port = udp.remotePort();
         
-        if (packetSize == 1025) {
+        // Expected UDP payload: [seq_lo][seq_hi][chunk_id][1024 bytes]
+        if (packetSize == 1027) {
+            uint8_t seq_lo = udp.read();
+            uint8_t seq_hi = udp.read();
+            uint16_t seq = (uint16_t)seq_lo | ((uint16_t)seq_hi << 8);
             uint8_t chunk_id = udp.read();
             if (chunk_id < 75) {
                 udp.read(assemble_buf + chunk_id * 1024, 1024);
-                if (chunk_id == 74) {
+                if (!seq_initialized) {
+                    reset_chunk_state(seq);
+                    seq_initialized = true;
+                } else if (seq != current_seq) {
+                    // New frame started (or we lost packets) -> start assembling new one
+                    reset_chunk_state(seq);
+                }
+
+                chunk_received[chunk_id] = true;
+                if (all_chunks_received()) {
                     memcpy(frame_buf, assemble_buf, SPI_BUFFER_SIZE);
                 }
             }
         } else {
             udp.flush();
         }
+    }
+
+    if (pending_buttons_valid && (uint32_t)esp1_ip != 0 && esp1_port != 0) {
+        // Pakiet kontrolny: [0xC0][buttons_nibble]
+        udp.beginPacket(esp1_ip, esp1_port);
+        udp.write((uint8_t)0xC0);
+        udp.write((uint8_t)(pending_buttons & 0x0F));
+        udp.endPacket();
+        pending_buttons_valid = false;
     }
 
     if (data_received) {

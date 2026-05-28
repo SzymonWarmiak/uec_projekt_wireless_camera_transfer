@@ -107,7 +107,8 @@ module top (
         .spi_cs_n(spi_cs_n)
     );
 
-    assign led = led_reg;
+    // Docelowo pokazujemy tylko 4 bity sterowania (U/D/L/R) na LED0..LED3
+    assign led = {12'd0, led_reg[3:0]};
 
     always_comb begin
         spi_tdata = 8'd0;

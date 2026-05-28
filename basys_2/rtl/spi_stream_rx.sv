@@ -19,7 +19,7 @@ module spi_stream_rx #(
 
     localparam int FRAME_SIZE = 76800; // Tylko 76800 bajtów obrazu
 
-    typedef enum logic [1:0] {IDLE, TRANSFER, WAIT_END} state_t;
+    typedef enum logic [2:0] {IDLE, CTRL, CTRL_END, FRAME, FRAME_END} state_t;
     state_t state = IDLE;
 
     logic [19:0] byte_cnt = '0;
@@ -29,6 +29,7 @@ module spi_stream_rx #(
     logic [7:0]  rx_shift = '0;
     logic [15:0] tx_shift = '0;
     logic [15:0] idle_cnt = '0;
+    logic        tx_active = 1'b0;
 
     assign spi_sck = sck_int;
     assign spi_mosi = tx_shift[15];
@@ -41,6 +42,11 @@ module spi_stream_rx #(
             m_axis_tvalid <= 1'b0;
             m_axis_tuser  <= 1'b0;
             idle_cnt      <= '0;
+            byte_cnt      <= '0;
+            bit_cnt       <= '0;
+            clk_cnt       <= '0;
+            tx_shift      <= '0;
+            tx_active     <= 1'b0;
         end else begin
             m_axis_tvalid <= 1'b0;
             m_axis_tuser  <= 1'b0;
@@ -50,19 +56,20 @@ module spi_stream_rx #(
                     spi_cs_n <= 1'b1;
                     sck_int  <= 1'b0;
                     tx_shift <= tx_data;
+                    tx_active <= 1'b1;
                     if (idle_cnt == 16'd1000) begin
                         idle_cnt <= '0;
                         spi_cs_n <= 1'b0;
-                        byte_cnt <= '0;
+                        // Najpierw transakcja kontrolna: 2 bajty
                         bit_cnt  <= 3'd7;
                         clk_cnt  <= '0;
-                        state    <= TRANSFER;
+                        state    <= CTRL;
                     end else begin
                         idle_cnt <= idle_cnt + 1'b1;
                     end
                 end
 
-                TRANSFER: begin
+                CTRL: begin
                     if (clk_cnt == CLK_DIV / 2 - 1) begin
                         clk_cnt <= '0;
                         sck_int <= ~sck_int;
@@ -73,14 +80,48 @@ module spi_stream_rx #(
                         end 
                         // Na zboczu opadajacym sprawdzamy czy mamy pelen bajt
                         else begin
-                            tx_shift <= {tx_shift[14:0], 1'b0}; // Przesuwanie rejestru nadawczego
+                            if (tx_active) tx_shift <= {tx_shift[14:0], 1'b0}; // Przesuwanie rejestru nadawczego
+                            if (bit_cnt == 0) begin
+                                // Po 2 bajtach kończymy kontrolę
+                                tx_active <= 1'b0;
+                                state <= CTRL_END;
+                            end else begin
+                                bit_cnt <= bit_cnt - 1'b1;
+                            end
+                        end
+                    end else begin
+                        clk_cnt <= clk_cnt + 1'b1;
+                    end
+                end
+
+                CTRL_END: begin
+                    spi_cs_n <= 1'b1;
+                    sck_int  <= 1'b0;
+                    clk_cnt  <= '0;
+                    // Przygotuj start transakcji ramki
+                    byte_cnt <= '0;
+                    bit_cnt  <= 3'd7;
+                    state    <= FRAME;
+                end
+
+                FRAME: begin
+                    // Start ramki: CS w dół, MOSI nieistotne (0)
+                    spi_cs_n <= 1'b0;
+                    tx_shift <= 16'd0;
+                    if (clk_cnt == CLK_DIV / 2 - 1) begin
+                        clk_cnt <= '0;
+                        sck_int <= ~sck_int;
+
+                        if (~sck_int) begin
+                            rx_shift <= {rx_shift[6:0], spi_miso};
+                        end else begin
                             if (bit_cnt == 0) begin
                                 m_axis_tdata  <= rx_shift;
                                 m_axis_tvalid <= 1'b1;
-                                if (byte_cnt == 0) m_axis_tuser <= 1'b1; // Znacznik Start of Frame (SOF)
+                                if (byte_cnt == 0) m_axis_tuser <= 1'b1; // SOF tylko na ramce
 
                                 if (byte_cnt == FRAME_SIZE - 1) begin
-                                    state <= WAIT_END;
+                                    state <= FRAME_END;
                                 end else begin
                                     byte_cnt <= byte_cnt + 1'b1;
                                     bit_cnt  <= 3'd7;
@@ -94,8 +135,9 @@ module spi_stream_rx #(
                     end
                 end
 
-                WAIT_END: begin
+                FRAME_END: begin
                     spi_cs_n <= 1'b1;
+                    sck_int  <= 1'b0;
                     state    <= IDLE;
                 end
             endcase

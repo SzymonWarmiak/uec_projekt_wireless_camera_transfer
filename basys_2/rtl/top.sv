@@ -27,7 +27,9 @@ module top (
     logic       rx_tuser;
     
     logic [15:0] tx_buttons;
-    assign tx_buttons = {11'd0, btnC, btnU, btnD, btnL, btnR};
+    // Sterowanie 4-kierunkowe: LED0..LED3 po stronie nadajnika będą mapowane na te bity
+    // Bit0=btnU, Bit1=btnD, Bit2=btnL, Bit3=btnR
+    assign tx_buttons = {12'd0, btnR, btnL, btnD, btnU};
 
     spi_stream_rx #(
         .CLK_DIV(4) // np. 40MHz / 4 = 10MHz dla SPI
