@@ -5,22 +5,27 @@ Ten folder zawiera uniwersalne skrypty wspierające pracę z wieloma układami w
 ## 1. Wgrywanie Bitstreamu na FPGA (`program_basys.sh`)
 
 Skrypt `program_basys.sh` pozwala na wgranie wygenerowanego strumienia bitów (`.bit`) na docelową płytkę Basys 3. Skrypt został zintegrowany z plikiem konfiguracyjnym, dzięki czemu nie trzeba pamiętać długich sprzętowych numerów JTAG.
+Po wgraniu `.bit` skrypt programuje też lokalną pamięć QSPI plikiem `.bin`, dzięki czemu FPGA odtworzy konfigurację po ponownym włączeniu zasilania.
 
 ### Jak tego używać?
 Będąc w **głównym katalogu** projektu wpisz komendę z dwoma argumentami:
-1. Nazwę folderu modułu (np. `basys_1` lub `basys_2`).
+1. Nazwę folderu modułu (np. `basys_cam` lub `basys_station`).
 2. Przyjazną nazwę płytki zdefiniowaną w pliku `board_config.sh` (np. `basys15`).
 
 ```bash
-./tools/program_basys.sh basys_1 basys15
+./tools/program_basys.sh basys_cam basys15
 ```
-*Powyższa komenda odnajdzie plik `.bit` w `basys_1/results/` i zaprogramuje nim płytkę "basys15".*
+*Powyższa komenda odnajdzie pliki `.bit` i `.bin` w `basys_cam/results/`, wypisze ich daty wygenerowania, zaprogramuje FPGA oraz pamięć QSPI płytki "basys15".*
 
 ### Co jeśli mam tylko jedną płytkę?
 Jeśli masz podłączoną tylko jedną płytkę, możesz pominąć drugi argument. Vivado wgra projekt na pierwsze urządzenie, jakie znajdzie:
 ```bash
-./tools/program_basys.sh basys_2
+./tools/program_basys.sh basys_station
 ```
+
+### Pamięć QSPI
+
+Skrypt próbuje zaprogramować pamięć QSPI automatycznie, sprawdzając obsługiwane typy pamięci po kolei. Po poprawnym zapisie ustaw zworkę `JP1` w pozycję `QSPI`, żeby FPGA startowało z pamięci po włączeniu zasilania.
 
 ---
 

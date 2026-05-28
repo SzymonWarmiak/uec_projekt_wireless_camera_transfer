@@ -11,8 +11,8 @@ Projekt realizujacy bezprzewodowa transmisje obrazu wideo z kamery OV7670 do wys
 
 ## Struktura Katalogow
 
-* /basys_1           - Projekt Vivado/SystemVerilog dla nadajnika (obsluga kamery OV7670, SPI Master).
-* /basys_2           - Projekt Vivado/SystemVerilog dla odbiornika (odbiornik SPI, podwojne buforowanie, kontroler VGA).
+* /basys_cam         - Projekt Vivado/SystemVerilog dla nadajnika (obsluga kamery OV7670, SPI Master).
+* /basys_station     - Projekt Vivado/SystemVerilog dla odbiornika (odbiornik SPI, podwojne buforowanie, kontroler VGA).
 * /uec_projekt_esp32 - Projekt PlatformIO zawierajacy kody zrodlowe w jezyku C++ dla obu mikrokontrolerow ESP32.
 * /tools             - Zestaw autorskich skryptow powloki automatyzujacych proces kompilacji i programowania urzadzen.
 
@@ -28,8 +28,8 @@ Sposob uzycia:
 ./tools/program_basys.sh <katalog_modulu> [NAZWA_PLYTKI]
 
 Przyklady:
-./tools/program_basys.sh basys_1 basys15
-./tools/program_basys.sh basys_2 basys16
+./tools/program_basys.sh basys_cam basys15
+./tools/program_basys.sh basys_station basys16
 
 Nazwy plytek zdefiniowane w pliku board_config.sh.
 
@@ -38,11 +38,11 @@ Nazwy plytek zdefiniowane w pliku board_config.sh.
 Skrypt zastepuje koniecznosc recznego modyfikowania pliku konfiguracyjnego PlatformIO. Kompiluje i wgrywa wskazany plik zrodlowy C++ na mikrokontroler podlaczony pod podany port szeregowy.
 
 Sposob uzycia:
-./tools/program_esp.sh <nazwa_pliku.cpp> <PORT_COM>
+./tools/program_esp.sh <esp_cam|esp_station> <PORT_COM>
 
 Przyklady:
-./tools/program_esp.sh main_esp1.cpp COM12
-./tools/program_esp.sh main_esp2.cpp COM14
+./tools/program_esp.sh esp_cam COM12
+./tools/program_esp.sh esp_station COM14
 
 ### 3. Identyfikacja urzadzen FPGA (list_basys_devices.sh)
 
