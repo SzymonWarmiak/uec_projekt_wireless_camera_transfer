@@ -30,7 +30,7 @@ void init_spi_slave() {
     spi_bus_config_t buscfg;
     memset(&buscfg, 0, sizeof(buscfg));
     buscfg.mosi_io_num = GPIO_MOSI;
-    buscfg.miso_io_num = GPIO_MISO;
+    buscfg.miso_io_num = -1;
     buscfg.sclk_io_num = GPIO_SCLK;
     buscfg.quadwp_io_num = -1;
     buscfg.quadhd_io_num = -1;

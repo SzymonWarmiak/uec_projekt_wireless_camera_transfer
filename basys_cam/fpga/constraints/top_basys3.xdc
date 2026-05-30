@@ -128,24 +128,25 @@ set_property PACKAGE_PIN J1 [get_ports spi_cs_n]
 ##Sch name = JA2
 set_property PACKAGE_PIN L2 [get_ports spi_mosi]
 	set_property IOSTANDARD LVCMOS33 [get_ports spi_mosi]
-##Sch name = JA3
-set_property PACKAGE_PIN J2 [get_ports spi_miso]
-	set_property IOSTANDARD LVCMOS33 [get_ports spi_miso]
+##Sch name = JA3 (wolny — sterowanie UART na JXADC XA1_P)
+#set_property PACKAGE_PIN J2 [get_ports spi_miso_unused]
+#	set_property IOSTANDARD LVCMOS33 [get_ports spi_miso_unused]
 ##Sch name = JA4
 set_property PACKAGE_PIN G2 [get_ports spi_sck]
 	set_property IOSTANDARD LVCMOS33 [get_ports spi_sck]
+## Pmod JA7..JA10 — wolne (SPI na JA1..JA4)
 ##Sch name = JA7
 #set_property PACKAGE_PIN H1 [get_ports {JA[4]}]
-	#set_property IOSTANDARD LVCMOS33 [get_ports {JA[4]}]
+#	set_property IOSTANDARD LVCMOS33 [get_ports {JA[4]}]
 ##Sch name = JA8
 #set_property PACKAGE_PIN K2 [get_ports {JA[5]}]
-	#set_property IOSTANDARD LVCMOS33 [get_ports {JA[5]}]
+#	set_property IOSTANDARD LVCMOS33 [get_ports {JA[5]}]
 ##Sch name = JA9
 #set_property PACKAGE_PIN H2 [get_ports {JA[6]}]
-	#set_property IOSTANDARD LVCMOS33 [get_ports {JA[6]}]
+#	set_property IOSTANDARD LVCMOS33 [get_ports {JA[6]}]
 ##Sch name = JA10
 #set_property PACKAGE_PIN G3 [get_ports {JA[7]}]
-	#set_property IOSTANDARD LVCMOS33 [get_ports {JA[7]}]
+#	set_property IOSTANDARD LVCMOS33 [get_ports {JA[7]}]
 
 
 
@@ -205,9 +206,10 @@ set_property PACKAGE_PIN G2 [get_ports spi_sck]
 
 
 ##Pmod Header JXADC
-##Sch name = XA1_P
-#set_property PACKAGE_PIN J3 [get_ports {JXADC[0]}]
-	#set_property IOSTANDARD LVCMOS33 [get_ports {JXADC[0]}]
+##Sch name = XA1_P — UART RX (ESP GPIO5 TX); pin 1 na zlaczu JXADC
+set_property PACKAGE_PIN J3 [get_ports ctrl_uart_rx]
+	set_property IOSTANDARD LVCMOS33 [get_ports ctrl_uart_rx]
+	set_property PULLUP true [get_ports ctrl_uart_rx]
 ##Sch name = XA2_P
 #set_property PACKAGE_PIN L3 [get_ports {JXADC[1]}]
 	#set_property IOSTANDARD LVCMOS33 [get_ports {JXADC[1]}]
@@ -217,18 +219,20 @@ set_property PACKAGE_PIN G2 [get_ports spi_sck]
 ##Sch name = XA4_P
 #set_property PACKAGE_PIN N2 [get_ports {JXADC[3]}]
 	#set_property IOSTANDARD LVCMOS33 [get_ports {JXADC[3]}]
-##Sch name = XA1_N
-#set_property PACKAGE_PIN K3 [get_ports {JXADC[4]}]
-	#set_property IOSTANDARD LVCMOS33 [get_ports {JXADC[4]}]
-##Sch name = XA2_N
-#set_property PACKAGE_PIN M3 [get_ports {JXADC[5]}]
-	#set_property IOSTANDARD LVCMOS33 [get_ports {JXADC[5]}]
-##Sch name = XA3_N
-#set_property PACKAGE_PIN M1 [get_ports {JXADC[6]}]
-	#set_property IOSTANDARD LVCMOS33 [get_ports {JXADC[6]}]
-##Sch name = XA4_N
-#set_property PACKAGE_PIN N1 [get_ports {JXADC[7]}]
-	#set_property IOSTANDARD LVCMOS33 [get_ports {JXADC[7]}]
+## JXADC7..JXADC10 (dolny rzad zlacza) -> L298N IN1..IN4, tryb cyfrowy LVCMOS33
+##Sch name = XA1_N / JXADC7 -> IN1 (bit 0x01)
+set_property PACKAGE_PIN K3 [get_ports {motor_in[0]}]
+	set_property IOSTANDARD LVCMOS33 [get_ports {motor_in[0]}]
+	set_property SLEW SLOW [get_ports {motor_in[*]}]
+##Sch name = XA2_N / JXADC8 -> IN2 (bit 0x02)
+set_property PACKAGE_PIN M3 [get_ports {motor_in[1]}]
+	set_property IOSTANDARD LVCMOS33 [get_ports {motor_in[1]}]
+##Sch name = XA3_N / JXADC9 -> IN3 (bit 0x04)
+set_property PACKAGE_PIN M1 [get_ports {motor_in[2]}]
+	set_property IOSTANDARD LVCMOS33 [get_ports {motor_in[2]}]
+##Sch name = XA4_N / JXADC10 -> IN4 (bit 0x08)
+set_property PACKAGE_PIN N1 [get_ports {motor_in[3]}]
+	set_property IOSTANDARD LVCMOS33 [get_ports {motor_in[3]}]
 
 
 

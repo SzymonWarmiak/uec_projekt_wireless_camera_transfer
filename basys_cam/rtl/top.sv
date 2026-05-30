@@ -7,7 +7,8 @@ module top (
     input  logic [15:0] sw,
     output logic spi_sck,
     output logic spi_mosi,
-    input  logic spi_miso,
+    input  logic ctrl_uart_rx,
+    output logic [3:0] motor_in,
     output logic spi_cs_n,
     // Interfejs kamery OV7670
     output logic ov7670_sioc,
@@ -36,10 +37,29 @@ module top (
     logic spi_tready;
     logic spi_tlast;
     
-    logic [7:0] rx_tdata;
-    logic rx_tvalid;
-    logic [15:0] led_reg = '0;
-    int rx_byte_cnt = 0;
+    logic [3:0] ctrl_nibble;
+    logic       ctrl_uart_rx_sync;
+
+    (* ASYNC_REG = "TRUE" *) logic ctrl_uart_rx_meta;
+    always_ff @(posedge clk) begin
+        ctrl_uart_rx_meta  <= ctrl_uart_rx;
+        ctrl_uart_rx_sync <= ctrl_uart_rx_meta;
+    end
+
+    uart_ctrl_bridge u_uart_ctrl (
+        .clk(clk),
+        .reset(rst),
+        .rx(ctrl_uart_rx_sync),
+        .ctrl_nibble(ctrl_nibble)
+    );
+
+    motor_l298n_decode u_motor_decode (
+        .ctrl_nibble(ctrl_nibble),
+        .motor_in(motor_in)
+    );
+
+    // Podgląd pada na LD0..LD3 (opcjonalnie)
+    assign led = {12'b0, ctrl_nibble};
 
     logic [7:0] cap_tdata;
     logic       cap_tvalid;
@@ -51,6 +71,28 @@ module top (
     logic       fifo_tready;
     logic       fifo_tlast;
     logic       fifo_tuser;
+    logic       cap_tready;
+    wire [0:0]  fifo_s_axis_tkeep;
+    wire [0:0]  fifo_s_axis_tstrb;
+    wire [0:0]  fifo_m_axis_tkeep;
+    wire [0:0]  fifo_s_axis_tid;
+    wire [0:0]  fifo_s_axis_tdest;
+    wire [0:0]  fifo_m_axis_tid;
+    wire [0:0]  fifo_m_axis_tdest;
+    wire        fifo_prog_full;
+    wire        fifo_almost_full;
+    wire        fifo_prog_empty;
+    wire        fifo_almost_empty;
+    wire [13:0] fifo_wr_data_count;
+    wire [13:0] fifo_rd_data_count;
+
+    logic spi_miso_idle;
+
+    assign fifo_s_axis_tkeep  = 1'b1;
+    assign fifo_s_axis_tstrb  = 1'b1;
+    assign fifo_s_axis_tid    = 1'b0;
+    assign fifo_s_axis_tdest  = 1'b0;
+    assign spi_miso_idle      = 1'b1;
 
     ov7670_capture #(
         .H_RES(640),
@@ -72,7 +114,8 @@ module top (
         .CLOCKING_MODE("independent_clock"),
         .FIFO_DEPTH(8192),
         .TDATA_WIDTH(8),
-        .TUSER_WIDTH(1)
+        .TUSER_WIDTH(1),
+        .USE_ADV_FEATURES("0000")
     ) u_fifo (
         .s_aresetn(~rst),
         .s_aclk(ov7670_pclk),
@@ -80,14 +123,28 @@ module top (
         .s_axis_tdata(cap_tdata),
         .s_axis_tlast(cap_tlast),
         .s_axis_tuser(cap_tuser),
-        .s_axis_tready(),
+        .s_axis_tkeep(fifo_s_axis_tkeep),
+        .s_axis_tstrb(fifo_s_axis_tstrb),
+        .s_axis_tid(fifo_s_axis_tid),
+        .s_axis_tdest(fifo_s_axis_tdest),
+        .s_axis_tready(cap_tready),
 
         .m_aclk(clk),
         .m_axis_tvalid(fifo_tvalid),
         .m_axis_tdata(fifo_tdata),
         .m_axis_tlast(fifo_tlast),
         .m_axis_tuser(fifo_tuser),
-        .m_axis_tready(fifo_tready)
+        .m_axis_tkeep(fifo_m_axis_tkeep),
+        .m_axis_tid(fifo_m_axis_tid),
+        .m_axis_tdest(fifo_m_axis_tdest),
+        .m_axis_tready(fifo_tready),
+
+        .prog_full_axis(fifo_prog_full),
+        .wr_data_count_axis(fifo_wr_data_count),
+        .almost_full_axis(fifo_almost_full),
+        .prog_empty_axis(fifo_prog_empty),
+        .rd_data_count_axis(fifo_rd_data_count),
+        .almost_empty_axis(fifo_almost_empty)
     );
 
     spi_stream_master #(
@@ -99,28 +156,13 @@ module top (
         .s_axis_tvalid(spi_tvalid),
         .s_axis_tready(spi_tready),
         .s_axis_tlast(spi_tlast),
-        .m_axis_rx_tdata(rx_tdata),
-        .m_axis_rx_tvalid(rx_tvalid),
+        .m_axis_rx_tdata(),
+        .m_axis_rx_tvalid(),
         .spi_sck(spi_sck),
         .spi_mosi(spi_mosi),
-        .spi_miso(spi_miso),
+        .spi_miso(spi_miso_idle),
         .spi_cs_n(spi_cs_n)
     );
-
-    // -------------------------------------------------------------------------
-    // Kanal zwrotny przyciskow ze stacji (placeholder pinow silnika).
-    // Sciezka: basys_station btn[U/R/D/L] -debounce-> spi_stream_rx (16-bit CTRL,
-    // MSB first) -> ESP_station SPI slave -> UDP [0xC0, nibble] -> ESP_cam ->
-    // sendbuf[0]=0x00 (MSB), sendbuf[1]=nibble (LSB) -> SPI MISO -> spi_stream_master
-    // -> led_reg[15:8]=0x00, led_reg[7:0]=nibble.
-    //
-    // Stale mapowanie nibble (led_reg[3:0]):
-    //   bit0 = btnU -> LED0 (LED1 na plytce)
-    //   bit1 = btnR -> LED1 (LED2 na plytce)
-    //   bit2 = btnD -> LED2 (LED3 na plytce)
-    //   bit3 = btnL -> LED3 (LED4 na plytce)
-    // -------------------------------------------------------------------------
-    assign led = {12'd0, led_reg[3:0]};
 
     always_comb begin
         spi_tdata = 8'd0;
@@ -141,17 +183,7 @@ module top (
     always_ff @(posedge clk) begin
         if (rst) begin
             state <= WAIT_FRAME;
-            rx_byte_cnt <= 0;
-            led_reg <= '0;
         end else begin
-            if (spi_cs_n) begin
-                rx_byte_cnt <= 0;
-            end else if (rx_tvalid) begin
-                if (rx_byte_cnt == 0) led_reg[15:8] <= rx_tdata;
-                if (rx_byte_cnt == 1) led_reg[7:0]  <= rx_tdata;
-                rx_byte_cnt <= rx_byte_cnt + 1;
-            end
-
             case (state)
                 WAIT_FRAME: begin
                     if (fifo_tvalid && fifo_tuser) state <= SEND_PIXELS;
