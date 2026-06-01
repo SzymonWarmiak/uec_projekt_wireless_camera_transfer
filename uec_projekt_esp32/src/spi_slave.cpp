@@ -30,7 +30,7 @@ void init_spi_slave() {
     spi_bus_config_t buscfg;
     memset(&buscfg, 0, sizeof(buscfg));
     buscfg.mosi_io_num = GPIO_MOSI;
-    buscfg.miso_io_num = -1;
+    buscfg.miso_io_num = GPIO_MISO;
     buscfg.sclk_io_num = GPIO_SCLK;
     buscfg.quadwp_io_num = -1;
     buscfg.quadhd_io_num = -1;
@@ -71,8 +71,8 @@ const uint8_t* get_spi_buffer() {
 }
 
 void set_spi_reply_word(uint16_t word) {
-    // basys_cam odczytuje 2 pierwsze bajty podczas transakcji SPI (rx_byte_cnt 0..1).
-    // Wysyłamy MSB najpierw, żeby pasowało do istniejącego mapowania w basys_cam/rtl/top.sv.
+    // basys_cam czyta pierwszy bajt MISO przy kazdej ramce SPI.
+    // Trzymamy tez drugi bajt jako rezerwe pod ewentualne rozszerzenie protokolu.
     sendbuf[0] = (uint8_t)((word >> 8) & 0xFF);
     sendbuf[1] = (uint8_t)(word & 0xFF);
 }

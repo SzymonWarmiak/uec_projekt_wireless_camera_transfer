@@ -5,7 +5,7 @@ Mapowanie wg [Basys 3 Reference Manual](https://digilent.com/reference/programma
 ## Złącze JXADC (widok standardowego Pmod 2×6)
 
 ```
-  [1] XA1_P (J3)  UART RX z ESP     [2] XA2_P (L3)
+  [1] XA1_P (J3)  wolny             [2] XA2_P (L3)
   [3] XA3_P (M2)                    [4] XA4_P (N2)
   [7] XA1_N (K3)  IN1              [8] XA2_N (M3)  IN2
   [9] XA3_N (M1)  IN3             [10] XA4_N (N1)  IN4
@@ -13,7 +13,7 @@ Mapowanie wg [Basys 3 Reference Manual](https://digilent.com/reference/programma
 
 | JXADC pin | Sygnał FPGA | `motor_in` | Bit pada | L298N |
 |-----------|-------------|------------|----------|-------|
-| **1** | XA1_P (J3) | — | — | UART z ESP (nie L298N) |
+| **1** | XA1_P (J3) | — | — | wolny (sterowanie idzie po SPI MISO) |
 | **7** | XA1_N (K3) | `[0]` | — | **IN1** (silnik 1) |
 | **8** | XA2_N (M3) | `[1]` | — | **IN2** (silnik 1) |
 | **9** | XA3_N (M1) | `[2]` | — | **IN3** (silnik 2) |
@@ -21,7 +21,7 @@ Mapowanie wg [Basys 3 Reference Manual](https://digilent.com/reference/programma
 
 ## Pada → jazda (jak Arduino L298N)
 
-UART wysyła **nibble kierunku** (nie bezpośrednio IN1..IN4). FPGA (`motor_l298n_decode.v`) mapuje:
+ESP odsyła po **SPI MISO** nibble kierunku (nie bezpośrednio IN1..IN4). FPGA (`motor_l298n_decode.v`) mapuje:
 
 | Pada | IN1 | IN2 | IN3 | IN4 | Efekt |
 |------|-----|-----|-----|-----|--------|

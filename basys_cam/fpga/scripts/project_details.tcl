@@ -47,10 +47,6 @@ set sv_files {
 set verilog_files {
     ../rtl/list_ch04_11_mod_m_counter.v
     ../rtl/list_ch04_20_fifo.v
-    ../rtl/list_ch08_01_uart_rx.v
-    ../rtl/list_ch08_03_uart_tx.v
-    ../rtl/list_ch08_04_uart.v
-    ../rtl/uart_ctrl_bridge.v
     ../rtl/motor_l298n_decode.v
 }
 

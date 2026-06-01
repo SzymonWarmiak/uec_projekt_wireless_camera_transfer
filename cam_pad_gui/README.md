@@ -1,11 +1,11 @@
 # Cam Pad GUI
 
-Aplikacja na PC (Python + **tkinter**, bez dodatkowych pakietów) — imitacja pada sterująca jazdą przez **Wi‑Fi → ESP cam → UART → FPGA → L298N**.
+Aplikacja na PC (Python + **tkinter**, bez dodatkowych pakietów) — imitacja pada sterująca jazdą przez **Wi‑Fi → ESP cam → SPI MISO → FPGA → L298N**.
 
 ## Wymagania
 
 - Python 3.8+
-- PC w sieci **`ESP_VIDEO_TX`** / hasło **`video_stream`**
+- PC w tej samej sieci Wi-Fi co ESP cam
 - Wgrane: `main_cam.cpp` na ESP przy kamerze + bitstream `basys_cam` z `motor_l298n_decode.v`
 
 ## Uruchomienie
@@ -37,7 +37,7 @@ Lub: `cam_pad_gui/run_pad.bat`
 
 **Przytrzymaj** kierunek = jazda; **puszczasz** = stop (wysyłany nibble `0`).
 
-Domyślnie: host **192.168.4.1**, port **1234** (pola w oknie).
+Host ustaw na adres IP ESP cam w skonfigurowanej sieci Wi-Fi, port **1234**.
 
 ## Co wysyła aplikacja
 

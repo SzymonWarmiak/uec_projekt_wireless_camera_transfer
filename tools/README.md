@@ -1,25 +1,11 @@
 # Narzędzia projektowe (Tools)
 
-Ten folder zawiera uniwersalne skrypty wspierające pracę z wieloma układami w projekcie (w tym automatyzację generowania bitstreamu, wgrywania na konkretne płytki FPGA i programowania pamięci QSPI).
+Ten folder zawiera uniwersalne skrypty wspierające pracę z wieloma układami w projekcie (w tym automatyzację wgrywania kodu na konkretne płytki FPGA).
 
-Każdy skrypt uruchamiamy **z głównego katalogu projektu** (tam gdzie ten plik leży o jeden poziom wyżej), w terminalu obsługującym Bash (np. Git Bash).
+## 1. Wgrywanie Bitstreamu na FPGA (`program_basys.sh`)
 
-## 1. Generowanie bitstreamu (`generate_bitstream_basys.sh`)
-
-Skrypt opakowuje wewnętrzny `tools/generate_bitstream.sh` modułu Basysa tak, aby nie trzeba było ręcznie wchodzić do folderu i sourcować `env.sh`. Sam wchodzi do podanego katalogu, inicjalizuje środowisko i uruchamia syntezę + implementację w Vivado.
-
-```bash
-./tools/generate_bitstream_basys.sh basys_cam
-./tools/generate_bitstream_basys.sh basys_station
-```
-
-Plik `.bit` ląduje w `<katalog_modulu>/results/`, a podsumowanie warningów w `<katalog_modulu>/results/warning_summary.log`.
-
----
-
-## 2. Wgrywanie Bitstreamu na FPGA (`program_basys.sh`)
-
-Skrypt `program_basys.sh` wgrywa wygenerowany strumień bitów (`.bit`) na docelową płytkę Basys 3 **do pamięci RAM FPGA** — po wyłączeniu zasilania bitstream znika. Jeżeli `.bit` nie istnieje, skrypt sam zawoła `generate_bitstream_basys.sh`. Skrypt jest zintegrowany z plikiem konfiguracyjnym, dzięki czemu nie trzeba pamiętać długich numerów JTAG.
+Skrypt `program_basys.sh` pozwala na wgranie wygenerowanego strumienia bitów (`.bit`) na docelową płytkę Basys 3. Skrypt został zintegrowany z plikiem konfiguracyjnym, dzięki czemu nie trzeba pamiętać długich sprzętowych numerów JTAG.
+Po wgraniu `.bit` skrypt programuje też lokalną pamięć QSPI plikiem `.bin`, dzięki czemu FPGA odtworzy konfigurację po ponownym włączeniu zasilania.
 
 ### Jak tego używać?
 Będąc w **głównym katalogu** projektu wpisz komendę z dwoma argumentami:
@@ -29,7 +15,7 @@ Będąc w **głównym katalogu** projektu wpisz komendę z dwoma argumentami:
 ```bash
 ./tools/program_basys.sh basys_cam basys15
 ```
-*Powyższa komenda odnajdzie plik `.bit` w `basys_cam/results/` i zaprogramuje nim płytkę "basys15".*
+*Powyższa komenda odnajdzie pliki `.bit` i `.bin` w `basys_cam/results/`, wypisze ich daty wygenerowania, zaprogramuje FPGA oraz pamięć QSPI płytki "basys15".*
 
 ### Co jeśli mam tylko jedną płytkę?
 Jeśli masz podłączoną tylko jedną płytkę, możesz pominąć drugi argument. Vivado wgra projekt na pierwsze urządzenie, jakie znajdzie:
@@ -37,47 +23,24 @@ Jeśli masz podłączoną tylko jedną płytkę, możesz pominąć drugi argumen
 ./tools/program_basys.sh basys_station
 ```
 
----
+### Pamięć QSPI
 
-## 3. Trwałe zaprogramowanie pamięci QSPI (`program_qspi_basys.sh`)
-
-Skrypt programuje pamięć **QSPI Flash** płytki Basys 3 (Spansion S25FL032P, 32 Mb) tak, żeby bitstream pozostał w urządzeniu po odłączeniu zasilania. Tworzy plik `.mcs` z `.bit` w `<katalog_modulu>/results/`, a następnie kasuje, zapisuje i weryfikuje flash przez Vivado. Po zakończeniu wciśnij `PROG` na płytce (albo wyłącz i włącz zasilanie), żeby FPGA załadowała wsad z flasha.
-
-```bash
-./tools/program_qspi_basys.sh basys_cam basys15
-./tools/program_qspi_basys.sh basys_station basys16
-```
-
-Pierwsze programowanie trwa zauważalnie dłużej niż wgrywanie do RAM (typowo 1–2 min). Argumenty są identyczne jak w `program_basys.sh`.
+Skrypt próbuje zaprogramować pamięć QSPI automatycznie, sprawdzając obsługiwane typy pamięci po kolei. Po poprawnym zapisie ustaw zworkę `JP1` w pozycję `QSPI`, żeby FPGA startowało z pamięci po włączeniu zasilania.
 
 ---
 
-## 4. Zarządzanie przypisaniami (`board_config.sh`)
+## 2. Zarządzanie przypisaniami (`board_config.sh`)
 
-W pliku `board_config.sh` znajduje się mapa przyjaznych nazw przypisana do identyfikatorów JTAG (Target ID). Jeśli w przyszłości otrzymasz inną płytkę z laboratorium, wystarczy odczytać jej numer i zaktualizować ten plik.
+W pliku `board_config.sh` znajduje się mapa przyjaznych nazw przypisana do identyfikatorów JTAG (Target ID). 
+Jeśli w przyszłości otrzymasz inną płytkę z laboratorium, wystarczy odczytać jej numer i zaktualizować ten plik.
 
 Format wpisów to `BOARD_<twoja_nazwa>="<jtag_id>"`.
 
 ---
 
-## 5. Listowanie podłączonych układów FPGA (`list_basys_devices.sh`)
+## 3. Listowanie podłączonych układów FPGA (`list_basys_devices.sh`)
 
 Jeśli potrzebujesz sprawdzić sprzętowe numery JTAG aktualnie podłączonych urządzeń, użyj komendy:
 ```bash
 ./tools/list_basys_devices.sh
-```
-
----
-
-## 6. Wgrywanie kodu na ESP32 (`program_esp.sh`)
-
-Skrypt pozwala wybrać który plik z `uec_projekt_esp32/src/main_*.cpp` ma być skompilowany i wgrany na podłączony mikrokontroler.
-
-W obecnym setupie u nas:
-- **ESP cam** (po stronie kamery, AP) → `COM10`
-- **ESP station** (po stronie stacji, STA) → `COM12`
-
-```bash
-./tools/program_esp.sh main_cam.cpp COM10
-./tools/program_esp.sh main_station.cpp COM12
 ```

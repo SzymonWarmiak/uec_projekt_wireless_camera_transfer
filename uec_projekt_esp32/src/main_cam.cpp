@@ -2,7 +2,6 @@
 #include <WiFi.h>
 #include <WiFiUdp.h>
 #include "spi_slave.h"
-#include "uart_ctrl.h"
 
 #define LED_PIN 8
 
@@ -19,8 +18,8 @@ unsigned long last_led_toggle = 0;
 static uint16_t frame_seq = 0;
 
 static void handle_basys_led_byte(uint8_t value) {
-    uart_send_led_byte(value);
-    Serial.printf("[UART->Basys] L298N IN mask=0x%X\n", value & 0x0F);
+    set_spi_reply_word((uint16_t)((value & 0x0F) << 8));
+    Serial.printf("[SPI MISO->Basys] L298N ctrl nibble=0x%X\n", value & 0x0F);
 }
 
 static void poll_serial_led_commands(void) {
@@ -85,8 +84,8 @@ void setup() {
     pinMode(LED_PIN, OUTPUT);
     digitalWrite(LED_PIN, HIGH);
 
-    Serial.println("\n--- ESP cam: SPI wideo (WiFi UDP) + UART -> L298N IN1..IN4 ---");
-    Serial.println("UDP: start | stop | led <0-15> | 1 bajt = maska IN (JXADC 7..10)");
+    Serial.println("\n--- ESP cam: SPI wideo + SPI MISO sterowanie L298N IN1..IN4 ---");
+    Serial.println("UDP: start | stop | led <0-15> | 1 bajt = nibble kierunku");
     Serial.println("USB: cyfra hex 0-F lub 1/2/4/8 (IN1..IN4)");
 
     WiFi.setSleep(WIFI_PS_NONE);
@@ -96,8 +95,8 @@ void setup() {
     Serial.println(WiFi.softAPIP());
 
     udp.begin(udp_port);
+    set_spi_reply_word(0);
     init_spi_slave();
-    init_uart_ctrl();
 }
 
 void loop() {

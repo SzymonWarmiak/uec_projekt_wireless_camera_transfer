@@ -12,6 +12,8 @@
 PROJECT_PATH=fpga/build
 LOG_FILE=results/warning_summary.log
 
+mkdir -p "$(dirname "$LOG_FILE")"
+
 SYNTH_IGNORE=\
 '\[Constraints\s18-5210\]\|'\
 '\[Netlist\s29-345\]'

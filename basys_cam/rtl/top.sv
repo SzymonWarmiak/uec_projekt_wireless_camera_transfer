@@ -7,7 +7,7 @@ module top (
     input  logic [15:0] sw,
     output logic spi_sck,
     output logic spi_mosi,
-    input  logic ctrl_uart_rx,
+    input  logic spi_miso,
     output logic [3:0] motor_in,
     output logic spi_cs_n,
     // Interfejs kamery OV7670
@@ -29,37 +29,24 @@ module top (
     localparam int IMG_W = 320;
     localparam int IMG_H = 240;
 
-    typedef enum logic {WAIT_FRAME, SEND_PIXELS} state_t;
+    typedef enum logic [1:0] {WAIT_FRAME, SEND_PIXELS, SEND_CTRL} state_t;
     state_t state = WAIT_FRAME;
+    localparam int CTRL_POLL_CYCLES = 40000;
 
     logic [7:0] spi_tdata;
     logic spi_tvalid;
     logic spi_tready;
     logic spi_tlast;
     
-    logic [3:0] ctrl_nibble;
-    logic       ctrl_uart_rx_sync;
-
-    (* ASYNC_REG = "TRUE" *) logic ctrl_uart_rx_meta;
-    always_ff @(posedge clk) begin
-        ctrl_uart_rx_meta  <= ctrl_uart_rx;
-        ctrl_uart_rx_sync <= ctrl_uart_rx_meta;
-    end
-
-    uart_ctrl_bridge u_uart_ctrl (
-        .clk(clk),
-        .reset(rst),
-        .rx(ctrl_uart_rx_sync),
-        .ctrl_nibble(ctrl_nibble)
-    );
+    logic [3:0] ctrl_nibble = 4'b0000;
 
     motor_l298n_decode u_motor_decode (
         .ctrl_nibble(ctrl_nibble),
         .motor_in(motor_in)
     );
 
-    // Podgląd pada na LD0..LD3 (opcjonalnie)
-    assign led = {12'b0, ctrl_nibble};
+    // LD0..LD3: command nibble from app/ESP. LD4..LD7: real L298N outputs.
+    assign led = {8'b0, motor_in, ctrl_nibble};
 
     logic [7:0] cap_tdata;
     logic       cap_tvalid;
@@ -86,13 +73,15 @@ module top (
     wire [13:0] fifo_wr_data_count;
     wire [13:0] fifo_rd_data_count;
 
-    logic spi_miso_idle;
+    logic [7:0] spi_rx_tdata;
+    logic       spi_rx_tvalid;
+    logic       spi_ctrl_sampled = 1'b0;
+    logic [$clog2(CTRL_POLL_CYCLES) - 1:0] ctrl_poll_cnt = '0;
 
     assign fifo_s_axis_tkeep  = 1'b1;
     assign fifo_s_axis_tstrb  = 1'b1;
     assign fifo_s_axis_tid    = 1'b0;
     assign fifo_s_axis_tdest  = 1'b0;
-    assign spi_miso_idle      = 1'b1;
 
     ov7670_capture #(
         .H_RES(640),
@@ -156,11 +145,11 @@ module top (
         .s_axis_tvalid(spi_tvalid),
         .s_axis_tready(spi_tready),
         .s_axis_tlast(spi_tlast),
-        .m_axis_rx_tdata(),
-        .m_axis_rx_tvalid(),
+        .m_axis_rx_tdata(spi_rx_tdata),
+        .m_axis_rx_tvalid(spi_rx_tvalid),
         .spi_sck(spi_sck),
         .spi_mosi(spi_mosi),
-        .spi_miso(spi_miso_idle),
+        .spi_miso(spi_miso),
         .spi_cs_n(spi_cs_n)
     );
 
@@ -177,19 +166,45 @@ module top (
             spi_tvalid = fifo_tvalid;
             spi_tlast = fifo_tlast;
             fifo_tready = spi_tready;
+        end else if (state == SEND_CTRL) begin
+            spi_tdata = 8'd0;
+            spi_tvalid = 1'b1;
+            spi_tlast = 1'b1;
         end
     end
 
     always_ff @(posedge clk) begin
         if (rst) begin
             state <= WAIT_FRAME;
+            ctrl_nibble <= 4'b0000;
+            spi_ctrl_sampled <= 1'b0;
+            ctrl_poll_cnt <= '0;
         end else begin
+            if (state == SEND_PIXELS && spi_rx_tvalid && !spi_ctrl_sampled) begin
+                ctrl_nibble <= spi_rx_tdata[3:0];
+                spi_ctrl_sampled <= 1'b1;
+            end else if (state == SEND_CTRL && spi_rx_tvalid) begin
+                ctrl_nibble <= spi_rx_tdata[3:0];
+            end
+
             case (state)
                 WAIT_FRAME: begin
-                    if (fifo_tvalid && fifo_tuser) state <= SEND_PIXELS;
+                    if (fifo_tvalid && fifo_tuser) begin
+                        state <= SEND_PIXELS;
+                        spi_ctrl_sampled <= 1'b0;
+                        ctrl_poll_cnt <= '0;
+                    end else if (ctrl_poll_cnt == CTRL_POLL_CYCLES - 1) begin
+                        state <= SEND_CTRL;
+                        ctrl_poll_cnt <= '0;
+                    end else begin
+                        ctrl_poll_cnt <= ctrl_poll_cnt + 1'b1;
+                    end
                 end
                 SEND_PIXELS: begin
                     if (spi_tvalid && spi_tready && spi_tlast) state <= WAIT_FRAME;
+                end
+                SEND_CTRL: begin
+                    if (spi_rx_tvalid) state <= WAIT_FRAME;
                 end
             endcase
         end

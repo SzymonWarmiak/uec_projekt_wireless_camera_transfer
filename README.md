@@ -6,7 +6,7 @@ Projekt AGH / UEC2: obraz z kamery **OV7670** trafia przez **FPGA Basys 3** i mo
 
 | Katalog | Rola |
 |---------|------|
-| [`basys_cam/`](basys_cam/) | Nadajnik: kamera, bufor ramki, **SPI master** → ESP, UART sterowania, wyjścia **JXADC 7–10** → L298N, lokalny podgląd VGA |
+| [`basys_cam/`](basys_cam/) | Nadajnik: kamera, bufor ramki, **SPI master** ↔ ESP, sterowanie po **SPI MISO**, wyjścia **JXADC 7–10** → L298N, lokalny podgląd VGA |
 | [`basys_station/`](basys_station/) | Odbiornik: **SPI slave** ← ESP, podwójne buforowanie, VGA na monitor |
 | [`uec_projekt_esp32/`](uec_projekt_esp32/) | Firmware **PlatformIO** (`main_cam.cpp`, `main_station.cpp`) — UDP, SPI DMA |
 | [`cam_pad_gui/`](cam_pad_gui/) | Aplikacja na PC: imitacja pada (Python + tkinter) |
@@ -21,7 +21,7 @@ flowchart LR
     OV7670[OV7670]
     FPGA_C[Artix-7]
     OV7670 --> FPGA_C
-    FPGA_C -->|SPI| ESP_C
+    FPGA_C <-->|SPI| ESP_C
     FPGA_C -->|VGA preview|
     FPGA_C -->|JXADC 7-10| L298N[L298N]
   end
@@ -39,8 +39,8 @@ flowchart LR
 ```
 
 1. **basys_cam** — przechwytuje klatkę (320×240), wysyła ~76 800 B przez SPI do ESP, opcjonalnie pokazuje obraz na lokalnym VGA.
-2. **ESP cam** (`main_cam.cpp`) — tryb **AP** `ESP_VIDEO_TX`, odbiór SPI, wysyłka klatek **UDP** (75 pakietów × 1024 B + nagłówek), **UART 9600** do FPGA (sterowanie).
-3. **ESP station** (`main_station.cpp`) — **STA** w tej samej sieci, broadcast `start`, składanie UDP → SPI do FPGA.
+2. **ESP cam** (`main_cam.cpp`) — tryb **STA** w skonfigurowanej sieci Wi-Fi, odbiór SPI, wysyłka klatek **UDP** (75 pakietów × 1024 B + nagłówek), sterowanie do FPGA po **SPI MISO**. Gdy brak konfiguracji Wi-Fi, łączy się jako klient z `ROBOT_SETUP`.
+3. **ESP station** (`main_station.cpp`) — **STA** w tej samej sieci, broadcast `start`, składanie UDP → SPI do FPGA. Gdy brak konfiguracji Wi-Fi, uruchamia AP `ROBOT_SETUP`.
 4. **basys_station** — odbiór SPI, framebuffer, **VGA** 800×600.
 
 ## Wymagania
@@ -55,32 +55,40 @@ flowchart LR
 
 Wszystkie polecenia z **katalogu głównego** repozytorium.
 
+Najpierw w Git Bash załaduj krótkie komendy:
+
+```bash
+source env.sh
+```
+
+Po tym można pisać np. `program_basys ...` i `program_esp ...` bez prefiksu `tools/`.
+
 ### 1. Konfiguracja JTAG (jednorazowo / przy nowych płytkach)
 
 ```bash
-./tools/list_basys_devices.sh
+list_basys_devices
 # wpisz numery seryjne w tools/board_config.sh jako BOARD_basys15=...
 ```
 
 ### 2. FPGA — kamera
 
 ```bash
-./tools/generate_bitstream_basys.sh basys_cam
-./tools/program_basys.sh basys_cam basys15
+generate_bitstream_basys basys_cam
+program_basys basys_cam basys15
 ```
 
 ### 3. FPGA — stacja
 
 ```bash
-./tools/generate_bitstream_basys.sh basys_station
-./tools/program_basys.sh basys_station basys16
+generate_bitstream_basys basys_station
+program_basys basys_station basys16
 ```
 
 ### 4. ESP
 
 ```bash
-./tools/program_esp.sh main_cam.cpp COM10
-./tools/program_esp.sh main_station.cpp COM14
+program_esp main_cam.cpp COM10
+program_esp main_station.cpp COM14
 ```
 
 Porty `COM*` dopasuj w Menedżerze urządzeń.
@@ -89,12 +97,13 @@ Porty `COM*` dopasuj w Menedżerze urządzeń.
 
 1. Zasilaj **Basys** i **ESP** osobno (np. dwa porty USB na PC — **nie** zasilaj ESP z USB Basysa).
 2. Wspólna **masa (GND)** między Basys a ESP przy połączeniach sygnałowych.
-3. Włącz obie płytki — stacja łączy się z `ESP_VIDEO_TX` / `video_stream` i sama negocjuje strumień (`start` broadcast).
-4. Obraz na **VGA** stacji; na ESP cam dioda miga przy aktywnym streamie.
+3. Przy pierwszym uruchomieniu skonfiguruj Wi-Fi przez aplikację Flutter: połącz telefon z `ROBOT_SETUP` / `robotsetup`, wpisz SSID i hasło sieci, wyślij konfigurację do ESP station. ESP station rozgłasza konfigurację do ESP cam i oba ESP restartują się do wybranej sieci.
+4. Włącz obie płytki — oba ESP łączą się z tą samą siecią i stacja sama negocjuje strumień (`start` broadcast).
+5. Obraz na **VGA** stacji; na ESP cam dioda miga przy aktywnym streamie.
 
 ### 6. Sterowanie silnikami (pad na PC)
 
-1. PC łączy się z Wi‑Fi **`ESP_VIDEO_TX`** (hasło **`video_stream`**).
+1. PC/telefon łączy się z tą samą siecią Wi-Fi, do której podłączone jest ESP cam.
 2. Uruchom:
 
 ```bash
@@ -114,23 +123,23 @@ python tools/cam_control.py led 0
 
 ## Połączenia sprzętowe (skrót)
 
-### basys_cam ↔ ESP32-C3 (SPI + UART)
+### basys_cam ↔ ESP32-C3 (SPI-only)
 
 | Sygnał | Basys | ESP (typowo) |
 |--------|-------|----------------|
 | SPI SCK | JA4 | GPIO4 |
 | SPI MOSI | JA2 | GPIO6 |
+| SPI MISO | JA3 | GPIO5 |
 | SPI CS | JA1 | GPIO7 |
-| UART RX | **JXADC pin 1** (XA1_P) | **GPIO5 TX** |
 | GND | GND | GND |
 
-SPI: tylko **MOSI** (ESP slave, bez MISO w tej wersji projektu).
+SPI: Basys jest masterem. Obraz idzie po **MOSI** do ESP, a aktualny nibble sterowania wraca po **MISO** do Basysa.
 
 ### L298N ↔ basys_cam (JXADC)
 
 | JXADC | FPGA | L298N |
 |-------|------|-------|
-| 1 | UART (nie L298N) | — |
+| 1 | wolny | — |
 | **7** | IN1 | silnik 1 |
 | **8** | IN2 | silnik 1 |
 | **9** | IN3 | silnik 2 |
@@ -157,7 +166,8 @@ LD0–LD3 na **basys_cam** pokazują aktualny **nibble z pada** (podgląd), nie 
 ## Protokół UDP (wideo)
 
 - Port: **1234**
-- AP cam: **`ESP_VIDEO_TX`** / **`video_stream`**, IP ESP zwykle **192.168.4.1**
+- Normalna praca: ESP cam i ESP station są klientami tej samej sieci Wi-Fi.
+- Tryb konfiguracji: ESP station tworzy AP **`ROBOT_SETUP`** / **`robotsetup`**, IP **192.168.4.1**, HTTP `POST /config` (`ssid`, `pass`). ESP cam łączy się z tym AP i odbiera konfigurację rozgłoszeniem UDP.
 - Start: tekst `start` → cam zapamiętuje IP stacji i wysyła klatki
 - Klatka: **75** datagramów po **1027** B (seq 2 B + chunk_id 1 B + 1024 B danych)
 - Sterowanie: **1 bajt** = nibble pada; `led <liczba>`; stacja może wysłać `0xC0` + nibble (2 B)
@@ -166,27 +176,28 @@ LD0–LD3 na **basys_cam** pokazują aktualny **nibble z pada** (podgląd), nie 
 
 | Skrypt | Opis |
 |--------|------|
-| `generate_bitstream_basys.sh <basys_cam\|basys_station>` | Synteza + implementacja Vivado → `*/results/*.bit` |
-| `program_basys.sh <moduł> [nazwa_płytki]` | Wgranie bitstreamu do RAM (JTAG) |
+| `generate_bitstream_basys <basys_cam\|basys_station>` | Synteza + implementacja Vivado → `*/results/*.bit` |
+| `program_basys <moduł> [nazwa_płytki]` | Wgranie bitstreamu do RAM (JTAG) |
 | `program_qspi_basys.sh <moduł> [nazwa_płytki]` | Trwały zapis do flash QSPI |
-| `program_esp.sh <main_*.cpp> <COM>` | Build + upload PlatformIO (jeden plik `main` na build) |
-| `list_basys_devices.sh` | Lista numerów JTAG |
+| `program_esp <main_*.cpp> <COM>` | Build + upload PlatformIO (jeden plik `main` na build) |
+| `list_basys_devices` | Lista numerów JTAG |
 | `board_config.sh` | Mapowanie `basys15` → serial |
 | `cam_control.py` | UDP: `start` / `stop` / `led <maska>` |
 
 Przykłady:
 
 ```bash
-./tools/generate_bitstream_basys.sh basys_cam
-./tools/program_basys.sh basys_cam basys15
-./tools/program_esp.sh main_cam.cpp COM10
+source env.sh
+generate_bitstream_basys basys_cam
+program_basys basys_cam basys15
+program_esp main_cam.cpp COM10
 python cam_pad_gui/pad_gui.py
 ```
 
 ## Firmware ESP (PlatformIO)
 
 - Środowisko: [`uec_projekt_esp32/platformio.ini`](uec_projekt_esp32/platformio.ini) — `esp32-c3-devkitm-1` dla kamery
-- Cam: `main_cam.cpp` + `spi_slave.cpp` + `uart_ctrl.cpp`
+- Cam: `main_cam.cpp` + `spi_slave.cpp`
 - Station: `main_station.cpp`
 - **Bez Dabble / BLE** — sterowanie przez UDP i pad GUI
 
@@ -200,4 +211,4 @@ python cam_pad_gui/pad_gui.py
 
 Projekt laboratoryjny UEC2 (AGH), rozszerzenia: most Wi‑Fi ESP32, sterowanie L298N, aplikacja `cam_pad_gui`.
 
-Bazowy szkielet FPGA/Vivado: materiały ćwiczeń (m.in. UART z list, VGA, OV7670).
+Bazowy szkielet FPGA/Vivado: materiały ćwiczeń (m.in. VGA, OV7670).

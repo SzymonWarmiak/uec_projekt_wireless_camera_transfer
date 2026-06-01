@@ -128,9 +128,9 @@ set_property PACKAGE_PIN J1 [get_ports spi_cs_n]
 ##Sch name = JA2
 set_property PACKAGE_PIN L2 [get_ports spi_mosi]
 	set_property IOSTANDARD LVCMOS33 [get_ports spi_mosi]
-##Sch name = JA3 (wolny — sterowanie UART na JXADC XA1_P)
-#set_property PACKAGE_PIN J2 [get_ports spi_miso_unused]
-#	set_property IOSTANDARD LVCMOS33 [get_ports spi_miso_unused]
+##Sch name = JA3 (MISO z ESP GPIO5)
+set_property PACKAGE_PIN J2 [get_ports spi_miso]
+	set_property IOSTANDARD LVCMOS33 [get_ports spi_miso]
 ##Sch name = JA4
 set_property PACKAGE_PIN G2 [get_ports spi_sck]
 	set_property IOSTANDARD LVCMOS33 [get_ports spi_sck]
@@ -206,10 +206,7 @@ set_property PACKAGE_PIN G2 [get_ports spi_sck]
 
 
 ##Pmod Header JXADC
-##Sch name = XA1_P — UART RX (ESP GPIO5 TX); pin 1 na zlaczu JXADC
-set_property PACKAGE_PIN J3 [get_ports ctrl_uart_rx]
-	set_property IOSTANDARD LVCMOS33 [get_ports ctrl_uart_rx]
-	set_property PULLUP true [get_ports ctrl_uart_rx]
+##Sch name = XA1_P — wolny; sterowanie z ESP idzie teraz po SPI MISO (JA3)
 ##Sch name = XA2_P
 #set_property PACKAGE_PIN L3 [get_ports {JXADC[1]}]
 	#set_property IOSTANDARD LVCMOS33 [get_ports {JXADC[1]}]

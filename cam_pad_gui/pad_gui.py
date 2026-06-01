@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-Prosty „pad” na PC → UDP → ESP → UART → L298N (2 silniki, JXADC 7–10).
+Prosty „pad” na PC → UDP → ESP → SPI MISO → L298N (2 silniki, JXADC 7–10).
 
-Wi-Fi: ESP_VIDEO_TX / video_stream. Przytrzymaj kierunek = jazda; puszczenie = stop.
+Wi-Fi: ta sama siec co ESP cam. Przytrzymaj kierunek = jazda; puszczenie = stop.
 """
 from __future__ import annotations
 
@@ -193,7 +193,7 @@ class PadGui(tk.Tk):
             self._status_var.set(f"Błąd UDP: {exc}")
             messagebox.showwarning(
                 "UDP",
-                f"Nie wysłano pakietu.\nCzy jesteś w sieci ESP_VIDEO_TX?\n\n{exc}",
+                f"Nie wysłano pakietu.\nCzy jesteś w tej samej sieci co ESP cam?\n\n{exc}",
             )
 
     def _press(self, bit: int) -> None:

@@ -11,12 +11,6 @@ export ROOT_DIR=$(pwd)
 export PATH=tools:${PATH}
 export VIVADO_DIR=$(which vivado | sed "s/bin\/vivado//")
 
-# Create local git repository - required for scripts
-if [[ ! -d .git ]]; then
-    git init
-    git add .
-fi
-
 mkdir -p results
 
 # Copy glbl.v from Vivado instalation dir - required for IP simulation

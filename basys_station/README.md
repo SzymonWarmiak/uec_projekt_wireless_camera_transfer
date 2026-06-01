@@ -21,8 +21,8 @@ git commit -am "Initial commit"
 Komendę `. env.sh` trzeba uruchomić za każdym razem, gdy rozpoczynamy pracę w nowej sesji terminala. Następnie, pozostając w głównym folderze, można wywoływać dostępne narzędzia:
 
 * `run_simulation.sh`
-* `generate_bitstream.sh`
-* `program_fpga.sh`
+* `generate_bitstream`
+* `program_fpga`
 * `clean.sh`
 
 Narzędzia te zostały opisane poniżej.
@@ -109,7 +109,7 @@ W pliku `<nazwa_testu>_tb.sv` należy napisać moduł testowy. Nazwa modułu mus
 ## Generowanie bitstreamu
 
 ```bash
-generate_bitstream.sh
+generate_bitstream
 ```
 
 Skrypt ten uruchamia generację bitstreamu, który finalnie znajdzie się w folderze `results`. Następnie sprawdza logi z syntezy i implementacji pod kątem ewentualnych ostrzeżeń (_warning_, _critical warning_) i błędów (_error_), a w razie ich wystąpienie kopiuje ich treść do pliku `results/warning_summary.log`.
@@ -117,7 +117,7 @@ Skrypt ten uruchamia generację bitstreamu, który finalnie znajdzie się w fold
 ## Wgrywanie bitstreamu do Basys3
 
 ```bash
-program_fpga.sh
+program_fpga
 ```
 
 Aby skrypt poprawnie wgrał bitstream do FPGA, w folderze `results` musi znajdować się **tylko jeden** plik z rozszerzeniem `.bit`.
