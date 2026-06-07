@@ -3,7 +3,7 @@ import 'package:robot_app/main.dart';
 
 void main() {
   testWidgets('shows pad controls', (WidgetTester tester) async {
-    await tester.pumpWidget(const RobotPadApp());
+    await tester.pumpWidget(const Jezdzik());
 
     expect(find.text('Basys Cam Pad'), findsOneWidget);
     expect(find.text('Start wideo'), findsOneWidget);

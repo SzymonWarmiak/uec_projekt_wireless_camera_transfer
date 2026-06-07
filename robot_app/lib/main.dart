@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 void main() {
-  runApp(const RobotPadApp());
+  runApp(const Jezdzik());
 }
 
 const int bitUp = 0x01;
@@ -13,23 +13,118 @@ const int bitRight = 0x02;
 const int bitDown = 0x04;
 const int bitLeft = 0x08;
 
-class RobotPadApp extends StatelessWidget {
-  const RobotPadApp({super.key});
+class Jezdzik extends StatelessWidget {
+  const Jezdzik({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Basys Cam Pad',
+      title: 'Jezdzik',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF2563EB),
-          brightness: Brightness.light,
+          seedColor: const Color(0xFF38BDF8),
+          brightness: Brightness.dark,
         ),
-        scaffoldBackgroundColor: const Color(0xFFF5F7FB),
+        scaffoldBackgroundColor: const Color(0xFF0B1018),
         useMaterial3: true,
       ),
-      home: const PadPage(),
+      home: const SplashPage(),
+    );
+  }
+}
+
+class SplashPage extends StatefulWidget {
+  const SplashPage({super.key});
+
+  @override
+  State<SplashPage> createState() => _SplashPageState();
+}
+
+class _SplashPageState extends State<SplashPage> {
+  static const List<String> _frames = <String>[
+    'photos/robot_lewo_przod.png',
+    'photos/robot_przod.png',
+    'photos/robot_prawo_przod.png',
+    'photos/robot_prawo.png',
+    'photos/robot_prawo_tyl.png',
+    'photos/robot_tyl.png',
+    'photos/robot_lewo_tyl.png',
+    'photos/robot_lewo.png',
+  ];
+
+  static const Duration _initialFrameDuration = Duration(milliseconds: 500);
+  static const Duration _frameDuration = Duration(milliseconds: 450);
+  int _frameIndex = 0;
+  Timer? _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    _timer = Timer(_initialFrameDuration, _startFrameTimer);
+  }
+
+  void _startFrameTimer() {
+    if (!mounted) return;
+    setState(() => _frameIndex++);
+    _timer = Timer.periodic(_frameDuration, (_) {
+      if (!mounted) return;
+      if (_frameIndex >= _frames.length - 1) {
+        _timer?.cancel();
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute<void>(builder: (_) => const PadPage()),
+        );
+        return;
+      }
+      setState(() => _frameIndex++);
+    });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    for (final frame in _frames) {
+      precacheImage(AssetImage(frame), context);
+    }
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color(0xFF101820),
+      body: SafeArea(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              SizedBox(
+                width: 260,
+                height: 260,
+                child: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 180),
+                  child: Image.asset(
+                    _frames[_frameIndex],
+                    key: ValueKey<int>(_frameIndex),
+                    fit: BoxFit.contain,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              Image.asset(
+                'photos/jezdzik_title.png',
+                width: 230,
+                fit: BoxFit.contain,
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
@@ -71,29 +166,30 @@ class PadPage extends StatefulWidget {
 }
 
 class _PadPageState extends State<PadPage> {
-  final TextEditingController _hostController = TextEditingController(
-    text: '192.168.4.1',
-  );
-  final TextEditingController _portController = TextEditingController(
-    text: '1234',
-  );
+  static const String _host = '192.168.4.1';
+  static const int _port = 1234;
   final FocusNode _keyboardFocus = FocusNode(debugLabel: 'padKeyboard');
   final Set<int> _pressedBits = <int>{};
   final Set<LogicalKeyboardKey> _pressedKeys = <LogicalKeyboardKey>{};
 
   UdpCamClient? _client;
-  String _status = 'UDP gotowe';
+  bool _hasConnectionError = false;
   int _lastMask = 0;
-  bool _sending = false;
+  Timer? _stopFlashTimer;
+  bool _stopPressed = false;
 
   static final Map<LogicalKeyboardKey, int> _keyMap = <LogicalKeyboardKey, int>{
     LogicalKeyboardKey.arrowUp: bitUp,
+    LogicalKeyboardKey.keyW: bitUp,
     LogicalKeyboardKey.digit1: bitUp,
     LogicalKeyboardKey.arrowRight: bitRight,
+    LogicalKeyboardKey.keyD: bitRight,
     LogicalKeyboardKey.digit2: bitRight,
     LogicalKeyboardKey.arrowDown: bitDown,
+    LogicalKeyboardKey.keyS: bitDown,
     LogicalKeyboardKey.digit4: bitDown,
     LogicalKeyboardKey.arrowLeft: bitLeft,
+    LogicalKeyboardKey.keyA: bitLeft,
     LogicalKeyboardKey.digit8: bitLeft,
     LogicalKeyboardKey.keyZ: bitUp,
     LogicalKeyboardKey.keyX: bitRight,
@@ -103,28 +199,19 @@ class _PadPageState extends State<PadPage> {
 
   @override
   void dispose() {
+    _stopFlashTimer?.cancel();
     _client?.close();
-    _hostController.dispose();
-    _portController.dispose();
     _keyboardFocus.dispose();
     super.dispose();
   }
 
-  UdpCamClient? _ensureClient() {
-    final host = _hostController.text.trim();
-    final port = int.tryParse(_portController.text.trim());
-
-    if (host.isEmpty || port == null || port < 1 || port > 65535) {
-      setState(() => _status = 'Niepoprawny host albo port');
-      return null;
-    }
-
+  UdpCamClient _ensureClient() {
     final current = _client;
-    if (current == null || current.host != host || current.port != port) {
+    if (current == null || current.host != _host || current.port != _port) {
       current?.close();
-      _client = UdpCamClient(host: host, port: port);
+      _client = UdpCamClient(host: _host, port: _port);
     }
-    return _client;
+    return _client!;
   }
 
   int _currentMask() {
@@ -137,56 +224,45 @@ class _PadPageState extends State<PadPage> {
 
   Future<void> _sendMask(int mask) async {
     final client = _ensureClient();
-    if (client == null) return;
 
-    setState(() => _sending = true);
     try {
       await client.sendMask(mask);
       if (!mounted) return;
       setState(() {
         _lastMask = mask & 0x0F;
-        _status =
-            'UDP -> ${client.host}:${client.port}  maska=0x${_lastMask.toRadixString(16).toUpperCase()}';
+        _hasConnectionError = false;
       });
-    } on Object catch (error) {
+    } on Object catch (_) {
       if (!mounted) return;
-      setState(() => _status = 'Blad UDP: $error');
-    } finally {
-      if (mounted) setState(() => _sending = false);
+      setState(() => _hasConnectionError = true);
     }
   }
 
   void _press(int bit) {
     _pressedBits.add(bit);
-    unawaited(_sendMask(_currentMask()));
+    final mask = _currentMask();
+    unawaited(_sendMask(mask));
   }
 
   void _release(int bit) {
     _pressedBits.remove(bit);
-    unawaited(_sendMask(_currentMask()));
+    final mask = _currentMask();
+    unawaited(_sendMask(mask));
   }
 
   void _stop() {
     _pressedBits.clear();
     _pressedKeys.clear();
+    _flashStop();
     unawaited(_sendMask(0));
   }
 
-  Future<void> _sendTextCommand(String command) async {
-    final client = _ensureClient();
-    if (client == null) return;
-
-    setState(() => _sending = true);
-    try {
-      await client.sendText(command);
-      if (!mounted) return;
-      setState(() => _status = 'Wyslano: $command');
-    } on Object catch (error) {
-      if (!mounted) return;
-      setState(() => _status = 'Blad UDP: $error');
-    } finally {
-      if (mounted) setState(() => _sending = false);
-    }
+  void _flashStop() {
+    _stopFlashTimer?.cancel();
+    setState(() => _stopPressed = true);
+    _stopFlashTimer = Timer(const Duration(milliseconds: 160), () {
+      if (mounted) setState(() => _stopPressed = false);
+    });
   }
 
   KeyEventResult _handleKey(FocusNode _, KeyEvent event) {
@@ -214,98 +290,42 @@ class _PadPageState extends State<PadPage> {
 
   Widget _networkBar() {
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 16),
       decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border.all(color: const Color(0xFFD7DEE8)),
+        color: const Color(0xFF111827),
+        border: Border.all(color: const Color(0xFF263244), width: 1.5),
         borderRadius: BorderRadius.circular(8),
       ),
-      child: Column(
-        children: <Widget>[
-          Row(
-            children: <Widget>[
-              Expanded(
-                flex: 2,
-                child: TextField(
-                  controller: _hostController,
-                  keyboardType: TextInputType.url,
-                  decoration: const InputDecoration(
-                    labelText: 'Host ESP',
-                    isDense: true,
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 10),
-              SizedBox(
-                width: 94,
-                child: TextField(
-                  controller: _portController,
-                  keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(
-                    labelText: 'Port',
-                    isDense: true,
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 10),
-          Row(
-            children: <Widget>[
-              Icon(
-                _sending ? Icons.sync : Icons.wifi_tethering,
-                size: 18,
-                color: _sending ? Colors.orange : Colors.blueGrey,
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  _status,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(fontFamily: 'monospace', fontSize: 13),
-                ),
-              ),
-            ],
-          ),
-        ],
+      child: Text(
+        '$_host:$_port',
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          color: _hasConnectionError
+              ? const Color(0xFFF87171)
+              : const Color(0xFFE2E8F0),
+          fontFamily: 'monospace',
+          fontSize: 20,
+          fontWeight: FontWeight.w700,
+        ),
       ),
     );
   }
 
-  Widget _streamControls() {
-    return Row(
-      children: <Widget>[
-        Expanded(
-          child: FilledButton.icon(
-            onPressed: () => unawaited(_sendTextCommand('start')),
-            icon: const Icon(Icons.play_arrow),
-            label: const Text('Start wideo'),
-          ),
-        ),
-        const SizedBox(width: 10),
-        Expanded(
-          child: OutlinedButton.icon(
-            onPressed: () => unawaited(_sendTextCommand('stop')),
-            icon: const Icon(Icons.stop),
-            label: const Text('Stop wideo'),
-          ),
-        ),
-        const SizedBox(width: 10),
-        IconButton.filledTonal(
-          tooltip: 'Stop IN',
-          onPressed: _stop,
-          icon: const Icon(Icons.block),
-        ),
-      ],
+  Widget _controlFrame(Widget child) {
+    return Container(
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        color: const Color(0xFF111827),
+        border: Border.all(color: const Color(0xFF263244), width: 1.5),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: child,
     );
   }
 
   Widget _padButton({
     required IconData icon,
     required int bit,
-    required String tooltip,
     double size = 78,
   }) {
     final pressed = (_lastMask & bit) != 0;
@@ -314,34 +334,29 @@ class _PadPageState extends State<PadPage> {
       onPointerDown: (_) => _press(bit),
       onPointerUp: (_) => _release(bit),
       onPointerCancel: (_) => _release(bit),
-      child: Tooltip(
-        message: tooltip,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 90),
-          width: size,
-          height: size,
-          decoration: BoxDecoration(
-            color: pressed ? const Color(0xFF2563EB) : const Color(0xFFE8EDF5),
-            border: Border.all(
-              color: pressed
-                  ? const Color(0xFF1E40AF)
-                  : const Color(0xFFC9D3E1),
-              width: 1.5,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 90),
+        width: size,
+        height: size,
+        decoration: BoxDecoration(
+          color: pressed ? const Color(0xFF2563EB) : const Color(0xFF243044),
+          border: Border.all(
+            color: pressed ? const Color(0xFF60A5FA) : const Color(0xFF3B4A63),
+            width: 1.5,
+          ),
+          borderRadius: BorderRadius.circular(8),
+          boxShadow: <BoxShadow>[
+            BoxShadow(
+              color: Colors.black.withValues(alpha: pressed ? 0.34 : 0.24),
+              blurRadius: pressed ? 6 : 12,
+              offset: Offset(0, pressed ? 2 : 6),
             ),
-            borderRadius: BorderRadius.circular(8),
-            boxShadow: <BoxShadow>[
-              BoxShadow(
-                color: Colors.black.withValues(alpha: pressed ? 0.16 : 0.08),
-                blurRadius: pressed ? 5 : 9,
-                offset: Offset(0, pressed ? 2 : 4),
-              ),
-            ],
-          ),
-          child: Icon(
-            icon,
-            size: size * 0.42,
-            color: pressed ? Colors.white : const Color(0xFF263241),
-          ),
+          ],
+        ),
+        child: Icon(
+          icon,
+          size: size * 0.42,
+          color: pressed ? Colors.white : const Color(0xFFE2E8F0),
         ),
       ),
     );
@@ -351,12 +366,7 @@ class _PadPageState extends State<PadPage> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        _padButton(
-          icon: Icons.keyboard_arrow_up,
-          bit: bitUp,
-          tooltip: 'Przod',
-          size: size,
-        ),
+        _padButton(icon: Icons.keyboard_arrow_up, bit: bitUp, size: size),
         const SizedBox(height: 8),
         Row(
           mainAxisSize: MainAxisSize.min,
@@ -364,7 +374,6 @@ class _PadPageState extends State<PadPage> {
             _padButton(
               icon: Icons.keyboard_arrow_left,
               bit: bitLeft,
-              tooltip: 'Lewo',
               size: size,
             ),
             const SizedBox(width: 8),
@@ -372,8 +381,16 @@ class _PadPageState extends State<PadPage> {
               width: size,
               height: size,
               child: IconButton.filledTonal(
-                tooltip: 'Stop',
                 onPressed: _stop,
+                style: IconButton.styleFrom(
+                  backgroundColor: _stopPressed
+                      ? const Color(0xFFDC2626)
+                      : const Color(0xFF243044),
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
                 icon: const Icon(Icons.circle),
               ),
             ),
@@ -381,144 +398,42 @@ class _PadPageState extends State<PadPage> {
             _padButton(
               icon: Icons.keyboard_arrow_right,
               bit: bitRight,
-              tooltip: 'Prawo',
               size: size,
             ),
           ],
         ),
         const SizedBox(height: 8),
-        _padButton(
-          icon: Icons.keyboard_arrow_down,
-          bit: bitDown,
-          tooltip: 'Tyl',
-          size: size,
-        ),
+        _padButton(icon: Icons.keyboard_arrow_down, bit: bitDown, size: size),
       ],
-    );
-  }
-
-  Widget _faceButtons({double size = 72}) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: <Widget>[
-        _letterButton('A', bitUp, 'IN1 / przod', size),
-        const SizedBox(width: 8),
-        _letterButton('B', bitRight, 'IN2 / prawo', size),
-        const SizedBox(width: 8),
-        _letterButton('X', bitDown, 'IN4 / tyl', size),
-        const SizedBox(width: 8),
-        _letterButton('Y', bitLeft, 'IN3 / lewo', size),
-      ],
-    );
-  }
-
-  Widget _letterButton(String text, int bit, String tooltip, double size) {
-    final pressed = (_lastMask & bit) != 0;
-    return Listener(
-      behavior: HitTestBehavior.opaque,
-      onPointerDown: (_) => _press(bit),
-      onPointerUp: (_) => _release(bit),
-      onPointerCancel: (_) => _release(bit),
-      child: Tooltip(
-        message: tooltip,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 90),
-          width: size,
-          height: size,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: pressed ? const Color(0xFF0F766E) : Colors.white,
-            border: Border.all(
-              color: pressed
-                  ? const Color(0xFF115E59)
-                  : const Color(0xFFC9D3E1),
-              width: 1.5,
-            ),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Text(
-            text,
-            style: TextStyle(
-              color: pressed ? Colors.white : const Color(0xFF263241),
-              fontSize: 22,
-              fontWeight: FontWeight.w800,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _section(String title, Widget child) {
-    return Container(
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border.all(color: const Color(0xFFD7DEE8)),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          Text(
-            title,
-            style: const TextStyle(
-              fontWeight: FontWeight.w700,
-              color: Color(0xFF263241),
-            ),
-          ),
-          const SizedBox(height: 12),
-          child,
-        ],
-      ),
     );
   }
 
   Widget _body(BoxConstraints constraints) {
     final wide = constraints.maxWidth >= 760;
-    final controls = wide
-        ? Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              _section('D-pad', _dPad(size: 86)),
-              const SizedBox(width: 18),
-              _section('Przyciski', _faceButtons(size: 78)),
-            ],
-          )
-        : Column(
-            children: <Widget>[
-              _section('D-pad', _dPad()),
-              const SizedBox(height: 14),
-              _section('Przyciski', _faceButtons()),
-            ],
-          );
-
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
-      child: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 840),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              _networkBar(),
-              const SizedBox(height: 12),
-              _streamControls(),
-              const SizedBox(height: 16),
-              controls,
-              const SizedBox(height: 14),
-              Text(
-                'Maska: 0x${_lastMask.toRadixString(16).toUpperCase()}  (${_lastMask.toRadixString(2).padLeft(4, '0')})',
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontFamily: 'monospace',
-                  fontSize: 16,
-                  fontWeight: FontWeight.w700,
-                  color: Color(0xFF263241),
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 24, 16, 16),
+        child: Align(
+          alignment: Alignment.topCenter,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 840),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Image.asset(
+                  'photos/jezdzik_title.png',
+                  width: wide ? 240 : 210,
+                  fit: BoxFit.contain,
                 ),
-              ),
-            ],
+                const SizedBox(height: 14),
+                _networkBar(),
+                Expanded(
+                  child: Center(
+                    child: _controlFrame(_dPad(size: wide ? 96 : 82)),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -535,17 +450,7 @@ class _PadPageState extends State<PadPage> {
         behavior: HitTestBehavior.translucent,
         onTap: () => _keyboardFocus.requestFocus(),
         child: Scaffold(
-          appBar: AppBar(
-            title: const Text('Basys Cam Pad'),
-            centerTitle: true,
-            actions: <Widget>[
-              IconButton(
-                tooltip: 'Stop',
-                onPressed: _stop,
-                icon: const Icon(Icons.stop_circle_outlined),
-              ),
-            ],
-          ),
+          backgroundColor: const Color(0xFF0B1018),
           body: LayoutBuilder(
             builder: (context, constraints) => _body(constraints),
           ),
