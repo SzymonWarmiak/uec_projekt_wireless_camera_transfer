@@ -1,34 +1,43 @@
-# Basys Cam Pad
+# Jeździk - aplikacja Flutter
 
-Minimalna aplikacja Flutter do sterowania `basys_cam` tak samo jak
-`cam_pad_gui`.
+Aplikacja sterująca robotem z Androida i Windowsa.
 
-## Protokol
+## Funkcje
 
-- Domyslny host: `192.168.4.1`
-- Domyslny port UDP: `1234`
-- `Start wideo` wysyla tekst `start`
-- `Stop wideo` wysyla tekst `stop`
-- Sterowanie jazda wysyla jeden bajt UDP:
-  - `0x01` przod
-  - `0x02` prawo
-  - `0x04` tyl
-  - `0x08` lewo
-  - `0x00` stop
+- sterowanie kierunkami przez UDP,
+- klawiatura na Windows: `W`, `S`, `A`, `D`, spacja jako stop,
+- domyślne IP `ESP_station`: `192.168.4.1`,
+- konfiguracja Wi-Fi ESP,
+- reset do sieci `Robot_jezdzik`.
 
-Telefon musi byc polaczony z Wi-Fi `ESP_VIDEO_TX` / `video_stream`.
-Aplikacja nie uzywa Firebase, Bluetooth ani HTTP.
+## Protokół
+
+- port UDP: `1234`,
+- sterowanie: 1 bajt z nibblem kierunku:
+  - `0x01` przód,
+  - `0x02` tył,
+  - `0x04` lewo,
+  - `0x08` prawo,
+  - `0x00` stop,
+- konfiguracja Wi-Fi:
+
+```text
+CFG
+ssid
+password
+AUTO
+```
 
 ## Uruchomienie
 
-```powershell
+```bash
 cd robot_app
 flutter run
 ```
 
 Budowanie APK:
 
-```powershell
+```bash
 cd robot_app
 flutter build apk
 ```

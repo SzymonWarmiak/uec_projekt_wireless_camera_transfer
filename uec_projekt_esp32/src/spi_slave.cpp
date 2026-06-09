@@ -71,8 +71,13 @@ const uint8_t* get_spi_buffer() {
 }
 
 void set_spi_reply_word(uint16_t word) {
-    // basys_cam czyta pierwszy bajt MISO przy kazdej ramce SPI.
-    // Trzymamy tez drugi bajt jako rezerwe pod ewentualne rozszerzenie protokolu.
-    sendbuf[0] = (uint8_t)((word >> 8) & 0xFF);
-    sendbuf[1] = (uint8_t)(word & 0xFF);
+    // Basys_cam probkuje MISO na poczatku transakcji SPI. Wypelniamy kilka
+    // pierwszych bajtow tym samym kodem, zeby sterowanie bylo odporne na
+    // przesuniecie o 1-2 bajty przy starcie ramki.
+    uint8_t hi = (uint8_t)((word >> 8) & 0xFF);
+    uint8_t lo = (uint8_t)(word & 0xFF);
+    for (int i = 0; i < 32; i += 2) {
+        sendbuf[i] = hi;
+        sendbuf[i + 1] = lo;
+    }
 }

@@ -46,7 +46,7 @@ module top (
     //   bit2 = btnD -> LED3
     //   bit3 = btnL -> LED4
     logic [15:0] tx_buttons;
-    assign tx_buttons = {12'd0, btnL_d, btnD_d, btnR_d, btnU_d};
+    assign tx_buttons = {12'd0, btnR_d, btnL_d, btnD_d, btnU_d};
 
     spi_stream_rx #(
         .CLK_DIV(4) // np. 40MHz / 4 = 10MHz dla SPI

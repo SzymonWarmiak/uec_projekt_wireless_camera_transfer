@@ -15,9 +15,9 @@ DEFAULT_PORT = 1234
 
 # UDP[3:0] = kierunek pada; FPGA zamienia na IN1..IN4 (L298N)
 BIT_UP = 0x01
-BIT_RIGHT = 0x02
-BIT_DOWN = 0x04
-BIT_LEFT = 0x08
+BIT_DOWN = 0x02
+BIT_LEFT = 0x04
+BIT_RIGHT = 0x08
 BIT_A = 0x01
 BIT_B = 0x02
 BIT_X = 0x04
@@ -149,9 +149,9 @@ class PadGui(tk.Tk):
             "Left": BIT_LEFT,
             "Right": BIT_RIGHT,
             "1": BIT_UP,
-            "2": BIT_RIGHT,
-            "4": BIT_DOWN,
-            "8": BIT_LEFT,
+            "2": BIT_DOWN,
+            "4": BIT_LEFT,
+            "8": BIT_RIGHT,
             "z": BIT_A,
             "x": BIT_B,
             "c": BIT_Y,

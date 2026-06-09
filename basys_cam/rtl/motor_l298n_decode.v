@@ -16,13 +16,13 @@ module motor_l298n_decode (
     localparam [3:0] MOT_STOP  = 4'b0000;
     localparam [3:0] MOT_FWD   = 4'b1001; // IN1=1 IN2=0, IN3=0 IN4=1
     localparam [3:0] MOT_REV   = 4'b0110; // IN1=0 IN2=1, IN3=1 IN4=0
-    localparam [3:0] MOT_LEFT  = 4'b1000; // right motor stop, left motor forward
-    localparam [3:0] MOT_RIGHT = 4'b0001; // right motor forward, left motor stop
+    localparam [3:0] MOT_LEFT  = 4'b1000; // left turn: right motor forward
+    localparam [3:0] MOT_RIGHT = 4'b0001; // right turn: left motor forward
 
     wire up    = ctrl_nibble[0];
-    wire right = ctrl_nibble[1];
-    wire down  = ctrl_nibble[2];
-    wire left  = ctrl_nibble[3];
+    wire down  = ctrl_nibble[1];
+    wire left  = ctrl_nibble[2];
+    wire right = ctrl_nibble[3];
 
     always @(*) begin
         if ((up && down) || (left && right))
