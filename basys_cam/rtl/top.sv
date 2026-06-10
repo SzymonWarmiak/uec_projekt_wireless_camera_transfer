@@ -2,7 +2,8 @@
 
 module top (
     input  logic clk,
-    input  logic rst,
+    input  logic clk_vga,
+    input  logic rst_n,
     output logic [15:0] led,
     input  logic [15:0] sw,
     output logic spi_sck,
@@ -10,15 +11,15 @@ module top (
     input  logic spi_miso,
     output logic [3:0] motor_in,
     output logic spi_cs_n,
-    // Interfejs kamery OV7670
+
     output logic ov7670_sioc,
-    inout  wire  ov7670_siod,
+    inout  wire ov7670_siod,
     input  logic ov7670_vsync,
     input  logic ov7670_href,
     input  logic ov7670_pclk,
     output logic ov7670_xclk,
     input  logic [7:0] ov7670_data,
-    // Interfejs VGA
+
     output logic vs,
     output logic hs,
     output logic [3:0] r,
@@ -45,7 +46,6 @@ module top (
         .motor_in(motor_in)
     );
 
-    // LD0..LD3: command nibble from app/ESP. LD4..LD7: real L298N outputs.
     assign led = {8'b0, motor_in, ctrl_nibble};
 
     logic [7:0] cap_tdata;
@@ -59,19 +59,19 @@ module top (
     logic       fifo_tlast;
     logic       fifo_tuser;
     logic       cap_tready;
-    wire [0:0]  fifo_s_axis_tkeep;
-    wire [0:0]  fifo_s_axis_tstrb;
-    wire [0:0]  fifo_m_axis_tkeep;
-    wire [0:0]  fifo_s_axis_tid;
-    wire [0:0]  fifo_s_axis_tdest;
-    wire [0:0]  fifo_m_axis_tid;
-    wire [0:0]  fifo_m_axis_tdest;
-    wire        fifo_prog_full;
-    wire        fifo_almost_full;
-    wire        fifo_prog_empty;
-    wire        fifo_almost_empty;
-    wire [13:0] fifo_wr_data_count;
-    wire [13:0] fifo_rd_data_count;
+    logic [0:0]  fifo_s_axis_tkeep;
+    logic [0:0]  fifo_s_axis_tstrb;
+    logic [0:0]  fifo_m_axis_tkeep;
+    logic [0:0]  fifo_s_axis_tid;
+    logic [0:0]  fifo_s_axis_tdest;
+    logic [0:0]  fifo_m_axis_tid;
+    logic [0:0]  fifo_m_axis_tdest;
+    logic        fifo_prog_full;
+    logic        fifo_almost_full;
+    logic        fifo_prog_empty;
+    logic        fifo_almost_empty;
+    logic [13:0] fifo_wr_data_count;
+    logic [13:0] fifo_rd_data_count;
 
     logic [7:0] spi_rx_tdata;
     logic       spi_rx_tvalid;
@@ -90,6 +90,7 @@ module top (
         .OUT_H(IMG_H)
     ) u_capture (
         .pclk(ov7670_pclk),
+        .rst_n(rst_n),
         .vsync(ov7670_vsync),
         .href(ov7670_href),
         .d(ov7670_data),
@@ -106,7 +107,7 @@ module top (
         .TUSER_WIDTH(1),
         .USE_ADV_FEATURES("0000")
     ) u_fifo (
-        .s_aresetn(~rst),
+        .s_aresetn(rst_n),
         .s_aclk(ov7670_pclk),
         .s_axis_tvalid(cap_tvalid),
         .s_axis_tdata(cap_tdata),
@@ -140,7 +141,7 @@ module top (
         .CLK_DIV(1)
     ) u_spi_master (
         .clk(clk),
-        .rst(rst),
+        .rst_n(rst_n),
         .s_axis_tdata(spi_tdata),
         .s_axis_tvalid(spi_tvalid),
         .s_axis_tready(spi_tready),
@@ -160,7 +161,9 @@ module top (
         fifo_tready = 1'b0;
 
         if (state == WAIT_FRAME) begin
-            if (fifo_tvalid && !fifo_tuser) fifo_tready = 1'b1;
+            if (fifo_tvalid && !fifo_tuser) begin
+                fifo_tready = 1'b1;
+            end
         end else if (state == SEND_PIXELS) begin
             spi_tdata = fifo_tdata;
             spi_tvalid = fifo_tvalid;
@@ -173,8 +176,8 @@ module top (
         end
     end
 
-    always_ff @(posedge clk) begin
-        if (rst) begin
+    always_ff @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
             state <= WAIT_FRAME;
             ctrl_nibble <= 4'b0000;
             spi_ctrl_sampled <= 1'b0;
@@ -201,10 +204,17 @@ module top (
                     end
                 end
                 SEND_PIXELS: begin
-                    if (spi_tvalid && spi_tready && spi_tlast) state <= WAIT_FRAME;
+                    if (spi_tvalid && spi_tready && spi_tlast) begin
+                        state <= WAIT_FRAME;
+                    end
                 end
                 SEND_CTRL: begin
-                    if (spi_rx_tvalid) state <= WAIT_FRAME;
+                    if (spi_rx_tvalid) begin
+                        state <= WAIT_FRAME;
+                    end
+                end
+                default: begin
+                    state <= WAIT_FRAME;
                 end
             endcase
         end
@@ -212,9 +222,12 @@ module top (
 
     logic [1:0] clk_div = '0;
     logic clk_25mhz;
-    always_ff @(posedge clk) begin
-        if (rst) clk_div <= '0;
-        else clk_div <= clk_div + 1'b1;
+    always_ff @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            clk_div <= '0;
+        end else begin
+            clk_div <= clk_div + 1'b1;
+        end
     end
     assign clk_25mhz = clk_div[1];
     assign ov7670_xclk = clk_25mhz;
@@ -222,36 +235,28 @@ module top (
     logic camera_config_done;
     ov7670_configurator u_configurator (
         .clk(clk_25mhz),
-        .rst(rst),
+        .rst_n(rst_n),
         .sioc(ov7670_sioc),
         .siod(ov7670_siod),
         .done(camera_config_done)
     );
 
-    // =========================================================
-    // --- OBSŁUGA WYŚWIETLACZA VGA (lokalny preview z kamery, debug) ---
-    // =========================================================
-
-    // Zegar 40 MHz dla VGA 800x600 @ 60Hz jest tworzony juz w fpga/rtl/top_basys3.sv
-    // przez MMCM, tutaj 'clk' to 40 MHz.
-    logic clk_40mhz;
-    assign clk_40mhz = clk;
-
-    // Licznik adresow pikseli (zsynchronizowany z zegarem pclk kamery).
-    // cap_tuser to znacznik poczatku nowej klatki (piksel 0,0).
     logic [$clog2(IMG_W * IMG_H) - 1 : 0] cam_wr_addr = '0;
-    always_ff @(posedge ov7670_pclk) begin
-        if (cap_tvalid) begin
-            if (cap_tuser) cam_wr_addr <= '0;
-            else           cam_wr_addr <= cam_wr_addr + 1;
+    always_ff @(posedge ov7670_pclk or negedge rst_n) begin
+        if (!rst_n) begin
+            cam_wr_addr <= '0;
+        end else if (cap_tvalid) begin
+            if (cap_tuser) begin
+                cam_wr_addr <= '0;
+            end else begin
+                cam_wr_addr <= cam_wr_addr + 1'b1;
+            end
         end
     end
 
-    // Glowny modul renderujacy VGA z buforem ramki. Celownik wylaczony -
-    // target_x/y wyzerowane (renderer i tak nie ma juz logiki crosshaira).
     top_vga u_top_vga (
-        .clk(clk_40mhz),
-        .rst_n(~rst),
+        .clk(clk_vga),
+        .rst_n(rst_n),
         .frame_wr_clk(ov7670_pclk),
         .frame_wr_en(cap_tvalid),
         .frame_wr_bank(1'b0),

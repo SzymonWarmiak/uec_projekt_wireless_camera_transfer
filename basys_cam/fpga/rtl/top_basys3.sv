@@ -13,27 +13,27 @@
  */
 
 module top_basys3 (
-        input  wire clk,
-        input  wire btnC,
-        output wire [15:0] led,
-        input  wire [15:0] sw,
-        output wire spi_sck,
-        output wire spi_mosi,
-        input  wire spi_miso,
-        output wire [3:0] motor_in,
-        output wire spi_cs_n,
-        output wire ov7670_sioc,
+        input  logic clk,
+        input  logic btnC,
+        output logic [15:0] led,
+        input  logic [15:0] sw,
+        output logic spi_sck,
+        output logic spi_mosi,
+        input  logic spi_miso,
+        output logic [3:0] motor_in,
+        output logic spi_cs_n,
+        output logic ov7670_sioc,
         inout  wire ov7670_siod,
-        input  wire ov7670_vsync,
-        input  wire ov7670_href,
-        input  wire ov7670_pclk,
-        output wire ov7670_xclk,
-        input  wire [7:0] ov7670_data,
-        output wire [3:0] vgaRed,
-        output wire [3:0] vgaGreen,
-        output wire [3:0] vgaBlue,
-        output wire Hsync,
-        output wire Vsync
+        input  logic ov7670_vsync,
+        input  logic ov7670_href,
+        input  logic ov7670_pclk,
+        output logic ov7670_xclk,
+        input  logic [7:0] ov7670_data,
+        output logic [3:0] vgaRed,
+        output logic [3:0] vgaGreen,
+        output logic [3:0] vgaBlue,
+        output logic Hsync,
+        output logic Vsync
     );
 
     timeunit 1ns;
@@ -43,11 +43,15 @@ module top_basys3 (
      * Local variables and signals
      */
 
-    wire clk_in, clk_fb, clk_ss, clk_out;
-    wire locked;
-    wire pclk;
-    wire pclk_mirror;
-
+    logic clk_in;
+    logic clk_fb;
+    logic clk_vga_ss;
+    logic clk_vga_out;
+    logic clk_sys_out;
+    logic locked;
+    logic pclk_vga;
+    logic pclk_sys;
+    logic rst_n;
     (* KEEP = "TRUE" *)
     (* ASYNC_REG = "TRUE" *)
     logic [7:0] safe_start = 0;
@@ -66,13 +70,15 @@ module top_basys3 (
 
     MMCME2_BASE #(
         .CLKIN1_PERIOD(10.000),
+        .DIVCLK_DIVIDE(1),
         .CLKFBOUT_MULT_F(10.000),
-        .CLKOUT0_DIVIDE_F(25.000)
+        .CLKOUT0_DIVIDE_F(15.375),
+        .CLKOUT1_DIVIDE(25)
     ) clk_in_mmcme2 (
         .CLKIN1(clk_in),
-        .CLKOUT0(clk_out),
+        .CLKOUT0(clk_vga_out),
         .CLKOUT0B(),
-        .CLKOUT1(),
+        .CLKOUT1(clk_sys_out),
         .CLKOUT1B(),
         .CLKOUT2(),
         .CLKOUT2B(),
@@ -89,20 +95,35 @@ module top_basys3 (
         .RST(1'b0)
     );
 
-    BUFH clk_out_bufh (
-        .I(clk_out),
-        .O(clk_ss)
+    BUFH clk_vga_bufh (
+        .I(clk_vga_out),
+        .O(clk_vga_ss)
     );
 
-    always_ff @(posedge clk_ss)
-        safe_start <= {safe_start[6:0],locked};
+    assign rst_n = ~btnC;
+
+    always_ff @(posedge clk_vga_ss or negedge rst_n) begin
+        if (!rst_n) begin
+            safe_start <= '0;
+        end else begin
+            safe_start <= {safe_start[6:0], locked};
+        end
+    end
 
     BUFGCE #(
         .SIM_DEVICE("7SERIES")
-    ) clk_out_bufgce (
-        .I(clk_out),
+    ) clk_vga_bufgce (
+        .I(clk_vga_out),
         .CE(safe_start[7]),
-        .O(pclk)
+        .O(pclk_vga)
+    );
+
+    BUFGCE #(
+        .SIM_DEVICE("7SERIES")
+    ) clk_sys_bufgce (
+        .I(clk_sys_out),
+        .CE(safe_start[7]),
+        .O(pclk_sys)
     );
 
     /**
@@ -110,8 +131,9 @@ module top_basys3 (
      */
 
     top u_top (
-        .clk(pclk),
-        .rst(btnC),
+        .clk(pclk_sys),
+        .clk_vga(pclk_vga),
+        .rst_n(rst_n),
         .led(led),
         .sw(sw),
         .spi_sck(spi_sck),

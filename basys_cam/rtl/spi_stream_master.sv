@@ -4,7 +4,7 @@ module spi_stream_master #(
     parameter int CLK_DIV = 2
 )(
     input  logic clk,
-    input  logic rst,
+    input  logic rst_n,
 
     input  logic [7:0] s_axis_tdata,
     input  logic       s_axis_tvalid,
@@ -31,13 +31,19 @@ module spi_stream_master #(
     assign spi_sck = sck_int;
     assign spi_mosi = tx_shift[7];
 
-    always_ff @(posedge clk) begin
-        if (rst) begin
+    always_ff @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
             state <= IDLE;
             s_axis_tready <= 1'b0;
             m_axis_rx_tvalid <= 1'b0;
+            m_axis_rx_tdata <= '0;
             spi_cs_n <= 1'b1;
             sck_int <= 1'b0;
+            tx_shift <= '0;
+            rx_shift <= '0;
+            bit_cnt <= '0;
+            clk_cnt <= '0;
+            last_byte <= 1'b0;
         end else begin
             m_axis_rx_tvalid <= 1'b0;
 
@@ -63,10 +69,15 @@ module spi_stream_master #(
                             rx_shift <= {rx_shift[6:0], spi_miso};
                         end else begin
                             tx_shift <= {tx_shift[6:0], 1'b0};
-                            if (bit_cnt == 0) state <= DONE;
-                            else bit_cnt <= bit_cnt - 1'b1;
+                            if (bit_cnt == 0) begin
+                                state <= DONE;
+                            end else begin
+                                bit_cnt <= bit_cnt - 1'b1;
+                            end
                         end
-                    end else clk_cnt <= clk_cnt + 1'b1;
+                    end else begin
+                        clk_cnt <= clk_cnt + 1'b1;
+                    end
                 end
                 DONE: begin
                     if (clk_cnt == CLK_DIV - 1) begin
@@ -79,7 +90,9 @@ module spi_stream_master #(
                         end else begin
                             state <= WAIT_NEXT;
                         end
-                    end else clk_cnt <= clk_cnt + 1'b1;
+                    end else begin
+                        clk_cnt <= clk_cnt + 1'b1;
+                    end
                 end
                 WAIT_NEXT: begin
                     s_axis_tready <= 1'b1;
@@ -91,6 +104,9 @@ module spi_stream_master #(
                         clk_cnt <= '0;
                         state <= SHIFT;
                     end
+                end
+                default: begin
+                    state <= IDLE;
                 end
             endcase
         end

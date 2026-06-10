@@ -13,6 +13,6 @@ basys_cam/rtl/top_vga.sv
 basys_cam/rtl/top.sv
 basys_cam/fpga/rtl/top_basys3.sv
 
-basys_cam/rtl/list_ch04_11_mod_m_counter.v
-basys_cam/rtl/list_ch04_20_fifo.v
-basys_cam/rtl/motor_l298n_decode.v
+basys_cam/rtl/mod_m_counter.sv
+basys_cam/rtl/fifo.sv
+basys_cam/rtl/motor_l298n_decode.sv

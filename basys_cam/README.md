@@ -219,7 +219,7 @@ Poniżej przedstawiono hierarchię plików w projekcie. Aby wszystkie narzędzia
 W tym folderze znajdują się pliki powiązane stricte z FPGA. Plik `fpga/rtl/top_*_basys3.sv` zawiera instancję funkcjonalnego topa projektu (`rtl/top*.sv`) oraz bloki IP specyficzne dla FPGA. Pozwala również zrealizować mapowanie funkcjonalnych portów projektu na fizyczne wyprowadzenia na PCB, np:
 
 ```sv
-.rst(btnC),
+.rst_n(~btnC),
 .ready(led[0])
 ```
 

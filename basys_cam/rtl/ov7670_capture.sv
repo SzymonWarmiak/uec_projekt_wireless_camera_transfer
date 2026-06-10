@@ -7,6 +7,7 @@ module ov7670_capture #(
     parameter int OUT_H = 64
 )(
     input  logic pclk,
+    input  logic rst_n,
     input  logic vsync,
     input  logic href,
     input  logic [7:0] d,
@@ -32,47 +33,72 @@ module ov7670_capture #(
     logic prev_href  = 1'b0;
     logic sof_flag   = 1'b0;
 
-    always_ff @(posedge pclk) begin
-        prev_vsync <= vsync;
-        prev_href  <= href;
-
-        m_axis_tvalid <= 1'b0;
-        m_axis_tlast  <= 1'b0;
-        m_axis_tuser  <= 1'b0;
-
-        if (vsync) begin
+    always_ff @(posedge pclk or negedge rst_n) begin
+        if (!rst_n) begin
             x_cnt <= '0;
             y_cnt <= '0;
             byte_sel <= 1'b0;
-            sof_flag <= 1'b1;
+            latched_d <= '0;
+            prev_vsync <= 1'b0;
+            prev_href <= 1'b0;
+            sof_flag <= 1'b0;
+            m_axis_tdata <= '0;
+            m_axis_tvalid <= 1'b0;
+            m_axis_tlast <= 1'b0;
+            m_axis_tuser <= 1'b0;
         end else begin
-            if (href && !prev_href) begin
-                byte_sel <= 1'b0;
+            prev_vsync <= vsync;
+            prev_href  <= href;
+
+            m_axis_tvalid <= 1'b0;
+            m_axis_tlast  <= 1'b0;
+            m_axis_tuser  <= 1'b0;
+
+            if (vsync) begin
                 x_cnt <= '0;
-            end
+                y_cnt <= '0;
+                byte_sel <= 1'b0;
+                sof_flag <= 1'b1;
+            end else begin
+                if (href && !prev_href) begin
+                    byte_sel <= 1'b0;
+                    x_cnt <= '0;
+                end
 
-            if (href) begin
-                byte_sel <= ~byte_sel;
-                if (byte_sel == 1'b0) begin
-                    latched_d <= d;
-                end else begin
-                    logic [7:0] gray;
-                    gray = {latched_d[2:0], d[7:5], 2'b00};
+                if (href) begin
+                    byte_sel <= ~byte_sel;
+                    if (byte_sel == 1'b0) begin
+                        latched_d <= d;
+                    end else begin
+                        logic [7:0] gray;
+                        gray = {latched_d[2:0], d[7:5], 2'b00};
 
-                    if (x_cnt >= START_X && x_cnt < START_X + CROP_W && y_cnt >= START_Y && y_cnt < START_Y + CROP_H) begin
-                        // Przepuszczamy co drugi piksel w obu osiach (Downsample x2)
-                        if (x_cnt[0] == 1'b0 && y_cnt[0] == 1'b0) begin
-                            m_axis_tdata  <= gray;
-                            m_axis_tvalid <= 1'b1;
-                            if (sof_flag) begin m_axis_tuser <= 1'b1; sof_flag <= 1'b0; end
-                            if (x_cnt == START_X + CROP_W - DOWNSAMPLE && y_cnt == START_Y + CROP_H - DOWNSAMPLE) m_axis_tlast <= 1'b1;
+                        if ((x_cnt >= START_X) &&
+                            (x_cnt < START_X + CROP_W) &&
+                            (y_cnt >= START_Y) &&
+                            (y_cnt < START_Y + CROP_H)) begin
+                            // Przepuszczamy co drugi piksel w obu osiach (Downsample x2).
+                            if ((x_cnt[0] == 1'b0) && (y_cnt[0] == 1'b0)) begin
+                                m_axis_tdata  <= gray;
+                                m_axis_tvalid <= 1'b1;
+                                if (sof_flag) begin
+                                    m_axis_tuser <= 1'b1;
+                                    sof_flag <= 1'b0;
+                                end
+                                if ((x_cnt == START_X + CROP_W - DOWNSAMPLE) &&
+                                    (y_cnt == START_Y + CROP_H - DOWNSAMPLE)) begin
+                                    m_axis_tlast <= 1'b1;
+                                end
+                            end
                         end
+                        x_cnt <= x_cnt + 1'b1;
                     end
-                    x_cnt <= x_cnt + 1'b1;
+                end
+
+                if (!href && prev_href) begin
+                    y_cnt <= y_cnt + 1'b1;
                 end
             end
-
-            if (!href && prev_href) y_cnt <= y_cnt + 1'b1;
         end
     end
 endmodule

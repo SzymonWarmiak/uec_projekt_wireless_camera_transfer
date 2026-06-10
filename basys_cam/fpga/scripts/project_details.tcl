@@ -35,6 +35,9 @@ set sv_files {
     ../rtl/spi_stream_master.sv
     ../rtl/ov7670_capture.sv
     ../rtl/ov7670_configurator.sv
+    ../rtl/mod_m_counter.sv
+    ../rtl/fifo.sv
+    ../rtl/motor_l298n_decode.sv
     ../rtl/vga_timing.sv
     ../rtl/video_framebuffer.sv
     ../rtl/vga_frame_renderer.sv
@@ -44,11 +47,9 @@ set sv_files {
 }
 
 # Specify Verilog design files location         -- EDIT
-set verilog_files {
-    ../rtl/list_ch04_11_mod_m_counter.v
-    ../rtl/list_ch04_20_fifo.v
-    ../rtl/motor_l298n_decode.v
-}
+# set verilog_files {
+#     path/to/file.v
+# }
 
 # Specify VHDL design files location            -- EDIT
 # set vhdl_files {

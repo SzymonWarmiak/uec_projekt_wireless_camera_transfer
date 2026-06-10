@@ -1,12 +1,10 @@
 `timescale 1ns / 1ps
 
-// SPI master (basys_station): cykl = CTRL (32 bity MOSI) -> przerwa CS -> FRAME (76800 B).
-// ESP_station: esp2_ctrl_t.length=32, esp2_frame_t.length=76800*8, rx tylko na CTRL.
 module spi_stream_rx #(
     parameter int CLK_DIV = 4
 )(
     input  logic clk,
-    input  logic rst,
+    input  logic rst_n,
 
     input  logic [15:0] tx_data,
     output logic [7:0]  m_axis_tdata,
@@ -36,17 +34,19 @@ module spi_stream_rx #(
     assign spi_sck  = sck_int;
     assign spi_mosi = tx_shift[31];
 
-    always_ff @(posedge clk) begin
-        if (rst) begin
+    always_ff @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
             state         <= IDLE;
             spi_cs_n      <= 1'b1;
             sck_int       <= 1'b0;
             m_axis_tvalid <= 1'b0;
             m_axis_tuser  <= 1'b0;
+            m_axis_tdata  <= '0;
             idle_cnt      <= '0;
             byte_cnt      <= '0;
             bit_cnt       <= '0;
             clk_cnt       <= '0;
+            rx_shift      <= '0;
             tx_shift      <= '0;
             tx_active     <= 1'b0;
         end else begin
@@ -78,7 +78,9 @@ module spi_stream_rx #(
                         if (~sck_int) begin
                             rx_shift <= {rx_shift[6:0], spi_miso};
                         end else begin
-                            if (tx_active) tx_shift <= {tx_shift[30:0], 1'b0};
+                            if (tx_active) begin
+                                tx_shift <= {tx_shift[30:0], 1'b0};
+                            end
                             if (bit_cnt == 0) begin
                                 tx_active <= 1'b0;
                                 state <= CTRL_END;
@@ -118,7 +120,9 @@ module spi_stream_rx #(
                             if (bit_cnt == 0) begin
                                 m_axis_tdata  <= rx_shift;
                                 m_axis_tvalid <= 1'b1;
-                                if (byte_cnt == 0) m_axis_tuser <= 1'b1;
+                                if (byte_cnt == 0) begin
+                                    m_axis_tuser <= 1'b1;
+                                end
 
                                 if (byte_cnt == FRAME_SIZE - 1) begin
                                     state <= FRAME_END;
@@ -139,6 +143,9 @@ module spi_stream_rx #(
                     spi_cs_n <= 1'b1;
                     sck_int  <= 1'b0;
                     state    <= IDLE;
+                end
+                default: begin
+                    state <= IDLE;
                 end
             endcase
         end

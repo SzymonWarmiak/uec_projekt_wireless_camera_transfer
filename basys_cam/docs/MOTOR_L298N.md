@@ -21,7 +21,7 @@ Mapowanie wg [Basys 3 Reference Manual](https://digilent.com/reference/programma
 
 ## Pada → jazda (jak Arduino L298N)
 
-ESP odsyła po **SPI MISO** nibble kierunku (nie bezpośrednio IN1..IN4). FPGA (`motor_l298n_decode.v`) mapuje:
+ESP odsyła po **SPI MISO** nibble kierunku (nie bezpośrednio IN1..IN4). FPGA (`motor_l298n_decode.sv`) mapuje:
 
 | Pada | IN1 | IN2 | IN3 | IN4 | Efekt |
 |------|-----|-----|-----|-----|--------|
@@ -48,4 +48,4 @@ Piny **2–6** (XA2_P … XA2_N) są wolne w tym projekcie.
 ./tools/program_basys.sh basys_cam basys15
 ```
 
-Sterowanie: `python cam_pad_gui/pad_gui.py` (bez zmiany ESP).
+Sterowanie: `python cam_control_gui/cam_control_gui.py` (bez zmiany ESP).

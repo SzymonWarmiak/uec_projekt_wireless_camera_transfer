@@ -9,7 +9,7 @@ Projekt AGH / UEC2: obraz z kamery **OV7670** trafia przez **FPGA Basys 3** i mo
 | [`basys_cam/`](basys_cam/) | Nadajnik: kamera, bufor ramki, **SPI master** ↔ ESP, sterowanie po **SPI MISO**, wyjścia **JXADC 7–10** → L298N, lokalny podgląd VGA |
 | [`basys_station/`](basys_station/) | Odbiornik: **SPI slave** ← ESP, podwójne buforowanie, VGA na monitor |
 | [`uec_projekt_esp32/`](uec_projekt_esp32/) | Firmware **PlatformIO** (`main_cam.cpp`, `main_station.cpp`) — UDP, SPI DMA |
-| [`cam_pad_gui/`](cam_pad_gui/) | Aplikacja na PC: imitacja pada (Python + tkinter) |
+| [`cam_control_gui/`](cam_control_gui/) | Aplikacja na PC: sterowanie i konfiguracja Wi-Fi (Python + tkinter) |
 | [`tools/`](tools/) | Skrypty: Vivado, programowanie Basys/ESP, `cam_control.py` |
 | [`basys_cam/docs/MOTOR_L298N.md`](basys_cam/docs/MOTOR_L298N.md) | Okablowanie L298N i mapowanie **JXADC** |
 
@@ -35,20 +35,20 @@ flowchart LR
     ESP_S -->|SPI| FPGA_S
     FPGA_S --> VGA[VGA]
   end
-  PC[PC / cam_pad_gui] -->|Wi-Fi| ESP_C
+  PC[PC / cam_control_gui] -->|Wi-Fi| ESP_C
 ```
 
 1. **basys_cam** — przechwytuje klatkę (320×240), wysyła ~76 800 B przez SPI do ESP, opcjonalnie pokazuje obraz na lokalnym VGA.
 2. **ESP cam** (`main_cam.cpp`) — tryb **STA** w skonfigurowanej sieci Wi-Fi, odbiór SPI, wysyłka klatek **UDP** (75 pakietów × 1024 B + nagłówek), sterowanie do FPGA po **SPI MISO**. Gdy brak konfiguracji Wi-Fi, łączy się jako klient z `ROBOT_SETUP`.
 3. **ESP station** (`main_station.cpp`) — **STA** w tej samej sieci, broadcast `start`, składanie UDP → SPI do FPGA. Gdy brak konfiguracji Wi-Fi, uruchamia AP `ROBOT_SETUP`.
-4. **basys_station** — odbiór SPI, framebuffer, **VGA** 800×600.
+4. **basys_station** — odbiór SPI, framebuffer, **VGA** 1024×768.
 
 ## Wymagania
 
 - **Xilinx Vivado** (w `PATH`) — synteza Basys 3 (`xc7a35tcpg236-1`)
 - **PlatformIO** (`pio`) — firmware ESP32-C3 (cam) i ESP32 (station, według używanego modułu)
 - **Git Bash** (Windows) lub Linux — skrypty `tools/*.sh`
-- **Python 3** — `cam_pad_gui`, `tools/cam_control.py`
+- **Python 3** — `cam_control_gui`, `tools/cam_control.py`
 - Sprzęt: 2× Basys 3, 2× ESP32 (u nas **ESP32-C3 DevKitM-1** przy kamerze), moduł OV7670, opcjonalnie **L298N** + 2 silniki DC
 
 ## Szybki start (kolejność)
@@ -107,10 +107,10 @@ Porty `COM*` dopasuj w Menedżerze urządzeń.
 2. Uruchom:
 
 ```bash
-python cam_pad_gui/pad_gui.py
+python cam_control_gui/cam_control_gui.py
 ```
 
-Przytrzymaj **▲▼◄►** = jazda; puszczenie = stop. Szczegóły: [`cam_pad_gui/README.md`](cam_pad_gui/README.md).
+Przytrzymaj **▲▼◄►** = jazda; puszczenie = stop. Szczegóły: [`cam_control_gui/README.md`](cam_control_gui/README.md).
 
 Alternatywa (CLI):
 
@@ -191,7 +191,7 @@ source env.sh
 generate_bitstream_basys basys_cam
 program_basys basys_cam basys15
 program_esp main_cam.cpp COM10
-python cam_pad_gui/pad_gui.py
+python cam_control_gui/cam_control_gui.py
 ```
 
 ## Firmware ESP (PlatformIO)
@@ -209,6 +209,6 @@ python cam_pad_gui/pad_gui.py
 
 ## Autorzy / kontekst
 
-Projekt laboratoryjny UEC2 (AGH), rozszerzenia: most Wi‑Fi ESP32, sterowanie L298N, aplikacja `cam_pad_gui`.
+Projekt laboratoryjny UEC2 (AGH), rozszerzenia: most Wi‑Fi ESP32, sterowanie L298N, aplikacja `cam_control_gui`.
 
 Bazowy szkielet FPGA/Vivado: materiały ćwiczeń (m.in. VGA, OV7670).

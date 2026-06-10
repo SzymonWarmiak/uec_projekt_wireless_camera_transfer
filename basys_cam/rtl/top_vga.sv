@@ -72,6 +72,7 @@ module top_vga (
         .wr_addr(frame_wr_addr),
         .wr_data(frame_wr_data),
         .rd_clk(clk),
+        .rd_rst_n(rst_n),
         .rd_bank(frame_rd_bank),
         .rd_addr(frame_rd_addr),
         .rd_data(frame_rd_data)
@@ -81,8 +82,8 @@ module top_vga (
         .FRAME_WIDTH(320),
         .FRAME_HEIGHT(240),
         .SCALE(2),
-        .X_OFFSET(80),
-        .Y_OFFSET(60)
+        .X_OFFSET(0),
+        .Y_OFFSET(0)
     ) u_vga_frame_renderer (
         .clk,
         .rst_n,
