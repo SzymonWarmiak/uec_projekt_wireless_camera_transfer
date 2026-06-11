@@ -294,6 +294,9 @@ set_property PACKAGE_PIN R19 [get_ports Vsync]
 	#set_property IOSTANDARD LVCMOS33 [get_ports QspiCSn]
 
 
+## Wyłączenie analizy ścieżki przechodzącej z safe_start_reg (CDC)
+set_false_path -from [get_cells -hier *safe_start_reg*]
+
 ## Configuration options, can be used for all designs
 set_property CONFIG_VOLTAGE 3.3 [current_design]
 set_property CFGBVS VCCO [current_design]

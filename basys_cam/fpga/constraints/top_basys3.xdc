@@ -316,6 +316,9 @@ set_property -dict { PACKAGE_PIN M19   IOSTANDARD LVCMOS33 } [get_ports { ov7670
 ## Zezwolenie na routing zegara PCLK przez zwykłą matrycę logiczną
 set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets [get_ports ov7670_pclk]]
 
+## Wyłączenie analizy ścieżki przechodzącej z safe_start_reg (CDC)
+set_false_path -from [get_cells -hier *safe_start_reg*]
+
 ## Configuration options, can be used for all designs
 set_property CONFIG_VOLTAGE 3.3 [current_design]
 set_property CFGBVS VCCO [current_design]

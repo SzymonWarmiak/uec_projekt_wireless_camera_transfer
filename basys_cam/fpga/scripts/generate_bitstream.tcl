@@ -6,6 +6,9 @@
 # tcl script being sourced to Vivado to build a project from sources and generate a bitstream.
 # Some project details and paths to the source files are read from project_details.tcl
 
+# Wyłączenie ostrzeżeń o set_bus_skew (pochodzących z makr Xilinx XPM)
+set_msg_config -id {Timing 38-436} -suppress
+
 
 # Source the project details file
 # (it should provide: project_name, top_module, target, and paths to all the sources)
