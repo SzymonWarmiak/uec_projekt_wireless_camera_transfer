@@ -11,10 +11,8 @@
 .Xil/
 */fpga/build/
 
-# WAŻNE ZGODNIE ZE SPECYFIKACJĄ MTM:
-# W repo ma być bitstream w folderze results. 
-# Zezwalamy na przesył plików wykonywalnych:
-*/results/*.log
+!*/results/
+!*/results/*
 
 # =========================
 # Symulacje
