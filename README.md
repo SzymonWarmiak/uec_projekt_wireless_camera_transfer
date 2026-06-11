@@ -4,14 +4,11 @@
   <img src="robot_app/photos/jezdzik_title.png" alt="Jeździk Banner" width="600px" style="border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);"/>
 </p>
 
-Projekt akademicki realizowany w ramach przedmiotu **MTM UEC2** na **Akademii Górniczo-Hutniczej (AGH)**. 
-
-System umożliwia bezprzewodowy przesył obrazu z kamery **OV7670** zamontowanej na mobilnej platformie kołowej ("Jeździku") za pośrednictwem mostu **Wi‑Fi (2x ESP32)** na stacjonarną płytkę **Basys 3**, która wyświetla obraz na monitorze **VGA**. Dodatkowo system zapewnia pełne dwukierunkowe sterowanie napędem robota (mostek **L298N**) za pomocą aplikacji PC (GUI/UDP) lub przycisków na stacji odbiorczej.
+Projekt akademicki realizowany w ramach przedmiotu **MTM UEC2** na **AGH**. Jest to rozproszony układ sprzętowo-programowy implementujący bezprzewodową transmisję obrazu z ruchomej platformy na stację bazową z interfejsem VGA. System wykorzystuje mikrokontrolery ESP32 jako most radiowy pracujący w architekturze UDP.
 
 ---
 
-## 📸 Galeria Konstrukcji Robota
-
+## 📸 Galeria Konstrukcji
 Poniżej przedstawiono zdjęcia zmontowanego robota mobilnego ("Jeździka") z różnych perspektyw:
 
 | Przód (Kamera OV7670 & sensory) | Tył (Napęd i zasilanie) |
@@ -26,141 +23,111 @@ Poniżej przedstawiono zdjęcia zmontowanego robota mobilnego ("Jeździka") z r�
 
 ---
 
-## 🛠️ Architektura Systemu
+## 1. Architektura Systemu
 
-System składa się z dwóch głównych węzłów komunikujących się bezprzewodowo za pomocą protokołu UDP w sieci Wi-Fi:
+System zbudowany jest z dwóch niezależnych platform deweloperskich Digilent Basys 3 połączonych radiowo z wykorzystaniem ESP32-C3 / ESP32, działających w topologii punkt-punkt (ESP-NOW / UDP).
 
 ```mermaid
-flowchart TB
+flowchart RL
   subgraph Robot [NADAJNIK: Jeździk Mobilny]
-    OV7670[Kamera OV7670] -->|640x480 Raw| FPGA_C[Basys 3: basys_cam]
-    FPGA_C -->|Downsampling 2x: 320x240 Grayscale| ESP_C[ESP32-C3]
-    ESP_C <-->|SPI Master / MISO Control| FPGA_C
-    FPGA_C -->|JXADC 7-10| L298N[Mostek H L298N]
-    L298N -->|Sterowanie| Motors[Silniki DC]
-    VGA_P[VGA Local Preview] <--- FPGA_C
+    direction RL
+    OV7670[Kamera OV7670] -->|Piksele| FPGA_C[Basys 3: basys_cam]
+    FPGA_C -->|Sygnał wideo SPI 20 MHz| ESP_C[ESP32-C3]
+    ESP_C -->|Kierunek SPI MISO| FPGA_C
+    FPGA_C -->|PWM| L298N[Mostek L298N]
+    L298N -->|Moc| Motors[Silniki DC 12V]
   end
 
-  subgraph WiFi [Bezprzewodowy Most Wi-Fi]
-    ESP_C -->|UDP Packets 1234| ESP_S[ESP32 Station]
-    PC[PC: cam_control_gui] -.->|Wi-Fi: UDP Commands| ESP_C
+  subgraph Radio [Interfejs Radiowy]
+    direction RL
+    ESP_C <-->|Pakiety UDP / ESP-NOW| ESP_S[ESP32 Stacja]
   end
 
   subgraph Station [ODBIORNIK: Stacja Bazowa]
-    ESP_S -->|SPI Slave| FPGA_S[Basys 3: basys_station]
-    FPGA_S -->|XGA 1024x768 Centered| VGA[Monitor VGA]
-    Btns[Przyciski Fizyczne] -->|Sterowanie| FPGA_S
+    direction RL
+    ESP_S -->|Sygnał wideo SPI 10 MHz| FPGA_S[Basys 3: basys_station]
+    FPGA_S -->|Sygnał wideo VGA 65 MHz| VGA[Monitor 1024x768]
+    Btns[Przyciski I/O] -->|Sterowanie| FPGA_S
     FPGA_S -->|Stan Przycisków| ESP_S
   end
 ```
 
-### 1. Nadajnik (`basys_cam`):
-* Przechwytuje obraz z kamery **OV7670** w rozdzielczości 640x480.
-* Dokonuje sprzętowego downsamplingu 2x w module [ov7670_capture.sv](file:///c:/Users/Vmagic/Desktop/Jezdzik_readyy_aaa/uec_projekt_wireless_camera_transfer/basys_cam/rtl/ov7670_capture.sv) do rozmiaru **320x240** (skala szarości, 8-bit, 76 800 bajtów/klatkę).
-* Zapisuje klatkę do bufora ramki BRAM i przesyła ją magistralą SPI do modułu **ESP32-C3** na robocie.
-* Steruje silnikami za pomocą mostka H **L298N** na podstawie odebranych z ESP32 (przez SPI MISO) komend ruchu.
-
-### 2. Bezprzewodowa transmisja (ESP32):
-* **ESP cam** (`main_cam.cpp`) odbiera dane z FPGA przez SPI i wysyła je pakietami UDP (75 pakietów po 1024 bajty danych wideo + nagłówek) do stacji bazowej. Odbiera również komendy kierunku jazdy z komputera lub stacji i odsyła je do FPGA przez SPI MISO.
-* **ESP station** (`main_station.cpp`) odbiera pakiety UDP, składa je w ramki i wysyła magistralą SPI do stacji FPGA. Jednocześnie odczytuje stan przycisków stacji i wysyła je bezprzewodowo z powrotem.
-
-### 3. Odbiornik (`basys_station`):
-* Odbiera ramki przez SPI i zapisuje je do bufora ramki BRAM.
-* Renderuje obraz na monitorze **VGA** w rozdzielczości **1024x768 @ 60Hz** (obraz z kamery jest centrowany, skalowany i obrócony o 90 stopni, co odpowiada bocznej orientacji kamery na robocie).
+### Specyfikacja podzespołów sprzętowych:
+1. **Moduł Kamery (`basys_cam`)**: Pobiera dane wejściowe w rozdzielczości 640x480 (PCLK: 10 MHz). Logika FPGA wykonuje downsampling do rozmiaru 320x240 w 8-bitowej skali szarości. Integracja domen zegarowych (CDC) ze środowiska kamery do domeny systemowej (40 MHz) odbywa się asynchronicznie poprzez instancję Xilinx XPM FIFO. Gotowe dane przesyłane są magistralą SPI. 
+2. **Most Radiowy (`uec_projekt_esp32`)**: Kod bazujący na FreeRTOS z obsługą DMA dla SPI. Implementuje sprzętowe kolejkowanie i dzieli strukturę wejściową klatek wideo na mniejsze pakiety protokołu UDP, przesyłając je drogą bezprzewodową, a w locie powrotnym odsyła komendy mechanizmu napędowego układu jezdnego.
+3. **Moduł Stacji (`basys_station`)**: Działa jako SPI Master z taktowaniem magistrali 10 MHz. Odpytuje ESP32 stacji za pomocą sekwencji synchronizującej `0xCAFE`. Odczytane paczki wideo trafiają pod adresację bufora Dual-Port BRAM z oddzielnym zegarem odczytu `65 MHz`. Moduł synchronizacji obrazu realizuje w locie stałą rotację tekstury o 90 stopni i sprzętowe skalowanie x2.13 dopasowując sygnał pod standard XGA 1024x768 60 Hz.
 
 ---
 
-## 📂 Zawartość Repozytorium
+## 2. Mapa Repozytorium
 
-| Katalog / Plik | Rola |
+| Katalog | Opis zawartości |
 |:---|:---|
-| 📂 [`basys_cam/`](basys_cam/) | Nadajnik FPGA: akwizycja wideo, bufor, SPI master, wyjścia silników, lokalne VGA. |
-| 📂 [`basys_station/`](basys_station/) | Odbiornik FPGA: SPI slave, bufor ramki BRAM, wyjście VGA na monitor. |
-| 📂 [`uec_projekt_esp32/`](uec_projekt_esp32/) | Oprogramowanie PlatformIO dla ESP32-C3 (kamery) i ESP32 (stacji) — obsługa UDP i DMA SPI. |
-| 📂 [`cam_control_gui/`](cam_control_gui/) | Aplikacja sterująca na komputer (Python + tkinter) — wysyłanie rozkazów jazdy po UDP. |
-| 📂 [`tools/`](tools/) | Skrypty do kompilacji, programowania i konfiguracji płytek. |
+| [`basys_cam/`](basys_cam/) | Kod źródłowy (RTL) modułu wysyłającego obraz i układu FSM SPI. |
+| [`basys_station/`](basys_station/) | Kod źródłowy (RTL) modułu odbiorczego, BRAM, i syntezy VGA. |
+| [`uec_projekt_esp32/`](uec_projekt_esp32/) | Oprogramowanie C++ mikrokontrolerów pod PlatformIO. |
+| [`cam_control_gui/`](cam_control_gui/) | Oprogramowanie klienckie Python do kontroli ruchu PC. |
+| [`doc/`](doc/) | Dokumentacja końcowa, raport, checklisty MTM. |
+| [`tools/`](tools/) | Skrypty powłoki automatyzujące tworzenie i wgrywanie bitstreamu. |
 
 ---
 
-## 🔌 Połączenia Sprzętowe
+## 3. Parametry Interfejsu Sprzętowego
+Poniżej zestawienie głównych linii transmisyjnych interfejsu Pmod (Złącza JA).
 
-### 1. Porty SPI (JA Pmod) na obu płytkach Basys 3
+### Magistrala SPI
+| Basys 3 Pin | Rola sygnałowa | Konfiguracja I/O | Przepustowość |
+|:---:|:---|:---:|:---:|
+| **JA1** | Chip Select (CS_N) | Active Low | - |
+| **JA2** | MOSI (Master Out) | Odtwarzanie wideo / Tx | - |
+| **JA3** | MISO (Master In) | Dane wejściowe przycisków / Rx | - |
+| **JA4** | Zegar SCK | Typ. 10 - 20 MHz | do ~25 FPS |
+| **GND** | Wspólna Masa | Konieczne domknięcie obwodu! | - |
 
-| Sygnał | Basys 3 Pin | ESP32 GPIO | Opis |
-|:---|:---:|:---:|:---|
-| **SPI CS** | **JA1** | **GPIO7** | Chip Select (Aktywny w stanie niskim) |
-| **SPI MOSI**| **JA2** | **GPIO6** | Dane wideo z FPGA do ESP (nadajnik) / z ESP do FPGA (odbiornik) |
-| **SPI MISO**| **JA3** | **GPIO5** | Komendy sterujące z ESP do FPGA (nadajnik) / z FPGA do ESP (odbiornik) |
-| **SPI SCK** | **JA4** | **GPIO4** | Zegar magistrali SPI |
-| **GND** | **GND** | **GND** | Wspólna masa (Krytyczna dla stabilności sygnałów!) |
-
-### 2. Połączenie Mostka H L298N do `basys_cam` (JXADC)
-
-| JXADC Pin | FPGA Port | Sygnał L298N | Opis działania |
-|:---:|:---:|:---:|:---|
-| **JXADC 7** | `motor_in[0]` | **IN1** | Kierunek silnika 1 (Lewa strona) |
-| **JXADC 8** | `motor_in[1]` | **IN2** | Kierunek silnika 1 (Lewa strona) |
-| **JXADC 9** | `motor_in[2]` | **IN3** | Kierunek silnika 2 (Prawa strona) |
-| **JXADC 10**| `motor_in[3]` | **IN4** | Kierunek silnika 2 (Prawa strona) |
-
-> [!NOTE]
-> Piny ENA i ENB mostka L298N powinny być podłączone na stałe do napięcia +5V za pomocą zworki w celu uzyskania maksymalnej prędkości obrotowej (brak sterowania PWM w bieżącej wersji FPGA). Więcej informacji w dedykowanym opisie: [`basys_cam/docs/MOTOR_L298N.md`](basys_cam/docs/MOTOR_L298N.md).
+*(W celu uzyskania informacji dotyczących sterownika mocy DC L298N przypiętego pod złącze `JXADC`, zapoznaj się z odpowiednią sekcją dokumentacji układu [doc/raport_modulow.md](doc/raport_modulow.md).)*
 
 ---
 
-## 🚀 Szybki Start
+## 4. Budowa i Kompilacja (Build System)
 
-Przed uruchomieniem komend załaduj środowisko narzędziowe (w terminalu Git Bash lub Linux):
+System wspiera pełną automatyzację przez zbiór skryptów `.sh` wywołujących Vivado w trybie CLI (TCL Batch Mode). W celu uruchomienia syntezy wejdź do katalogu głównego w środowisku Bash.
+
+**Krok 1. Ładowanie środowiska**
+Wymagane do dołączenia ścieżek globalnych i lokalnego katalogu `tools`:
 ```bash
 source env.sh
 ```
 
-### 1. Synteza i Wgranie FPGA
-Wygeneruj bitstreamy dla obu projektów i wgraj je za pomocą JTAG:
-
-**Dla Nadajnika (Robot):**
+**Krok 2. Synteza / Implementacja FPGA**
+Generuje konfigurację bitstream:
 ```bash
-generate_bitstream_basys basys_cam
-program_basys basys_cam basys15
+./tools/generate_bitstream_basys.sh basys_cam
+./tools/generate_bitstream_basys.sh basys_station
 ```
 
-**Dla Odbiornika (Stacja bazowa):**
+**Krok 3. Wgrywanie układu testowego**
+Ładuje projekt bezpośrednio do pamięci ulotnej (RAM) FPGA. Jako drugi argument wymagane jest ID JTAG przypisane do danego programatora USB, skonfigurowane uprzednio w `tools/board_config.sh`:
 ```bash
-generate_bitstream_basys basys_station
-program_basys basys_station basys16
-```
-*(Numery seryjne programatorów `basys15`/`basys16` należy wcześniej wpisać w pliku `tools/board_config.sh`)*.
-
-### 2. Kompilacja i Wgranie ESP32
-Za pomocą PlatformIO skompiluj i prześlij programy na moduły ESP32 podłączone pod odpowiednie porty szeregowe COM:
-```bash
-program_esp main_cam.cpp COM10
-program_esp main_station.cpp COM14
+./tools/program_basys.sh basys_cam basys15
+./tools/program_basys.sh basys_station basys16
 ```
 
-### 3. Konfiguracja sieci Wi-Fi i Uruchomienie Streamu
-1. Po włączeniu zasilania moduł ESP stacji utworzy tymczasowy punkt dostępowy o nazwie **`ROBOT_SETUP`** (hasło: `robotsetup`).
-2. Połącz się komputerem lub telefonem z tą siecią i za pomocą aplikacji sterującej prześlij docelowe dane logowania do swojej domowej sieci Wi-Fi.
-3. Po zrestartowaniu, oba moduły ESP połączą się z wybraną siecią. Obraz z kamery pojawi się automatycznie na monitorze VGA podpiętym do płytki odbiorczej.
-
-### 4. Sterowanie robotem
-
-Sterowanie pojazdem mobilnym (Jeździkiem) może odbywać się na dwa sposoby:
-
-#### A. Dedykowana Aplikacja Mobilna & Desktopowa (Flutter)
-W folderze [`Jezdzik_do_pobrania/`](Jezdzik_do_pobrania/) przygotowano gotowe pakiety instalacyjne aplikacji sterującej na systemy Android oraz Windows:
-* **Android**: Plik instalacyjny [`Jezdzik.apk`](Jezdzik_do_pobrania/Jezdzik.apk). Podczas instalacji system telefonu może poprosić o zezwolenie na instalację aplikacji spoza sklepu Google Play.
-* **Windows**: Archiwum [`Jezdzik_Windows.zip`](Jezdzik_do_pobrania/Jezdzik_Windows.zip). Po rozpakowaniu należy uruchomić plik `jezdzik.exe` (pamiętaj, aby nie przenosić samego pliku `.exe` bez dołączonych bibliotek `.dll` oraz katalogu `data`).
-
-#### B. Aplikacja PC Python (GUI)
-Alternatywnie, na komputerze podłączonym do tej samej sieci Wi-Fi co robot, można uruchomić lekki skrypt sterujący w Pythonie:
+**Krok 4. Programowanie Trwałe QSPI Flash (Opcjonalnie)**
+Pozwala na utrwalenie bitstreamu `.bin` do pamięci stałej płyty i samoczynny zapłon układów po ponownym uruchomieniu zasilania bez wsparcia PC:
 ```bash
-python cam_control_gui/cam_control_gui.py
+./tools/program_qspi_basys.sh basys_cam basys15
+./tools/program_qspi_basys.sh basys_station basys16
 ```
-* **Sterowanie**: Użyj klawiszy **strzałek** lub klawiszy **W, S, A, D** w celu poruszania się.
-* Puszczenie klawisza powoduje natychmiastowe zatrzymanie (wysłanie ramki **stop** do robota).
 
 ---
 
-## 🛠️ Informacje o Taktowaniu (Timing)
-W projektach wyłączono analizę ścieżki przejścia między domenami zegarowymi `safe_start_reg` (CDC z 65 MHz do 40 MHz) za pomocą reguły `set_false_path` w plikach `.xdc`. Zapewnia to pomyślne przejście weryfikacji czasowej (Timing Constraints Met) przy zachowaniu pełnej stabilności i bezpieczeństwa startu układów.
+## 5. Sterowanie i Aplikacje Klienckie
+
+Platforma obsługuje zdalne sterowanie przy użyciu sieci Wi-Fi i gniazd UDP. Możliwe są dwie opcje łączenia:
+1. **Gotowe skrypty PC**: W katalogu `cam_control_gui/cam_control_gui.py` znajduje się referencyjny program do kierowania platformą z użyciem klawiszy WASD lub strzałek na klawiaturze.
+2. **Platforma Mobilna**: Skompilowane instalatory (pakiety `.apk` dla Android i `.zip` na platformę Windows) dostępne są w katalogu głównym `Jezdzik_do_pobrania/`.
+
+---
+
+## 6. Raporty Timingu
+Aplikacja przechodzi weryfikację czasową bez generowania błędów krytycznych (Setup/Hold met). Zastosowano ograniczenia `set_false_path` izolujące ścieżki przejść domen zegarowych między rejestrami konfiguracyjnymi a pętlą PLL. Wykluczone z syntezy porty wejściowe w bloku `vga_frame_renderer` zakwalifikowano jako nieużywane przestrzenie gotowe na implementację interfejsu graficznego (HUD).
