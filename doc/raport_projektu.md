@@ -8,14 +8,14 @@
 ---
 
 ## 1. Cel i koncepcja projektu
-Celem projektu było zaprojektowanie, zaimplementowanie i przetestowanie zaawansowanego sprzętowo-programowego systemu transmisji wideo zrealizowanego w oparciu o dwie oddzielne platformy uruchomieniowe Basys3 (Multiplayer/Multi-board). Projekt pozwala na asynchroniczne odczytywanie klatek z matrycy OV7670 na jednej płytce (układ Kamery), transmisję pełnego obrazu po magistrali SPI w kierunku procesora ESP32 pracującego jako most radiowy Wi-Fi (UDP/ESP-NOW), a następnie odbiór sygnału, jego buforowanie i sprzętowe wyrenderowanie na monitorze podłączonym złączem VGA do drugiej płytki docelowej (układ Stacji Bazowej). Dodatkowo zaimplementowano interfejs użytkownika w postaci przycisków kierunkowych stacji bazowej sterujących zdalnie układem napędowym po stronie kamery (w układzie Full-Duplex).
+Celem projektu było zaprojektowanie, zaimplementowanie i przetestowanie zaawansowanego sprzętowo-programowego systemu transmisji wideo zrealizowanego w oparciu o dwie oddzielne platformy uruchomieniowe Basys3 (Multiplayer/Multi-board). Projekt pozwala na asynchroniczne odczytywanie klatek z matrycy OV7670 na jednej płytce (układ Kamery), transmisję pełnego obrazu po magistrali SPI w kierunku procesora ESP32 pracującego jako most radiowy Wi-Fi (UDP/ESP-NOW), a następnie odbiór sygnału, jego buforowanie i sprzętowe wyrenderowanie na monitorze podłączonym złączem VGA do drugiej płytki docelowej (układ Stacji Bazowej). Dodatkowo zaimplementowano interfejs użytkownika w postaci autorskich aplikacji sterujących (PC/Android), z których pakiety sterujące wysyłane są bezpośrednio do mikrokontrolera ESP32 napędzając układ jezdny.
 
 ---
 
 ## 2. Spełnienie Wymagań Projektowych
 Projekt w pełni spełnia założenia specyfikacji wytycznej:
 1. **Dwie Płytki Basys 3:** Zaimplementowano osobne logiki sprzętowe (`basys_cam` i `basys_station`).
-2. **Interfejs Użytkownika:** Wciskane przyciski na pierwszej płytce (stacji) formują się w paczki danych transmitowanych falami radiowymi na drugą płytkę, napędzając dedykowany moduł sterownika silników (`motor_l298n_decode`).
+2. **Interfejs Użytkownika:** Dedykowane oprogramowanie na PC/Android wysyła pakiety sterujące z danymi klawiatury/interfejsu w locie przez zintegrowany most WiFi ESP32, napędzając dedykowany moduł sterownika silników (`motor_l298n_decode`) w platformie wysyłającej.
 3. **Ekran VGA 1024x768:** Płytka odbiorcza z sukcesem generuje interfejs wyświetlacza standardu XGA (65 MHz) i maluje zbuforowaną macierz na żywo, implementując unikalne 90-stopniowe obrócenie klatki i sprzętowe skalowanie (×2.13).
 4. **Style Kodowania i Architektura (SystemVerilog):** System w pełni zaimplementowany jako FSM z rygorystycznym korzystaniem z poprawnych mechanizmów izolacji przekraczania domen zegarowych `CDC` przy użyciu wzorcowych bibliotek `Xilinx XPM`.
 5. **Reset Asynchroniczny:** Moduły pamięciowe kasowane są asynchronicznie reagując na negację zbocza centralnego przycisku `BTNC`.

@@ -1,6 +1,6 @@
 Tytuł: Bezprzewodowy System Transmisji Wideo (Kamera OV7670 + ESP32)
-Autorzy: Szymon Warmiak (SW), [Imię Kolegi] ([Inicjały])
-Ostatnia modyfikacja: 10.06.2026
+Autorzy: Szymon Warmiak (SW), Grzegorz Twardosz (GT) 
+Ostatnia modyfikacja: 11.06.2026
 
 | Pytanie | Oczekiwana odpowiedź | Twoja odpowiedź |
 | :--- | :--- | :--- |
@@ -12,7 +12,7 @@ Ostatnia modyfikacja: 10.06.2026
 | Liczba błędów (error) zgłoszonych przez Vivado | 0 (!) | **0** |
 | Liczba ostrzeżeń krytycznych (critical warning) zgłoszona przez Vivado | 0 (!) | **0** |
 | Liczba ostrzeżeń zwykłych (warning) zgłoszona przez Vivado | | **127 (Stacja) / 149 (Kamera)** |
-| Interfejs dostarczania danych przez użytkownika ( klawiatura / mysz / ... ) | | **Przyciski płytki Basys3 (Klawiatura kierunkowa sterująca robotem)** |
+| Interfejs dostarczania danych przez użytkownika ( klawiatura / mysz / ... ) | | **Klawiatura komputera PC (poprzez aplikację UDP) oraz interfejs aplikacji Android** |
 | Użycie ekranu jako wyjścia ( TAK / NIE ) | TAK | **TAK** |
 | Rozdzielczość ekranu ( X px / Y px ) | | **1024 px / 768 px** |
 | Czy układ używa resetu asynchronicznego? ( TAK / NIE ) | TAK | **TAK** |

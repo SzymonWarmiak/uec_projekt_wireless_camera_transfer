@@ -34,7 +34,7 @@ Niniejszy dokument stanowi zwięzłe podsumowanie struktury i działania moduł�
 ## 2. Stacja Bazowa (Basys_Station)
 
 ### 2.1 `top_basys3.sv` i `top.sv`
-* **Rola:** Analogicznie jak w systemie kamery - dostarczają domen zegarowych 40 MHz i 65 MHz, ale ich serce (`top.sv`) pełni nieco odwrotną funkcję. Zamiast nadawać z modułów układu, nieprzerwanie pytają po SPI własne ESP32 o nowe piksele z powietrza, a przyciski odbite podsyłają jako flagi do sterowania robotem.
+* **Rola:** Analogicznie jak w systemie kamery - dostarczają domen zegarowych 40 MHz i 65 MHz, ale ich serce (`top.sv`) pełni nieco odwrotną funkcję. Zamiast nadawać z modułów układu, nieprzerwanie pytają po SPI własne ESP32 o nowe piksele z powietrza ładując je do bufora pamięci VGA.
 * **Resety:** Asynchroniczny z przycisku.
 
 ### 2.2 `spi_stream_rx.sv`
