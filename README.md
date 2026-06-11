@@ -47,8 +47,6 @@ flowchart RL
     direction RL
     ESP_S -->|Sygnał wideo SPI 10 MHz| FPGA_S[Basys 3: basys_station]
     FPGA_S -->|Sygnał wideo VGA 65 MHz| VGA[Monitor 1024x768]
-    Btns[Przyciski I/O] -->|Sterowanie| FPGA_S
-    FPGA_S -->|Stan Przycisków| ESP_S
   end
 ```
 
@@ -121,13 +119,21 @@ Pozwala na utrwalenie bitstreamu `.bin` do pamięci stałej płyty i samoczynny 
 
 ---
 
-## 5. Sterowanie i Aplikacje Klienckie
+## 5. Parowanie Sieci Wi-Fi i Szybki Start
 
-Platforma obsługuje zdalne sterowanie przy użyciu sieci Wi-Fi i gniazd UDP. Możliwe są dwie opcje łączenia:
-1. **Gotowe skrypty PC**: W katalogu `cam_control_gui/cam_control_gui.py` znajduje się referencyjny program do kierowania platformą z użyciem klawiszy WASD lub strzałek na klawiaturze.
-2. **Platforma Mobilna**: Skompilowane instalatory (pakiety `.apk` dla Android i `.zip` na platformę Windows) dostępne są w katalogu głównym `Jezdzik_do_pobrania/`.
+Proces łączenia środowiska, sprzęgnięcia modułów i odpalania aplikacji przebiega następująco:
+1. Po włączeniu zasilania, układ mikrokontrolera generuje tymczasowy punkt dostępowy o SSID: **`Robot_jezdzik`** (Z widocznym hasłem autoryzującym).
+2. Podłącz się komputerem (lub telefonem) pod wygenerowaną sieć `Robot_jezdzik`. Od tego momentu wszystko działa w zamkniętym ekosystemie AP.
+3. Jeśli chcesz przepiąć robota do swojej sieci domowej/hotspota: z poziomu Aplikacji mobilnej wejdź w ustawienia (ikona 3 strzałek w prawym górnym rogu), wpisz nazwę swojej sieci docelowej (SSID) oraz hasło docelowe, pozostawiając pole IP bez zmian, i wyślij konfigurację do układów ESP32.
+4. Oba procesory chwilę się restartują (zobaczysz proces na migających diodach). 
+5. Odczytaj przyznane IP w panelu swojego hotspota/routera Windows. 
+6. Wróć do okienka sieci w aplikacji, wbij nowe docelowe IP urządzenia, wciśnij akceptację - adres IP w pasku aplikacji odświeży się. Wszystko "załapie", zyskujesz pełną wideo-obsługę i sterowanie po nowej sieci z pominięciem własnego AP.
 
 ---
 
-## 6. Raporty Timingu
-Aplikacja przechodzi weryfikację czasową bez generowania błędów krytycznych (Setup/Hold met). Zastosowano ograniczenia `set_false_path` izolujące ścieżki przejść domen zegarowych między rejestrami konfiguracyjnymi a pętlą PLL. Wykluczone z syntezy porty wejściowe w bloku `vga_frame_renderer` zakwalifikowano jako nieużywane przestrzenie gotowe na implementację interfejsu graficznego (HUD).
+## 6. Sterowanie i Aplikacje Klienckie
+
+Platforma obsługuje zdalne sterowanie dedykowanymi programami:
+1. **Platforma Mobilna / Windows**: Skompilowane instalatory (pakiety `.apk` dla Android i `.zip` na platformę Windows) dostępne są w katalogu głównym `Jezdzik_do_pobrania/`. Z poziomu ekranu urządzenia sterujesz kierunkiem modułu L298N. Wideo ładuje się wbudowanym interfejsem.
+2. **Gotowe skrypty Python**: W katalogu `cam_control_gui/cam_control_gui.py` znajduje się referencyjny program do kierowania z użyciem klawiszy WASD lub strzałek, łącząc po standardowym Socket UDP.
+

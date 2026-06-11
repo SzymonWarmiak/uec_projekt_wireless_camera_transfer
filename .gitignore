@@ -10,7 +10,10 @@
 *.vds
 .Xil/
 */fpga/build/
-*/results/*.bit
+
+# WAŻNE ZGODNIE ZE SPECYFIKACJĄ MTM:
+# W repo ma być bitstream w folderze results. 
+# Zezwalamy na przesył plików wykonywalnych:
 */results/*.log
 
 # =========================
@@ -34,7 +37,14 @@ xrun.history
 dvt_build.log
 
 # =========================
-# Systemowe
+# Systemowe (Windows / MacOSX)
 # =========================
 .DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.Spotlight-V100
+.Trashes
 Thumbs.db
+ehthumbs.db
