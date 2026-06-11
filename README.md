@@ -143,13 +143,22 @@ program_esp main_station.cpp COM14
 2. Połącz się komputerem lub telefonem z tą siecią i za pomocą aplikacji sterującej prześlij docelowe dane logowania do swojej domowej sieci Wi-Fi.
 3. Po zrestartowaniu, oba moduły ESP połączą się z wybraną siecią. Obraz z kamery pojawi się automatycznie na monitorze VGA podpiętym do płytki odbiorczej.
 
-### 4. Sterowanie robotem (Pad PC)
-Uruchom aplikację GUI na komputerze podłączonym do tej samej sieci Wi-Fi:
+### 4. Sterowanie robotem
+
+Sterowanie pojazdem mobilnym (Jeździkiem) może odbywać się na dwa sposoby:
+
+#### A. Dedykowana Aplikacja Mobilna & Desktopowa (Flutter)
+W folderze [`Jezdzik_do_pobrania/`](Jezdzik_do_pobrania/) przygotowano gotowe pakiety instalacyjne aplikacji sterującej na systemy Android oraz Windows:
+* **Android**: Plik instalacyjny [`Jezdzik.apk`](Jezdzik_do_pobrania/Jezdzik.apk). Podczas instalacji system telefonu może poprosić o zezwolenie na instalację aplikacji spoza sklepu Google Play.
+* **Windows**: Archiwum [`Jezdzik_Windows.zip`](Jezdzik_do_pobrania/Jezdzik_Windows.zip). Po rozpakowaniu należy uruchomić plik `jezdzik.exe` (pamiętaj, aby nie przenosić samego pliku `.exe` bez dołączonych bibliotek `.dll` oraz katalogu `data`).
+
+#### B. Aplikacja PC Python (GUI)
+Alternatywnie, na komputerze podłączonym do tej samej sieci Wi-Fi co robot, można uruchomić lekki skrypt sterujący w Pythonie:
 ```bash
 python cam_control_gui/cam_control_gui.py
 ```
-* Steruj za pomocą klawiszy **strzałek** lub klawiszy **W, S, A, D**. 
-* Puszczenie klawisza powoduje zatrzymanie robota.
+* **Sterowanie**: Użyj klawiszy **strzałek** lub klawiszy **W, S, A, D** w celu poruszania się.
+* Puszczenie klawisza powoduje natychmiastowe zatrzymanie (wysłanie ramki **stop** do robota).
 
 ---
 
