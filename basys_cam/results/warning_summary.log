@@ -1,0 +1,151 @@
+Warnings, critical warnings and errors from synthesis and implementation
+
+Created: 2026-06-11 12:02:07
+
+----SYNTHESIS----
+WARNING: [Synth 8-689] width (14) of port connection 'wr_data_count_axis' does not match port width (1) of module 'xpm_fifo_axis' [C:/Users/szymo/Desktop/AGH/SEMESTR_4/UEC2/projekt_cyfra/uec_projekt_wireless_camera_transfer/basys_cam/rtl/top.sv:133]
+WARNING: [Synth 8-689] width (14) of port connection 'rd_data_count_axis' does not match port width (1) of module 'xpm_fifo_axis' [C:/Users/szymo/Desktop/AGH/SEMESTR_4/UEC2/projekt_cyfra/uec_projekt_wireless_camera_transfer/basys_cam/rtl/top.sv:136]
+WARNING: [Synth 8-7071] port 'm_axis_tstrb' of module 'xpm_fifo_axis' is unconnected for instance 'u_fifo' [C:/Users/szymo/Desktop/AGH/SEMESTR_4/UEC2/projekt_cyfra/uec_projekt_wireless_camera_transfer/basys_cam/rtl/top.sv:109]
+WARNING: [Synth 8-7071] port 'injectsbiterr_axis' of module 'xpm_fifo_axis' is unconnected for instance 'u_fifo' [C:/Users/szymo/Desktop/AGH/SEMESTR_4/UEC2/projekt_cyfra/uec_projekt_wireless_camera_transfer/basys_cam/rtl/top.sv:109]
+WARNING: [Synth 8-7071] port 'injectdbiterr_axis' of module 'xpm_fifo_axis' is unconnected for instance 'u_fifo' [C:/Users/szymo/Desktop/AGH/SEMESTR_4/UEC2/projekt_cyfra/uec_projekt_wireless_camera_transfer/basys_cam/rtl/top.sv:109]
+WARNING: [Synth 8-7071] port 'sbiterr_axis' of module 'xpm_fifo_axis' is unconnected for instance 'u_fifo' [C:/Users/szymo/Desktop/AGH/SEMESTR_4/UEC2/projekt_cyfra/uec_projekt_wireless_camera_transfer/basys_cam/rtl/top.sv:109]
+WARNING: [Synth 8-7071] port 'dbiterr_axis' of module 'xpm_fifo_axis' is unconnected for instance 'u_fifo' [C:/Users/szymo/Desktop/AGH/SEMESTR_4/UEC2/projekt_cyfra/uec_projekt_wireless_camera_transfer/basys_cam/rtl/top.sv:109]
+WARNING: [Synth 8-7023] instance 'u_fifo' of module 'xpm_fifo_axis' has 31 connections declared, but only 26 given [C:/Users/szymo/Desktop/AGH/SEMESTR_4/UEC2/projekt_cyfra/uec_projekt_wireless_camera_transfer/basys_cam/rtl/top.sv:109]
+WARNING: [Synth 8-6014] Unused sequential element prev_vsync_reg was removed.  [C:/Users/szymo/Desktop/AGH/SEMESTR_4/UEC2/projekt_cyfra/uec_projekt_wireless_camera_transfer/basys_cam/rtl/ov7670_capture.sv:42]
+WARNING: [Synth 8-6014] Unused sequential element gray_reg was removed.  [C:/Users/szymo/Desktop/AGH/SEMESTR_4/UEC2/projekt_cyfra/uec_projekt_wireless_camera_transfer/basys_cam/rtl/ov7670_capture.sv:74]
+WARNING: [Synth 8-6014] Unused sequential element gen_rd_b.gen_doutb_pipe.enb_pipe_reg[0] was removed.  [C:/Xilinx/Vivado/2024.2/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv:3077]
+WARNING: [Synth 8-6014] Unused sequential element dest_out_bin_ff_reg was removed.  [C:/Xilinx/Vivado/2024.2/data/ip/xpm/xpm_cdc/hdl/xpm_cdc.sv:417]
+WARNING: [Synth 8-6014] Unused sequential element dest_out_bin_ff_reg was removed.  [C:/Xilinx/Vivado/2024.2/data/ip/xpm/xpm_cdc/hdl/xpm_cdc.sv:417]
+WARNING: [Synth 8-6014] Unused sequential element dest_out_bin_ff_reg was removed.  [C:/Xilinx/Vivado/2024.2/data/ip/xpm/xpm_cdc/hdl/xpm_cdc.sv:417]
+WARNING: [Synth 8-6014] Unused sequential element gdvld.data_valid_std_reg was removed.  [C:/Xilinx/Vivado/2024.2/data/ip/xpm/xpm_fifo/hdl/xpm_fifo.sv:550]
+WARNING: [Synth 8-6014] Unused sequential element gen_fwft.empty_fwft_fb_reg was removed.  [C:/Xilinx/Vivado/2024.2/data/ip/xpm/xpm_fifo/hdl/xpm_fifo.sv:1404]
+WARNING: [Synth 8-7129] Port status_word[15] in module vga_frame_renderer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port status_word[14] in module vga_frame_renderer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port status_word[13] in module vga_frame_renderer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port status_word[12] in module vga_frame_renderer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port status_word[11] in module vga_frame_renderer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port status_word[10] in module vga_frame_renderer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port status_word[9] in module vga_frame_renderer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port status_word[8] in module vga_frame_renderer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port status_word[7] in module vga_frame_renderer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port status_word[6] in module vga_frame_renderer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port status_word[5] in module vga_frame_renderer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port status_word[4] in module vga_frame_renderer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port status_word[3] in module vga_frame_renderer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port status_word[2] in module vga_frame_renderer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port status_word[1] in module vga_frame_renderer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port status_word[0] in module vga_frame_renderer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port spi_link in module vga_frame_renderer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port peer_link in module vga_frame_renderer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port target_x[8] in module vga_frame_renderer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port target_x[7] in module vga_frame_renderer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port target_x[6] in module vga_frame_renderer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port target_x[5] in module vga_frame_renderer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port target_x[4] in module vga_frame_renderer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port target_x[3] in module vga_frame_renderer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port target_x[2] in module vga_frame_renderer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port target_x[1] in module vga_frame_renderer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port target_x[0] in module vga_frame_renderer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port target_y[7] in module vga_frame_renderer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port target_y[6] in module vga_frame_renderer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port target_y[5] in module vga_frame_renderer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port target_y[4] in module vga_frame_renderer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port target_y[3] in module vga_frame_renderer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port target_y[2] in module vga_frame_renderer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port target_y[1] in module vga_frame_renderer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port target_y[0] in module vga_frame_renderer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port frame_rd_data[3] in module vga_frame_renderer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port frame_rd_data[2] in module vga_frame_renderer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port frame_rd_data[1] in module vga_frame_renderer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port frame_rd_data[0] in module vga_frame_renderer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port sleep in module xpm_memory_base is either unconnected or has no load
+WARNING: [Synth 8-7129] Port rsta in module xpm_memory_base is either unconnected or has no load
+WARNING: [Synth 8-7129] Port regcea in module xpm_memory_base is either unconnected or has no load
+WARNING: [Synth 8-7129] Port injectsbiterra in module xpm_memory_base is either unconnected or has no load
+WARNING: [Synth 8-7129] Port injectdbiterra in module xpm_memory_base is either unconnected or has no load
+WARNING: [Synth 8-7129] Port dinb[13] in module xpm_memory_base is either unconnected or has no load
+WARNING: [Synth 8-7129] Port dinb[12] in module xpm_memory_base is either unconnected or has no load
+WARNING: [Synth 8-7129] Port dinb[11] in module xpm_memory_base is either unconnected or has no load
+WARNING: [Synth 8-7129] Port dinb[10] in module xpm_memory_base is either unconnected or has no load
+WARNING: [Synth 8-7129] Port dinb[9] in module xpm_memory_base is either unconnected or has no load
+WARNING: [Synth 8-7129] Port dinb[8] in module xpm_memory_base is either unconnected or has no load
+WARNING: [Synth 8-7129] Port dinb[7] in module xpm_memory_base is either unconnected or has no load
+WARNING: [Synth 8-7129] Port dinb[6] in module xpm_memory_base is either unconnected or has no load
+WARNING: [Synth 8-7129] Port dinb[5] in module xpm_memory_base is either unconnected or has no load
+WARNING: [Synth 8-7129] Port dinb[4] in module xpm_memory_base is either unconnected or has no load
+WARNING: [Synth 8-7129] Port dinb[3] in module xpm_memory_base is either unconnected or has no load
+WARNING: [Synth 8-7129] Port dinb[2] in module xpm_memory_base is either unconnected or has no load
+WARNING: [Synth 8-7129] Port dinb[1] in module xpm_memory_base is either unconnected or has no load
+WARNING: [Synth 8-7129] Port dinb[0] in module xpm_memory_base is either unconnected or has no load
+WARNING: [Synth 8-7129] Port injectsbiterrb in module xpm_memory_base is either unconnected or has no load
+WARNING: [Synth 8-7129] Port injectdbiterrb in module xpm_memory_base is either unconnected or has no load
+WARNING: [Synth 8-7080] Parallel synthesis criteria is not met
+WARNING: [Synth 8-7129] Port status_word[15] in module top_vga is either unconnected or has no load
+WARNING: [Synth 8-7129] Port status_word[14] in module top_vga is either unconnected or has no load
+WARNING: [Synth 8-7129] Port status_word[13] in module top_vga is either unconnected or has no load
+WARNING: [Synth 8-7129] Port status_word[12] in module top_vga is either unconnected or has no load
+WARNING: [Synth 8-7129] Port status_word[11] in module top_vga is either unconnected or has no load
+WARNING: [Synth 8-7129] Port status_word[10] in module top_vga is either unconnected or has no load
+WARNING: [Synth 8-7129] Port status_word[9] in module top_vga is either unconnected or has no load
+WARNING: [Synth 8-7129] Port status_word[8] in module top_vga is either unconnected or has no load
+WARNING: [Synth 8-7129] Port status_word[7] in module top_vga is either unconnected or has no load
+WARNING: [Synth 8-7129] Port status_word[6] in module top_vga is either unconnected or has no load
+WARNING: [Synth 8-7129] Port status_word[5] in module top_vga is either unconnected or has no load
+WARNING: [Synth 8-7129] Port status_word[4] in module top_vga is either unconnected or has no load
+WARNING: [Synth 8-7129] Port status_word[3] in module top_vga is either unconnected or has no load
+WARNING: [Synth 8-7129] Port status_word[2] in module top_vga is either unconnected or has no load
+WARNING: [Synth 8-7129] Port status_word[1] in module top_vga is either unconnected or has no load
+WARNING: [Synth 8-7129] Port status_word[0] in module top_vga is either unconnected or has no load
+WARNING: [Synth 8-7129] Port spi_link in module top_vga is either unconnected or has no load
+WARNING: [Synth 8-7129] Port peer_link in module top_vga is either unconnected or has no load
+WARNING: [Synth 8-7129] Port target_x[8] in module top_vga is either unconnected or has no load
+WARNING: [Synth 8-7129] Port target_x[7] in module top_vga is either unconnected or has no load
+WARNING: [Synth 8-7129] Port target_x[6] in module top_vga is either unconnected or has no load
+WARNING: [Synth 8-7129] Port target_x[5] in module top_vga is either unconnected or has no load
+WARNING: [Synth 8-7129] Port target_x[4] in module top_vga is either unconnected or has no load
+WARNING: [Synth 8-7129] Port target_x[3] in module top_vga is either unconnected or has no load
+WARNING: [Synth 8-7129] Port target_x[2] in module top_vga is either unconnected or has no load
+WARNING: [Synth 8-7129] Port target_x[1] in module top_vga is either unconnected or has no load
+WARNING: [Synth 8-7129] Port target_x[0] in module top_vga is either unconnected or has no load
+WARNING: [Synth 8-7129] Port target_y[7] in module top_vga is either unconnected or has no load
+WARNING: [Synth 8-7129] Port target_y[6] in module top_vga is either unconnected or has no load
+WARNING: [Synth 8-7129] Port target_y[5] in module top_vga is either unconnected or has no load
+WARNING: [Synth 8-7129] Port target_y[4] in module top_vga is either unconnected or has no load
+WARNING: [Synth 8-7129] Port target_y[3] in module top_vga is either unconnected or has no load
+WARNING: [Synth 8-7129] Port target_y[2] in module top_vga is either unconnected or has no load
+WARNING: [Synth 8-7129] Port target_y[1] in module top_vga is either unconnected or has no load
+WARNING: [Synth 8-7129] Port target_y[0] in module top_vga is either unconnected or has no load
+WARNING: [Synth 8-7129] Port rsta in module xpm_memory_base is either unconnected or has no load
+WARNING: [Synth 8-7129] Port regcea in module xpm_memory_base is either unconnected or has no load
+WARNING: [Synth 8-7129] Port injectsbiterra in module xpm_memory_base is either unconnected or has no load
+WARNING: [Synth 8-7129] Port injectdbiterra in module xpm_memory_base is either unconnected or has no load
+WARNING: [Synth 8-7129] Port dinb[13] in module xpm_memory_base is either unconnected or has no load
+WARNING: [Synth 8-3332] Sequential element (u_top/u_top_vga/u_video_framebuffer/ram_reg_mux_sel_b_pos_0__6) is unused and will be removed from module top_basys3.
+WARNING: [Synth 8-3332] Sequential element (u_top/u_top_vga/u_video_framebuffer/ram_reg_mux_sel_a_pos_1) is unused and will be removed from module top_basys3.
+WARNING: [Synth 8-3332] Sequential element (u_top/u_top_vga/u_video_framebuffer/ram_reg_mux_sel_a_pos_1__0) is unused and will be removed from module top_basys3.
+WARNING: [Synth 8-3332] Sequential element (u_top/u_top_vga/u_video_framebuffer/ram_reg_mux_sel_a_pos_1__1) is unused and will be removed from module top_basys3.
+WARNING: [Synth 8-3332] Sequential element (u_top/u_top_vga/u_video_framebuffer/ram_reg_mux_sel_a_pos_1__2) is unused and will be removed from module top_basys3.
+WARNING: [Synth 8-3332] Sequential element (u_top/u_top_vga/u_video_framebuffer/ram_reg_mux_sel_a_pos_1__3) is unused and will be removed from module top_basys3.
+WARNING: [Synth 8-3332] Sequential element (u_top/u_top_vga/u_video_framebuffer/ram_reg_mux_sel_a_pos_1__4) is unused and will be removed from module top_basys3.
+WARNING: [Synth 8-3332] Sequential element (u_top/u_top_vga/u_video_framebuffer/ram_reg_mux_sel_a_pos_1__5) is unused and will be removed from module top_basys3.
+WARNING: [Synth 8-3332] Sequential element (u_top/u_top_vga/u_video_framebuffer/ram_reg_mux_sel_a_pos_1__6) is unused and will be removed from module top_basys3.
+WARNING: [Synth 8-3332] Sequential element (u_top/u_top_vga/u_video_framebuffer/ram_reg_mux_sel_a_pos_1__7) is unused and will be removed from module top_basys3.
+WARNING: [Synth 8-3332] Sequential element (u_top/u_top_vga/u_video_framebuffer/ram_reg_mux_sel_a_pos_1__8) is unused and will be removed from module top_basys3.
+WARNING: [Synth 8-3332] Sequential element (u_top/u_top_vga/u_video_framebuffer/ram_reg_mux_sel_a_pos_1__9) is unused and will be removed from module top_basys3.
+WARNING: [Synth 8-3332] Sequential element (u_top/u_top_vga/u_video_framebuffer/ram_reg_mux_sel_a_pos_1__10) is unused and will be removed from module top_basys3.
+WARNING: [Synth 8-3332] Sequential element (u_top/u_top_vga/u_video_framebuffer/ram_reg_mux_sel_a_pos_1__11) is unused and will be removed from module top_basys3.
+WARNING: [Synth 8-3332] Sequential element (u_top/u_top_vga/u_video_framebuffer/ram_reg_mux_sel_a_pos_1__12) is unused and will be removed from module top_basys3.
+WARNING: [Synth 8-3332] Sequential element (u_top/u_top_vga/u_video_framebuffer/ram_reg_mux_sel_a_pos_1__13) is unused and will be removed from module top_basys3.
+WARNING: [Synth 8-3332] Sequential element (u_top/u_top_vga/u_video_framebuffer/ram_reg_mux_sel_a_pos_1__14) is unused and will be removed from module top_basys3.
+WARNING: [Synth 8-3332] Sequential element (u_top/u_top_vga/u_video_framebuffer/ram_reg_mux_sel_a_pos_2) is unused and will be removed from module top_basys3.
+WARNING: [Synth 8-3332] Sequential element (u_top/u_top_vga/u_video_framebuffer/ram_reg_mux_sel_a_pos_2__0) is unused and will be removed from module top_basys3.
+WARNING: [Synth 8-3332] Sequential element (u_top/u_top_vga/u_video_framebuffer/ram_reg_mux_sel_a_pos_2__1) is unused and will be removed from module top_basys3.
+WARNING: [Synth 8-3332] Sequential element (u_top/u_top_vga/u_video_framebuffer/ram_reg_mux_sel_a_pos_2__2) is unused and will be removed from module top_basys3.
+WARNING: [Synth 8-3332] Sequential element (u_top/u_top_vga/u_video_framebuffer/ram_reg_mux_sel_a_pos_2__3) is unused and will be removed from module top_basys3.
+WARNING: [Synth 8-3332] Sequential element (u_top/u_top_vga/u_video_framebuffer/ram_reg_mux_sel_a_pos_2__4) is unused and will be removed from module top_basys3.
+WARNING: [Synth 8-3332] Sequential element (u_top/u_top_vga/u_video_framebuffer/ram_reg_mux_sel_a_pos_2__5) is unused and will be removed from module top_basys3.
+WARNING: [Synth 8-3332] Sequential element (u_top/u_top_vga/u_video_framebuffer/ram_reg_mux_sel_a_pos_2__6) is unused and will be removed from module top_basys3.
+WARNING: [Synth 8-3332] Sequential element (u_top/u_top_vga/u_video_framebuffer/ram_reg_mux_sel_b_pos_2__6) is unused and will be removed from module top_basys3.
+
+----IMPLEMENTATION----
+CLEAR :)

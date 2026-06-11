@@ -36,7 +36,7 @@ dvt_build.log
 xcelium.d
 xrun.log
 
-results/
+# results/ - usuniete celowo, aby zezwolic na commity zgodnie ze specyfikacja
 
 screeny/
 
