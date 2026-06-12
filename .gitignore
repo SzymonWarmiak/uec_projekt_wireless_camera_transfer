@@ -46,3 +46,14 @@ Icon
 .Trashes
 Thumbs.db
 ehthumbs.db
+
+# =========================
+# Analizy / smieci
+# =========================
+DOC_TEST/
+dfx_runtime.txt
+
+# =========================
+# Binarki aplikacji
+# =========================
+*.apk

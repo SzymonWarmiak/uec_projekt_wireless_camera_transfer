@@ -1,3 +1,9 @@
+// Copyright (C) 2026 Szymon Warmiak, Grzegorz Twardosz
+// MTM UEC2
+// Author: Szymon Warmiak, Grzegorz Twardosz
+//
+// Description:
+// 
 module vga_frame_renderer #(
         parameter int FRAME_WIDTH = 320,
         parameter int FRAME_HEIGHT = 240,

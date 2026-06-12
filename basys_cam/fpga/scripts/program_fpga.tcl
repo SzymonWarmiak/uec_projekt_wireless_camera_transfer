@@ -1,6 +1,7 @@
 # Copyright (C) 2025  AGH University of Science and Technology
 # MTM UEC2
 # Author: Piotr Kaczmarczyk
+# Modified by: Szymon Warmiak, Grzegorz Twardosz
 #
 # Description:
 # tcl file sourced to Vivado to load the bitstream specified in the argument to an FPGA.

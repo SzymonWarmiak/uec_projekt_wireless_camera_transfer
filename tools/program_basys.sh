@@ -1,4 +1,10 @@
 #!/bin/bash
+# Copyright (C) 2026 Szymon Warmiak, Grzegorz Twardosz
+# MTM UEC2
+# Author: Szymon Warmiak, Grzegorz Twardosz
+#
+# Description:
+# 
 #
 # Wgrywa tymczasowo bitstream do RAM-u plytki Basys 3
 #

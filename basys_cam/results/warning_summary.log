@@ -1,18 +1,18 @@
 Warnings, critical warnings and errors from synthesis and implementation
 
-Created: 2026-06-11 12:02:07
+Created: 2026-06-11 16:32:08
 
 ----SYNTHESIS----
-WARNING: [Synth 8-689] width (14) of port connection 'wr_data_count_axis' does not match port width (1) of module 'xpm_fifo_axis' [C:/Users/szymo/Desktop/AGH/SEMESTR_4/UEC2/projekt_cyfra/uec_projekt_wireless_camera_transfer/basys_cam/rtl/top.sv:133]
-WARNING: [Synth 8-689] width (14) of port connection 'rd_data_count_axis' does not match port width (1) of module 'xpm_fifo_axis' [C:/Users/szymo/Desktop/AGH/SEMESTR_4/UEC2/projekt_cyfra/uec_projekt_wireless_camera_transfer/basys_cam/rtl/top.sv:136]
-WARNING: [Synth 8-7071] port 'm_axis_tstrb' of module 'xpm_fifo_axis' is unconnected for instance 'u_fifo' [C:/Users/szymo/Desktop/AGH/SEMESTR_4/UEC2/projekt_cyfra/uec_projekt_wireless_camera_transfer/basys_cam/rtl/top.sv:109]
-WARNING: [Synth 8-7071] port 'injectsbiterr_axis' of module 'xpm_fifo_axis' is unconnected for instance 'u_fifo' [C:/Users/szymo/Desktop/AGH/SEMESTR_4/UEC2/projekt_cyfra/uec_projekt_wireless_camera_transfer/basys_cam/rtl/top.sv:109]
-WARNING: [Synth 8-7071] port 'injectdbiterr_axis' of module 'xpm_fifo_axis' is unconnected for instance 'u_fifo' [C:/Users/szymo/Desktop/AGH/SEMESTR_4/UEC2/projekt_cyfra/uec_projekt_wireless_camera_transfer/basys_cam/rtl/top.sv:109]
-WARNING: [Synth 8-7071] port 'sbiterr_axis' of module 'xpm_fifo_axis' is unconnected for instance 'u_fifo' [C:/Users/szymo/Desktop/AGH/SEMESTR_4/UEC2/projekt_cyfra/uec_projekt_wireless_camera_transfer/basys_cam/rtl/top.sv:109]
-WARNING: [Synth 8-7071] port 'dbiterr_axis' of module 'xpm_fifo_axis' is unconnected for instance 'u_fifo' [C:/Users/szymo/Desktop/AGH/SEMESTR_4/UEC2/projekt_cyfra/uec_projekt_wireless_camera_transfer/basys_cam/rtl/top.sv:109]
-WARNING: [Synth 8-7023] instance 'u_fifo' of module 'xpm_fifo_axis' has 31 connections declared, but only 26 given [C:/Users/szymo/Desktop/AGH/SEMESTR_4/UEC2/projekt_cyfra/uec_projekt_wireless_camera_transfer/basys_cam/rtl/top.sv:109]
-WARNING: [Synth 8-6014] Unused sequential element prev_vsync_reg was removed.  [C:/Users/szymo/Desktop/AGH/SEMESTR_4/UEC2/projekt_cyfra/uec_projekt_wireless_camera_transfer/basys_cam/rtl/ov7670_capture.sv:42]
-WARNING: [Synth 8-6014] Unused sequential element gray_reg was removed.  [C:/Users/szymo/Desktop/AGH/SEMESTR_4/UEC2/projekt_cyfra/uec_projekt_wireless_camera_transfer/basys_cam/rtl/ov7670_capture.sv:74]
+WARNING: [Synth 8-689] width (14) of port connection 'wr_data_count_axis' does not match port width (1) of module 'xpm_fifo_axis' [C:/Users/szymo/Desktop/AGH/SEMESTR_4/UEC2/projekt_cyfra/uec_projekt_wireless_camera_transfer/basys_cam/rtl/top.sv:139]
+WARNING: [Synth 8-689] width (14) of port connection 'rd_data_count_axis' does not match port width (1) of module 'xpm_fifo_axis' [C:/Users/szymo/Desktop/AGH/SEMESTR_4/UEC2/projekt_cyfra/uec_projekt_wireless_camera_transfer/basys_cam/rtl/top.sv:142]
+WARNING: [Synth 8-7071] port 'm_axis_tstrb' of module 'xpm_fifo_axis' is unconnected for instance 'u_fifo' [C:/Users/szymo/Desktop/AGH/SEMESTR_4/UEC2/projekt_cyfra/uec_projekt_wireless_camera_transfer/basys_cam/rtl/top.sv:115]
+WARNING: [Synth 8-7071] port 'injectsbiterr_axis' of module 'xpm_fifo_axis' is unconnected for instance 'u_fifo' [C:/Users/szymo/Desktop/AGH/SEMESTR_4/UEC2/projekt_cyfra/uec_projekt_wireless_camera_transfer/basys_cam/rtl/top.sv:115]
+WARNING: [Synth 8-7071] port 'injectdbiterr_axis' of module 'xpm_fifo_axis' is unconnected for instance 'u_fifo' [C:/Users/szymo/Desktop/AGH/SEMESTR_4/UEC2/projekt_cyfra/uec_projekt_wireless_camera_transfer/basys_cam/rtl/top.sv:115]
+WARNING: [Synth 8-7071] port 'sbiterr_axis' of module 'xpm_fifo_axis' is unconnected for instance 'u_fifo' [C:/Users/szymo/Desktop/AGH/SEMESTR_4/UEC2/projekt_cyfra/uec_projekt_wireless_camera_transfer/basys_cam/rtl/top.sv:115]
+WARNING: [Synth 8-7071] port 'dbiterr_axis' of module 'xpm_fifo_axis' is unconnected for instance 'u_fifo' [C:/Users/szymo/Desktop/AGH/SEMESTR_4/UEC2/projekt_cyfra/uec_projekt_wireless_camera_transfer/basys_cam/rtl/top.sv:115]
+WARNING: [Synth 8-7023] instance 'u_fifo' of module 'xpm_fifo_axis' has 31 connections declared, but only 26 given [C:/Users/szymo/Desktop/AGH/SEMESTR_4/UEC2/projekt_cyfra/uec_projekt_wireless_camera_transfer/basys_cam/rtl/top.sv:115]
+WARNING: [Synth 8-6014] Unused sequential element prev_vsync_reg was removed.  [C:/Users/szymo/Desktop/AGH/SEMESTR_4/UEC2/projekt_cyfra/uec_projekt_wireless_camera_transfer/basys_cam/rtl/ov7670_capture.sv:48]
+WARNING: [Synth 8-6014] Unused sequential element gray_reg was removed.  [C:/Users/szymo/Desktop/AGH/SEMESTR_4/UEC2/projekt_cyfra/uec_projekt_wireless_camera_transfer/basys_cam/rtl/ov7670_capture.sv:80]
 WARNING: [Synth 8-6014] Unused sequential element gen_rd_b.gen_doutb_pipe.enb_pipe_reg[0] was removed.  [C:/Xilinx/Vivado/2024.2/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv:3077]
 WARNING: [Synth 8-6014] Unused sequential element dest_out_bin_ff_reg was removed.  [C:/Xilinx/Vivado/2024.2/data/ip/xpm/xpm_cdc/hdl/xpm_cdc.sv:417]
 WARNING: [Synth 8-6014] Unused sequential element dest_out_bin_ff_reg was removed.  [C:/Xilinx/Vivado/2024.2/data/ip/xpm/xpm_cdc/hdl/xpm_cdc.sv:417]

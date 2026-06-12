@@ -1,3 +1,9 @@
+// Copyright (C) 2026 Szymon Warmiak, Grzegorz Twardosz
+// MTM UEC2
+// Author: Szymon Warmiak, Grzegorz Twardosz
+//
+// Description:
+// 
 module motor_l298n_decode (
     input  logic [3:0] ctrl_nibble,
     output logic [3:0] motor_in

@@ -1,4 +1,10 @@
 #!/bin/bash
+# Copyright (C) 2026 Szymon Warmiak, Grzegorz Twardosz
+# MTM UEC2
+# Author: Szymon Warmiak, Grzegorz Twardosz
+#
+# Description:
+# 
 
 # Ustalenie absolutnej sciezki do folderu skryptu
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

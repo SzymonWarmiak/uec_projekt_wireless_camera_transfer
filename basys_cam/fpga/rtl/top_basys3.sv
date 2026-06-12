@@ -2,6 +2,7 @@
  * San Jose State University
  * EE178 Lab #4
  * Author: prof. Eric Crabilla
+// Modified by: Szymon Warmiak, Grzegorz Twardosz
  *
  * Modified by:
  * 2025  AGH University of Science and Technology

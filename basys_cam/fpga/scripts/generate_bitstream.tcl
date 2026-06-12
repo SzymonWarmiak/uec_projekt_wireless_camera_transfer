@@ -1,6 +1,7 @@
 # Copyright (C) 2025  AGH University of Science and Technology
 # MTM UEC2
 # Author: Piotr Kaczmarczyk
+# Modified by: Szymon Warmiak, Grzegorz Twardosz
 #
 # Description:
 # tcl script being sourced to Vivado to build a project from sources and generate a bitstream.

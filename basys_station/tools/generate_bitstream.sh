@@ -3,6 +3,7 @@
 # Copyright (C) 2025  AGH University of Science and Technology
 # MTM UEC2
 # Author: Piotr Kaczmarczyk
+# Modified by: Szymon Warmiak, Grzegorz Twardosz
 #
 # Description:
 # This script runs Vivado in tcl mode and sources an apropriate tcl file to run

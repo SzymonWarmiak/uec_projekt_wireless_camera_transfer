@@ -1,6 +1,7 @@
 # Copyright (C) 2025  AGH University of Science and Technology
 # MTM UEC2
 # Author: Piotr Kaczmarczyk
+# Modified by: Szymon Warmiak, Grzegorz Twardosz
 #
 # Description:
 # Project detiles required for generate_bitstream.tcl
@@ -13,7 +14,7 @@
 #                   Project details                   #
 #-----------------------------------------------------#
 # Project name                                  -- EDIT
-set project_name blank_project
+set project_name wireless_camera_transfer
 
 # Top module name                               -- EDIT
 set top_module top_basys3
@@ -35,8 +36,6 @@ set sv_files {
     ../rtl/spi_stream_master.sv
     ../rtl/ov7670_capture.sv
     ../rtl/ov7670_configurator.sv
-    ../rtl/mod_m_counter.sv
-    ../rtl/fifo.sv
     ../rtl/motor_l298n_decode.sv
     ../rtl/vga_timing.sv
     ../rtl/video_framebuffer.sv

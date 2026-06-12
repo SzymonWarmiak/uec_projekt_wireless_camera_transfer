@@ -1,4 +1,10 @@
 #!/bin/bash
+# Copyright (C) 2026 Szymon Warmiak, Grzegorz Twardosz
+# MTM UEC2
+# Author: Szymon Warmiak, Grzegorz Twardosz
+#
+# Description:
+# 
 #
 # Trwale programuje pamiec QSPI Flash plytki Basys 3 wybranym bitstreamem,
 # tak aby FPGA ladowala wsad samodzielnie po wlaczeniu zasilania.

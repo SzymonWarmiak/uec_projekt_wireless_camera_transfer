@@ -1,6 +1,7 @@
 # Copyright (C) 2025  AGH University of Science and Technology
 # MTM UEC2
 # Author: Piotr Kaczmarczyk
+# Modified by: Szymon Warmiak, Grzegorz Twardosz
 #
 # Description:
 # Project detiles required for generate_bitstream.tcl
@@ -13,7 +14,7 @@
 #                   Project details                   #
 #-----------------------------------------------------#
 # Project name                                  -- EDIT
-set project_name blank_project
+set project_name wireless_camera_transfer
 
 # Top module name                               -- EDIT
 set top_module top_basys3

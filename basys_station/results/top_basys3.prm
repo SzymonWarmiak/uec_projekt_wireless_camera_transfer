@@ -1,11 +1,11 @@
 ===================================
 Configuration Memory information
 ===================================
-File Format        BIN
+File Format        MCS
 Interface          SPIX1
-Size               32M
+Size               16M
 Start Address      0x00000000
-End Address        0x01FFFFFF
+End Address        0x00FFFFFF
 
 Addr1         Addr2         Date                    File(s)
-0x00000000    0x0021728B    Jun 11 11:59:09 2026    results/top_basys3.bit
+0x00000000    0x0021728B    Jun 11 16:34:36 2026    C:/Users/szymo/Desktop/AGH/SEMESTR_4/UEC2/projekt_cyfra/uec_projekt_wireless_camera_transfer/basys_station/results/top_basys3.bit

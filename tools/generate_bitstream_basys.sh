@@ -1,4 +1,10 @@
 #!/bin/bash
+# Copyright (C) 2026 Szymon Warmiak, Grzegorz Twardosz
+# MTM UEC2
+# Author: Szymon Warmiak, Grzegorz Twardosz
+#
+# Description:
+# 
 #
 # Opakowanie wewnętrznego ./tools/generate_bitstream.sh każdego modułu Basysa,
 # tak aby z głównego katalogu projektu można było uruchomić jednym poleceniem:
