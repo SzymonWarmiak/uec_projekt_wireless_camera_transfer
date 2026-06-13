@@ -1,6 +1,6 @@
 Warnings, critical warnings and errors from synthesis and implementation
 
-Created: 2026-06-11 16:34:43
+Created: 2026-06-13 19:36:03
 
 ----SYNTHESIS----
 WARNING: [Synth 8-7129] Port status_word[15] in module vga_frame_renderer is either unconnected or has no load

@@ -57,3 +57,9 @@ dfx_runtime.txt
 # Binarki aplikacji
 # =========================
 *.apk
+!Jezdzik_do_pobrania/Jezdzik.apk
+
+# =========================
+# Pliki tymczasowe Office
+# =========================
+~$*

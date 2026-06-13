@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:robot_app/main.dart';
+import 'package:robot_app/pages/pad_page.dart';
 
 void main() {
   testWidgets('shows pad controls', (WidgetTester tester) async {

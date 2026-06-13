@@ -1,6 +1,6 @@
 Warnings, critical warnings and errors from synthesis and implementation
 
-Created: 2026-06-11 16:32:08
+Created: 2026-06-13 19:33:51
 
 ----SYNTHESIS----
 WARNING: [Synth 8-689] width (14) of port connection 'wr_data_count_axis' does not match port width (1) of module 'xpm_fifo_axis' [C:/Users/szymo/Desktop/AGH/SEMESTR_4/UEC2/projekt_cyfra/uec_projekt_wireless_camera_transfer/basys_cam/rtl/top.sv:139]
